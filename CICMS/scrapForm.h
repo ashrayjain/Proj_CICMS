@@ -99,7 +99,6 @@ namespace CICMS {
 			this->MinimizeBox = false;
 			this->Name = L"scrape";
 			this->Text = L"scrape";
-			this->Load += gcnew System::EventHandler(this, &scrapForm::scrapForm_Load);
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -110,9 +109,6 @@ namespace CICMS {
 			 }
 	private: System::Void button2_Click(System::Object^  sender, System::EventArgs^  e) {
 				 Close();
-			 }
-	private: System::Void scrapForm_Load(System::Object^  sender, System::EventArgs^  e) {
-				 this->StartPosition = FormStartPosition::CenterParent;
 			 }
 	};
 }

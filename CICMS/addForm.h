@@ -256,7 +256,6 @@ namespace CICMS {
 			this->Controls->Add(this->groupBox2);
 			this->Name = L"addForm";
 			this->Text = L"addForm";
-			this->Load += gcnew System::EventHandler(this, &addForm::addForm_Load);
 			this->groupBox2->ResumeLayout(false);
 			this->groupBox2->PerformLayout();
 			this->ResumeLayout(false);
@@ -273,8 +272,5 @@ namespace CICMS {
 				return gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {textBox2->Text, 
 				textBox3->Text, textBox4->Text, textBox5->Text, textBox6->Text, textBox7->Text, textBox8->Text}, -1);
 			}
-private: System::Void addForm_Load(System::Object^  sender, System::EventArgs^  e) {
-			 this->StartPosition = FormStartPosition::CenterParent;
-		 }
 };
 }

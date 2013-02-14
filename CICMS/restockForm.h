@@ -106,7 +106,6 @@ namespace CICMS {
 			this->Controls->Add(this->label1);
 			this->Name = L"restock";
 			this->Text = L"restock";
-			this->Load += gcnew System::EventHandler(this, &restockForm::restockForm_Load);
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -117,9 +116,6 @@ namespace CICMS {
 			 }
 	private: System::Void button2_Click(System::Object^  sender, System::EventArgs^  e) {
 				Close();
-			 }
-	private: System::Void restockForm_Load(System::Object^  sender, System::EventArgs^  e) {
-				this->StartPosition = FormStartPosition::CenterParent;
 			 }
 };
 }

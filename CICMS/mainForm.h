@@ -644,7 +644,6 @@ private: System::Windows::Forms::GroupBox^  list_grp;
 			this->MaximizeBox = false;
 			this->Name = L"mainForm";
 			this->Text = L"CICMS";
-			this->Load += gcnew System::EventHandler(this, &mainForm::mainForm_Load);
 			this->menu->ResumeLayout(false);
 			this->menu->PerformLayout();
 			this->s_grp->ResumeLayout(false);
@@ -659,14 +658,12 @@ private: System::Windows::Forms::GroupBox^  list_grp;
 
 		}
 #pragma endregion
-	private: System::Void mainForm_Load(System::Object^  sender, System::EventArgs^  e) {
-				 this->StartPosition = FormStartPosition::CenterScreen;
-			}
 	private: System::Void menu_f_quit_Click(System::Object^  sender, System::EventArgs^  e) {
 				Close();
 			}
 	private: System::Void button3_Click(System::Object^  sender, System::EventArgs^  e) {
 				Form^ dlg1 = gcnew scrapForm();// need to create a function to include these mess
+				dlg1->StartPosition = FormStartPosition::CenterParent;
 				if (dlg1->ShowDialog() == System::Windows::Forms::DialogResult::OK){
 					list_lv->Items->RemoveAt(list_lv->SelectedIndices[0]);
 					pd_tB_name->Text = "";// can be more elegant??
@@ -684,16 +681,19 @@ private: System::Windows::Forms::GroupBox^  list_grp;
 			}
 	private: System::Void button4_Click(System::Object^  sender, System::EventArgs^  e) {
 			 	Form^ dlg1 = gcnew sellForm();
+				dlg1->StartPosition = FormStartPosition::CenterParent;
 				dlg1->ShowDialog();
 				delete dlg1;//should I?
 		 }
 	private: System::Void button5_Click(System::Object^  sender, System::EventArgs^  e) {
 				Form^ dlg1 = gcnew restockForm();
+				dlg1->StartPosition = FormStartPosition::CenterParent;
 				dlg1->ShowDialog();
 				delete dlg1;//should I?
 		 }
 	private: System::Void menu_f_addANewProduct_Click(System::Object^  sender, System::EventArgs^  e) {
 				addForm^ dlg1 = gcnew addForm();
+				dlg1->StartPosition = FormStartPosition::CenterParent;
 				if (dlg1->ShowDialog() == System::Windows::Forms::DialogResult::OK){
 					System::Windows::Forms::ListViewItem^  temp = dlg1->get_product_details();
 					this->list_lv->Items->AddRange(gcnew cli::array< System::Windows::Forms::ListViewItem^  >(1) {temp});
@@ -703,11 +703,11 @@ private: System::Windows::Forms::GroupBox^  list_grp;
 		 }
 	private: System::Void menu_about_Click(System::Object^  sender, System::EventArgs^  e) {
 				Form^ dlg1 = gcnew aboutForm();
+				dlg1->StartPosition = FormStartPosition::CenterParent;
 				dlg1->ShowDialog();
 				delete dlg1;//should I?
 		 }
 	private: System::Void menu_f_loadProductList_Click(System::Object^  sender, System::EventArgs^  e) {
-				
 				openFileDialog1->ShowDialog();
 		 }
 	private: System::Void menu_f_saveProductList_Click(System::Object^  sender, System::EventArgs^  e) {
@@ -732,10 +732,5 @@ private: System::Windows::Forms::GroupBox^  list_grp;
 					//tb_M = "Changed"; the new item will still be "hi" instead of "Changed"
 				 }
 		 }
-	public: System::Void refreshListview(){
-			System::Windows::Forms::ListViewItem^  temp = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"hm_name", 
-				L"bag", L"000021", L"31", L"H&M", L"31", L"5"}, -1));
-			this->list_lv->Items->AddRange(gcnew cli::array< System::Windows::Forms::ListViewItem^  >(1) {temp});
-		}
 };
 }

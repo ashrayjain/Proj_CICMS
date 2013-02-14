@@ -70,14 +70,10 @@ namespace CICMS {
 			this->Controls->Add(this->label1);
 			this->Name = L"aboutForm";
 			this->Text = L"aboutForm";
-			this->Load += gcnew System::EventHandler(this, &aboutForm::aboutForm_Load);
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
 		}
 #pragma endregion
-	private: System::Void aboutForm_Load(System::Object^  sender, System::EventArgs^  e) {
-				 this->StartPosition = FormStartPosition::CenterParent;
-			 }
 	};
 }
