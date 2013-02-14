@@ -112,7 +112,7 @@
     <ClCompile Include="aboutForm.cpp" />
     <ClCompile Include="addForm.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
-    <ClCompile Include="CICMS.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="mainForm.cpp" />
     <ClCompile Include="restockForm.cpp" />
     <ClCompile Include="scrapForm.cpp" />
