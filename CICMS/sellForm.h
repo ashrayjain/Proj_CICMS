@@ -10,12 +10,12 @@ namespace CICMS {
 	using namespace System::Drawing;
 
 	/// <summary>
-	/// Summary for specify
+	/// Summary for sellForm
 	/// </summary>
-	public ref class specify : public System::Windows::Forms::Form
+	public ref class sellForm : public System::Windows::Forms::Form
 	{
 	public:
-		specify(void)
+		sellForm(void)
 		{
 			InitializeComponent();
 			//
@@ -27,7 +27,7 @@ namespace CICMS {
 		/// <summary>
 		/// Clean up any resources being used.
 		/// </summary>
-		~specify()
+		~sellForm()
 		{
 			if (components)
 			{
@@ -76,7 +76,7 @@ namespace CICMS {
 			this->button1->TabIndex = 1;
 			this->button1->Text = L"Yes";
 			this->button1->UseVisualStyleBackColor = true;
-			this->button1->Click += gcnew System::EventHandler(this, &specify::button1_Click);
+			this->button1->Click += gcnew System::EventHandler(this, &sellForm::button1_Click);
 			// 
 			// button2
 			// 
@@ -86,7 +86,7 @@ namespace CICMS {
 			this->button2->TabIndex = 2;
 			this->button2->Text = L"No";
 			this->button2->UseVisualStyleBackColor = true;
-			this->button2->Click += gcnew System::EventHandler(this, &specify::button2_Click);
+			this->button2->Click += gcnew System::EventHandler(this, &sellForm::button2_Click);
 			// 
 			// textBox1
 			// 
@@ -95,9 +95,8 @@ namespace CICMS {
 			this->textBox1->Size = System::Drawing::Size(100, 20);
 			this->textBox1->TabIndex = 3;
 			// 
-			// specify
+			// sellForm
 			// 
-			this->StartPosition = FormStartPosition::CenterParent;
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(209, 125);
@@ -107,6 +106,7 @@ namespace CICMS {
 			this->Controls->Add(this->label1);
 			this->Name = L"specify";
 			this->Text = L"specify";
+			this->Load += gcnew System::EventHandler(this, &sellForm::sellForm_Load);
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -118,5 +118,8 @@ namespace CICMS {
 	private: System::Void button2_Click(System::Object^  sender, System::EventArgs^  e) {
 				 Close();
 			 }
-	};
+	private: System::Void sellForm_Load(System::Object^  sender, System::EventArgs^  e) {
+				 this->StartPosition = FormStartPosition::CenterParent;
+			 }
+};
 }

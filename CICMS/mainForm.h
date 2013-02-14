@@ -660,12 +660,13 @@ private: System::Windows::Forms::GroupBox^  list_grp;
 		}
 #pragma endregion
 	private: System::Void mainForm_Load(System::Object^  sender, System::EventArgs^  e) {
+				 this->StartPosition = FormStartPosition::CenterScreen;
 			}
 	private: System::Void menu_f_quit_Click(System::Object^  sender, System::EventArgs^  e) {
 				Close();
 			}
 	private: System::Void button3_Click(System::Object^  sender, System::EventArgs^  e) {
-				Form^ dlg1 = gcnew scrape();// need to create a function to include these mess
+				Form^ dlg1 = gcnew scrapForm();// need to create a function to include these mess
 				if (dlg1->ShowDialog() == System::Windows::Forms::DialogResult::OK){
 					list_lv->Items->RemoveAt(list_lv->SelectedIndices[0]);
 					pd_tB_name->Text = "";// can be more elegant??
@@ -682,12 +683,12 @@ private: System::Windows::Forms::GroupBox^  list_grp;
 				delete dlg1;//should I?
 			}
 	private: System::Void button4_Click(System::Object^  sender, System::EventArgs^  e) {
-			 	Form^ dlg1 = gcnew specify();
+			 	Form^ dlg1 = gcnew sellForm();
 				dlg1->ShowDialog();
 				delete dlg1;//should I?
 		 }
 	private: System::Void button5_Click(System::Object^  sender, System::EventArgs^  e) {
-				Form^ dlg1 = gcnew restock();
+				Form^ dlg1 = gcnew restockForm();
 				dlg1->ShowDialog();
 				delete dlg1;//should I?
 		 }

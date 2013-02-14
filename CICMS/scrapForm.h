@@ -10,12 +10,12 @@ namespace CICMS {
 	using namespace System::Drawing;
 
 	/// <summary>
-	/// Summary for scrape
+	/// Summary for scrapForm
 	/// </summary>
-	public ref class scrape : public System::Windows::Forms::Form
+	public ref class scrapForm : public System::Windows::Forms::Form
 	{
 	public:
-		scrape(void)
+		scrapForm(void)
 		{
 			InitializeComponent();
 			//
@@ -27,7 +27,7 @@ namespace CICMS {
 		/// <summary>
 		/// Clean up any resources being used.
 		/// </summary>
-		~scrape()
+		~scrapForm()
 		{
 			if (components)
 			{
@@ -75,7 +75,7 @@ namespace CICMS {
 			this->button1->TabIndex = 1;
 			this->button1->Text = L"Yes";
 			this->button1->UseVisualStyleBackColor = true;
-			this->button1->Click += gcnew System::EventHandler(this, &scrape::button1_Click);
+			this->button1->Click += gcnew System::EventHandler(this, &scrapForm::button1_Click);
 			// 
 			// button2
 			// 
@@ -85,11 +85,10 @@ namespace CICMS {
 			this->button2->TabIndex = 2;
 			this->button2->Text = L"No";
 			this->button2->UseVisualStyleBackColor = true;
-			this->button2->Click += gcnew System::EventHandler(this, &scrape::button2_Click);
+			this->button2->Click += gcnew System::EventHandler(this, &scrapForm::button2_Click);
 			// 
-			// scrape
+			// scrapForm
 			// 
-			this->StartPosition = FormStartPosition::CenterParent;
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(191, 114);
@@ -100,6 +99,7 @@ namespace CICMS {
 			this->MinimizeBox = false;
 			this->Name = L"scrape";
 			this->Text = L"scrape";
+			this->Load += gcnew System::EventHandler(this, &scrapForm::scrapForm_Load);
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -110,6 +110,9 @@ namespace CICMS {
 			 }
 	private: System::Void button2_Click(System::Object^  sender, System::EventArgs^  e) {
 				 Close();
+			 }
+	private: System::Void scrapForm_Load(System::Object^  sender, System::EventArgs^  e) {
+				 this->StartPosition = FormStartPosition::CenterParent;
 			 }
 	};
 }

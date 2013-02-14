@@ -70,10 +70,10 @@
     <ClCompile Include="sellForm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="mainForm.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mainForm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

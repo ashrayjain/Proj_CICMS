@@ -64,7 +64,6 @@ namespace CICMS {
 			// 
 			// aboutForm
 			// 
-			this->StartPosition = FormStartPosition::CenterParent;
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(292, 163);
@@ -78,6 +77,7 @@ namespace CICMS {
 		}
 #pragma endregion
 	private: System::Void aboutForm_Load(System::Object^  sender, System::EventArgs^  e) {
+				 this->StartPosition = FormStartPosition::CenterParent;
 			 }
 	};
 }

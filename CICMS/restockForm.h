@@ -10,12 +10,12 @@ namespace CICMS {
 	using namespace System::Drawing;
 
 	/// <summary>
-	/// Summary for restock
+	/// Summary for restockForm
 	/// </summary>
-	public ref class restock : public System::Windows::Forms::Form
+	public ref class restockForm : public System::Windows::Forms::Form
 	{
 	public:
-		restock(void)
+		restockForm(void)
 		{
 			InitializeComponent();
 			//
@@ -27,7 +27,7 @@ namespace CICMS {
 		/// <summary>
 		/// Clean up any resources being used.
 		/// </summary>
-		~restock()
+		~restockForm()
 		{
 			if (components)
 			{
@@ -76,7 +76,7 @@ namespace CICMS {
 			this->button1->TabIndex = 1;
 			this->button1->Text = L"Yes";
 			this->button1->UseVisualStyleBackColor = true;
-			this->button1->Click += gcnew System::EventHandler(this, &restock::button1_Click);
+			this->button1->Click += gcnew System::EventHandler(this, &restockForm::button1_Click);
 			// 
 			// button2
 			// 
@@ -86,7 +86,7 @@ namespace CICMS {
 			this->button2->TabIndex = 2;
 			this->button2->Text = L"No";
 			this->button2->UseVisualStyleBackColor = true;
-			this->button2->Click += gcnew System::EventHandler(this, &restock::button2_Click);
+			this->button2->Click += gcnew System::EventHandler(this, &restockForm::button2_Click);
 			// 
 			// textBox1
 			// 
@@ -95,9 +95,8 @@ namespace CICMS {
 			this->textBox1->Size = System::Drawing::Size(100, 20);
 			this->textBox1->TabIndex = 3;
 			// 
-			// restock
+			// restockForm
 			// 
-			this->StartPosition = FormStartPosition::CenterParent;
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(209, 122);
@@ -107,19 +106,20 @@ namespace CICMS {
 			this->Controls->Add(this->label1);
 			this->Name = L"restock";
 			this->Text = L"restock";
-			this->Load += gcnew System::EventHandler(this, &restock::restock_Load);
+			this->Load += gcnew System::EventHandler(this, &restockForm::restockForm_Load);
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
 		}
 #pragma endregion
 	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
-				 Close();
+				Close();
 			 }
 	private: System::Void button2_Click(System::Object^  sender, System::EventArgs^  e) {
-				 Close();
+				Close();
 			 }
-	private: System::Void restock_Load(System::Object^  sender, System::EventArgs^  e) {
+	private: System::Void restockForm_Load(System::Object^  sender, System::EventArgs^  e) {
+				this->StartPosition = FormStartPosition::CenterParent;
 			 }
 };
 }
