@@ -68,6 +68,7 @@ namespace CICMS {
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(292, 163);
 			this->Controls->Add(this->label1);
+			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
 			this->Name = L"aboutForm";
 			this->Text = L"aboutForm";
 			this->ResumeLayout(false);

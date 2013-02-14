@@ -104,7 +104,8 @@ namespace CICMS {
 			this->Controls->Add(this->button2);
 			this->Controls->Add(this->button1);
 			this->Controls->Add(this->label1);
-			this->Name = L"specify";
+			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
+			this->Name = L"sellForm";
 			this->Text = L"specify";
 			this->ResumeLayout(false);
 			this->PerformLayout();

@@ -254,6 +254,7 @@ namespace CICMS {
 			this->Controls->Add(this->button2);
 			this->Controls->Add(this->button1);
 			this->Controls->Add(this->groupBox2);
+			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
 			this->Name = L"addForm";
 			this->Text = L"addForm";
 			this->groupBox2->ResumeLayout(false);
