@@ -1,10 +1,14 @@
-#pragma once
-#include "scrapForm.h"
-#include "sellForm.h"
-#include "restockForm.h"
-#include "addForm.h"
-#include "aboutForm.h"
+#ifndef _GUARD_UI_mainForm
+#define _GUARD_UI_mainForm
 
+#include "inputForm.h"
+#include "addForm.h"
+
+//naming
+//"pd_b_delete" means a button for deletion in ProductDetails part
+//"pd_l_name" means a label for name in ProductDetails part
+//etc etc
+//
 namespace CICMS {
 
 	using namespace System;
@@ -127,13 +131,13 @@ namespace CICMS {
 
 
 
-private: System::Windows::Forms::Button^  pd_b_sell;
-private: System::Windows::Forms::Button^  pd_b_restock;
-private: System::Windows::Forms::ListView^  list_lv;
-private: System::Windows::Forms::ColumnHeader^  list_col_name;
-private: System::Windows::Forms::ColumnHeader^  list_col_category;
-private: System::Windows::Forms::ColumnHeader^  list_col_barcode;
-private: System::Windows::Forms::ColumnHeader^  list_col_price;
+	private: System::Windows::Forms::Button^  pd_b_sell;
+	private: System::Windows::Forms::Button^  pd_b_restock;
+	private: System::Windows::Forms::ListView^  list_lv;
+	private: System::Windows::Forms::ColumnHeader^  list_col_name;
+	private: System::Windows::Forms::ColumnHeader^  list_col_category;
+	private: System::Windows::Forms::ColumnHeader^  list_col_barcode;
+	private: System::Windows::Forms::ColumnHeader^  list_col_price;
 
 
 
@@ -148,13 +152,13 @@ private: System::Windows::Forms::ColumnHeader^  list_col_price;
 
 	private: System::Windows::Forms::OpenFileDialog^  openFileDialog1;
 	private: System::Windows::Forms::SaveFileDialog^  saveFileDialog1;
-private: System::Windows::Forms::ColumnHeader^  list_col_manuf;
-private: System::Windows::Forms::ColumnHeader^  list_col_stock;
-private: System::Windows::Forms::ColumnHeader^  list_col_sold;
+	private: System::Windows::Forms::ColumnHeader^  list_col_manuf;
+	private: System::Windows::Forms::ColumnHeader^  list_col_stock;
+	private: System::Windows::Forms::ColumnHeader^  list_col_sold;
 
 
 
-private: System::Windows::Forms::GroupBox^  list_grp;
+	private: System::Windows::Forms::GroupBox^  list_grp;
 
 
 	private: System::Windows::Forms::StatusStrip^  statusStrip1;
@@ -405,7 +409,7 @@ private: System::Windows::Forms::GroupBox^  list_grp;
 			this->pd_b_restock->TabIndex = 8;
 			this->pd_b_restock->Text = L"Restock";
 			this->pd_b_restock->UseVisualStyleBackColor = true;
-			this->pd_b_restock->Click += gcnew System::EventHandler(this, &mainForm::button5_Click);
+			this->pd_b_restock->Click += gcnew System::EventHandler(this, &mainForm::pd_b_restock_Click);
 			// 
 			// pd_tB_category
 			// 
@@ -424,7 +428,7 @@ private: System::Windows::Forms::GroupBox^  list_grp;
 			this->pd_b_sell->TabIndex = 7;
 			this->pd_b_sell->Text = L"Sell";
 			this->pd_b_sell->UseVisualStyleBackColor = true;
-			this->pd_b_sell->Click += gcnew System::EventHandler(this, &mainForm::button4_Click);
+			this->pd_b_sell->Click += gcnew System::EventHandler(this, &mainForm::pd_b_sell_Click);
 			// 
 			// pd_tB_barcode
 			// 
@@ -451,7 +455,7 @@ private: System::Windows::Forms::GroupBox^  list_grp;
 			this->pd_b_delete->TabIndex = 6;
 			this->pd_b_delete->Text = L"Delete";
 			this->pd_b_delete->UseVisualStyleBackColor = true;
-			this->pd_b_delete->Click += gcnew System::EventHandler(this, &mainForm::button3_Click);
+			this->pd_b_delete->Click += gcnew System::EventHandler(this, &mainForm::pd_b_delete_Click);
 			// 
 			// pd_tB_manuf
 			// 
@@ -657,80 +661,90 @@ private: System::Windows::Forms::GroupBox^  list_grp;
 			this->PerformLayout();
 
 		}
-#pragma endregion
 	private: System::Void menu_f_quit_Click(System::Object^  sender, System::EventArgs^  e) {
-				Close();
-			}
-	private: System::Void button3_Click(System::Object^  sender, System::EventArgs^  e) {
-				Form^ dlg1 = gcnew scrapForm();// need to create a function to include these mess
-				dlg1->StartPosition = FormStartPosition::CenterParent;
-				if (dlg1->ShowDialog() == System::Windows::Forms::DialogResult::OK){
-					list_lv->Items->RemoveAt(list_lv->SelectedIndices[0]);
-					pd_tB_name->Text = "";// can be more elegant??
-					pd_tB_category->Text = "";
-					pd_tB_barcode->Text = "";
-					pd_tB_price->Text = "";
-					pd_tB_manuf->Text = "";
-					pd_tB_stock->Text = "";
-					pd_tB_sold->Text = "";
-					pd_b_delete->Enabled = false;
-					pd_b_sell->Enabled = false;
-					pd_b_restock->Enabled = false;
-				}
-				delete dlg1;//should I?
-			}
-	private: System::Void button4_Click(System::Object^  sender, System::EventArgs^  e) {
-			 	Form^ dlg1 = gcnew sellForm();
-				dlg1->StartPosition = FormStartPosition::CenterParent;
-				dlg1->ShowDialog();
-				delete dlg1;//should I?
-		 }
-	private: System::Void button5_Click(System::Object^  sender, System::EventArgs^  e) {
-				Form^ dlg1 = gcnew restockForm();
-				dlg1->StartPosition = FormStartPosition::CenterParent;
-				dlg1->ShowDialog();
-				delete dlg1;//should I?
-		 }
+				 Close();
+			 }
+
+	private: System::Void pd_b_delete_Click(System::Object^  sender, System::EventArgs^  e) {
+				 if(MessageBox::Show("Are you sure that you would like \nto delete this product?", 
+					 " Delete Product",
+					 MessageBoxButtons::YesNo,
+					 MessageBoxIcon::Warning) == System::Windows::Forms::DialogResult::Yes){
+						 Clear_selectedList();
+						 Clear_pd();
+						 Disable_pd_b();
+				 }
+			 }
+
+	private: Void Clear_selectedList(){
+				 list_lv->Items->RemoveAt(list_lv->SelectedIndices[0]);
+			 }
+
+	private: Void Clear_pd(){
+				 pd_tB_name->Text = "";
+				 pd_tB_category->Text = "";
+				 pd_tB_barcode->Text = "";
+				 pd_tB_price->Text = "";
+				 pd_tB_manuf->Text = "";
+				 pd_tB_stock->Text = "";
+				 pd_tB_sold->Text = "";
+			 }
+
+	private: Void Disable_pd_b(){
+				 pd_b_delete->Enabled = false;
+				 pd_b_sell->Enabled = false;
+				 pd_b_restock->Enabled = false;
+			 }
+
+	private: System::Void pd_b_sell_Click(System::Object^  sender, System::EventArgs^  e) {
+				 inputForm^ dlg = gcnew inputForm(" Sell Products", "Sell:");
+				 dlg->StartPosition = FormStartPosition::CenterParent;
+				 dlg->ShowDialog();
+				 delete dlg;//should I?
+			 }
+	private: System::Void pd_b_restock_Click(System::Object^  sender, System::EventArgs^  e) {
+				 inputForm^ dlg = gcnew inputForm(" Restock Products", "Restock:");
+				 dlg->StartPosition = FormStartPosition::CenterParent;
+				 dlg->ShowDialog();
+			 }
 	private: System::Void menu_f_addANewProduct_Click(System::Object^  sender, System::EventArgs^  e) {
-				addForm^ dlg1 = gcnew addForm();
-				dlg1->StartPosition = FormStartPosition::CenterParent;
-				if (dlg1->ShowDialog() == System::Windows::Forms::DialogResult::OK){
-					System::Windows::Forms::ListViewItem^  temp = dlg1->get_product_details();
-					this->list_lv->Items->AddRange(gcnew cli::array< System::Windows::Forms::ListViewItem^  >(1) {temp});
-					delete temp;
-				}
-				delete dlg1;//should I?
-		 }
+				 addForm^ dlg1 = gcnew addForm();
+				 dlg1->StartPosition = FormStartPosition::CenterParent;
+				 if (dlg1->ShowDialog() == System::Windows::Forms::DialogResult::OK){
+					 System::Windows::Forms::ListViewItem^  temp = dlg1->get_product_details();
+					 this->list_lv->Items->AddRange(gcnew cli::array< System::Windows::Forms::ListViewItem^  >(1) {temp});
+					 delete temp;
+				 }
+				 delete dlg1;//should I?
+			 }
 	private: System::Void menu_about_Click(System::Object^  sender, System::EventArgs^  e) {
-				Form^ dlg1 = gcnew aboutForm();
-				dlg1->StartPosition = FormStartPosition::CenterParent;
-				dlg1->ShowDialog();
-				delete dlg1;//should I?
-		 }
+				 MessageBox::Show("Hello! Our team: Ashray, Bob, Hui and Kai!", " About");
+			 }
 	private: System::Void menu_f_loadProductList_Click(System::Object^  sender, System::EventArgs^  e) {
-				openFileDialog1->ShowDialog();
-		 }
+				 openFileDialog1->ShowDialog();
+			 }
 	private: System::Void menu_f_saveProductList_Click(System::Object^  sender, System::EventArgs^  e) {
-				saveFileDialog1->ShowDialog();
-		 }
+				 saveFileDialog1->ShowDialog();
+			 }
 	private: System::Void listView1_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
 				 System::Collections::IEnumerator^ myEnum = this->list_lv->SelectedItems->GetEnumerator();
 				 pd_b_delete->Enabled = true;
 				 pd_b_sell->Enabled = true;
 				 pd_b_restock->Enabled = true;
 				 while ( myEnum->MoveNext() ){
-					ListViewItem^ item = safe_cast<ListViewItem^>(myEnum->Current);
-					pd_tB_name->Text = item->SubItems[0]->Text;// can be more elegant??
-					pd_tB_category->Text = item->SubItems[1]->Text;
-					pd_tB_barcode->Text = item->SubItems[2]->Text;
-					pd_tB_price->Text = item->SubItems[3]->Text;
-					pd_tB_manuf->Text = item->SubItems[4]->Text;
-					pd_tB_stock->Text = item->SubItems[5]->Text;
-					pd_tB_sold->Text = item->SubItems[6]->Text;
-					//String^ tb_M = "hi";
-					//this->list_lv->Items->Add(tb_M);
-					//tb_M = "Changed"; the new item will still be "hi" instead of "Changed"
+					 ListViewItem^ item = safe_cast<ListViewItem^>(myEnum->Current);
+					 pd_tB_name->Text = item->SubItems[0]->Text;// can be more elegant??
+					 pd_tB_category->Text = item->SubItems[1]->Text;
+					 pd_tB_barcode->Text = item->SubItems[2]->Text;
+					 pd_tB_price->Text = item->SubItems[3]->Text;
+					 pd_tB_manuf->Text = item->SubItems[4]->Text;
+					 pd_tB_stock->Text = item->SubItems[5]->Text;
+					 pd_tB_sold->Text = item->SubItems[6]->Text;
+					 //String^ tb_M = "hi";
+					 //this->list_lv->Items->Add(tb_M);
+					 //tb_M = "Changed"; the new item will still be "hi" instead of "Changed"
 				 }
-		 }
-};
+			 }
+	};
 }
+#endif

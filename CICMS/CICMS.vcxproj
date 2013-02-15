@@ -84,9 +84,6 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="aboutForm.h">
-      <FileType>CppForm</FileType>
-    </ClInclude>
     <ClInclude Include="addForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
@@ -94,10 +91,7 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="resource.h" />
-    <ClInclude Include="restockForm.h">
-      <FileType>CppForm</FileType>
-    </ClInclude>
-    <ClInclude Include="scrapForm.h">
+    <ClInclude Include="inputForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="sellForm.h">
@@ -109,13 +103,11 @@
     <ResourceCompile Include="app.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="aboutForm.cpp" />
     <ClCompile Include="addForm.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainForm.cpp" />
-    <ClCompile Include="restockForm.cpp" />
-    <ClCompile Include="scrapForm.cpp" />
+    <ClCompile Include="inputForm.cpp" />
     <ClCompile Include="sellForm.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -126,20 +118,14 @@
     <Image Include="app.ico" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="aboutForm.resx">
-      <DependentUpon>aboutForm.h</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="addForm.resx">
       <DependentUpon>addForm.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mainForm.resx">
       <DependentUpon>mainForm.h</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="restockForm.resx">
-      <DependentUpon>restockForm.h</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="scrapForm.resx">
-      <DependentUpon>scrapForm.h</DependentUpon>
+    <EmbeddedResource Include="inputForm.resx">
+      <DependentUpon>inputForm.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="sellForm.resx">
       <DependentUpon>sellForm.h</DependentUpon>

@@ -27,19 +27,13 @@
     <ClInclude Include="addForm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="aboutForm.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="restockForm.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="scrapForm.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="sellForm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="mainForm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inputForm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -58,15 +52,6 @@
     <ClCompile Include="addForm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="aboutForm.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="restockForm.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="scrapForm.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sellForm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -74,6 +59,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="mainForm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="inputForm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -92,13 +80,13 @@
     <EmbeddedResource Include="addForm.resx">
       <Filter>Resource Files</Filter>
     </EmbeddedResource>
-    <EmbeddedResource Include="restockForm.resx">
-      <Filter>Resource Files</Filter>
-    </EmbeddedResource>
     <EmbeddedResource Include="scrapForm.resx">
       <Filter>Resource Files</Filter>
     </EmbeddedResource>
     <EmbeddedResource Include="sellForm.resx">
+      <Filter>Resource Files</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="inputForm.resx">
       <Filter>Resource Files</Filter>
     </EmbeddedResource>
   </ItemGroup>
