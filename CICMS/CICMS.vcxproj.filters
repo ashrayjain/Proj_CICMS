@@ -24,16 +24,13 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="addForm.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sellForm.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="mainForm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="inputForm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="addPdForm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -50,9 +47,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="addForm.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sellForm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
@@ -77,9 +71,6 @@
     <EmbeddedResource Include="aboutForm.resx">
       <Filter>Resource Files</Filter>
     </EmbeddedResource>
-    <EmbeddedResource Include="addForm.resx">
-      <Filter>Resource Files</Filter>
-    </EmbeddedResource>
     <EmbeddedResource Include="scrapForm.resx">
       <Filter>Resource Files</Filter>
     </EmbeddedResource>
@@ -87,6 +78,9 @@
       <Filter>Resource Files</Filter>
     </EmbeddedResource>
     <EmbeddedResource Include="inputForm.resx">
+      <Filter>Resource Files</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="addPdForm.resx">
       <Filter>Resource Files</Filter>
     </EmbeddedResource>
   </ItemGroup>

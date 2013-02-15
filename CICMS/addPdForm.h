@@ -10,12 +10,12 @@ namespace CICMS {
 	using namespace System::Drawing;
 
 	/// <summary>
-	/// Summary for addForm
+	/// Summary for addPdForm
 	/// </summary>
-	public ref class addForm : public System::Windows::Forms::Form
+	public ref class addPdForm : public System::Windows::Forms::Form
 	{
 	public:
-		addForm(void)
+		addPdForm(void)
 		{
 			InitializeComponent();
 			//
@@ -27,7 +27,7 @@ namespace CICMS {
 		/// <summary>
 		/// Clean up any resources being used.
 		/// </summary>
-		~addForm()
+		~addPdForm()
 		{
 			if (components)
 			{
@@ -110,7 +110,7 @@ namespace CICMS {
 			this->groupBox2->Size = System::Drawing::Size(247, 213);
 			this->groupBox2->TabIndex = 5;
 			this->groupBox2->TabStop = false;
-			this->groupBox2->Text = L"New product";
+			this->groupBox2->Text = L"New product details";
 			// 
 			// textBox2
 			// 
@@ -233,7 +233,7 @@ namespace CICMS {
 			this->button2->TabIndex = 7;
 			this->button2->Text = L"Cancel";
 			this->button2->UseVisualStyleBackColor = true;
-			this->button2->Click += gcnew System::EventHandler(this, &addForm::button2_Click);
+			this->button2->Click += gcnew System::EventHandler(this, &addPdForm::button2_Click);
 			// 
 			// button1
 			// 
@@ -244,9 +244,9 @@ namespace CICMS {
 			this->button1->TabIndex = 6;
 			this->button1->Text = L"OK";
 			this->button1->UseVisualStyleBackColor = true;
-			this->button1->Click += gcnew System::EventHandler(this, &addForm::button1_Click);
+			this->button1->Click += gcnew System::EventHandler(this, &addPdForm::button1_Click);
 			// 
-			// addForm
+			// addPdForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
@@ -255,8 +255,8 @@ namespace CICMS {
 			this->Controls->Add(this->button1);
 			this->Controls->Add(this->groupBox2);
 			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
-			this->Name = L"addForm";
-			this->Text = L"addForm";
+			this->Name = L"addPdForm";
+			this->Text = L"Add a new product";
 			this->groupBox2->ResumeLayout(false);
 			this->groupBox2->PerformLayout();
 			this->ResumeLayout(false);

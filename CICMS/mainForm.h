@@ -2,7 +2,7 @@
 #define _GUARD_UI_mainForm
 
 #include "inputForm.h"
-#include "addForm.h"
+#include "addPdForm.h"
 
 //naming
 //"pd_b_delete" means a button for deletion in ProductDetails part
@@ -150,8 +150,8 @@ namespace CICMS {
 
 
 
-	private: System::Windows::Forms::OpenFileDialog^  openFileDialog1;
-	private: System::Windows::Forms::SaveFileDialog^  saveFileDialog1;
+	private: System::Windows::Forms::OpenFileDialog^  openFileDialog;
+	private: System::Windows::Forms::SaveFileDialog^  saveFileDialog;
 	private: System::Windows::Forms::ColumnHeader^  list_col_manuf;
 	private: System::Windows::Forms::ColumnHeader^  list_col_stock;
 	private: System::Windows::Forms::ColumnHeader^  list_col_sold;
@@ -223,8 +223,8 @@ namespace CICMS {
 			this->list_col_manuf = (gcnew System::Windows::Forms::ColumnHeader());
 			this->list_col_stock = (gcnew System::Windows::Forms::ColumnHeader());
 			this->list_col_sold = (gcnew System::Windows::Forms::ColumnHeader());
-			this->openFileDialog1 = (gcnew System::Windows::Forms::OpenFileDialog());
-			this->saveFileDialog1 = (gcnew System::Windows::Forms::SaveFileDialog());
+			this->openFileDialog = (gcnew System::Windows::Forms::OpenFileDialog());
+			this->saveFileDialog = (gcnew System::Windows::Forms::SaveFileDialog());
 			this->list_grp = (gcnew System::Windows::Forms::GroupBox());
 			this->statusStrip1 = (gcnew System::Windows::Forms::StatusStrip());
 			this->toolStripStatusLabel1 = (gcnew System::Windows::Forms::ToolStripStatusLabel());
@@ -560,7 +560,7 @@ namespace CICMS {
 			this->list_lv->TabIndex = 9;
 			this->list_lv->UseCompatibleStateImageBehavior = false;
 			this->list_lv->View = System::Windows::Forms::View::Details;
-			this->list_lv->SelectedIndexChanged += gcnew System::EventHandler(this, &mainForm::listView1_SelectedIndexChanged);
+			this->list_lv->SelectedIndexChanged += gcnew System::EventHandler(this, &mainForm::list_lv_SelectedIndexChanged);
 			// 
 			// list_col_name
 			// 
@@ -595,16 +595,16 @@ namespace CICMS {
 			// 
 			this->list_col_sold->Text = L"Sold";
 			// 
-			// openFileDialog1
+			// openFileDialog
 			// 
-			this->openFileDialog1->AutoUpgradeEnabled = false;
-			this->openFileDialog1->FileName = L"openFileDialog1";
-			this->openFileDialog1->InitialDirectory = L"c:\\";
+			this->openFileDialog->AutoUpgradeEnabled = false;
+			this->openFileDialog->FileName = L"Data.CICMS";
+			this->openFileDialog->InitialDirectory = L"c:\\";
 			// 
-			// saveFileDialog1
+			// saveFileDialog
 			// 
-			this->saveFileDialog1->AutoUpgradeEnabled = false;
-			this->saveFileDialog1->InitialDirectory = L"c:\\";
+			this->saveFileDialog->AutoUpgradeEnabled = false;
+			this->saveFileDialog->InitialDirectory = L"c:\\";
 			// 
 			// list_grp
 			// 
@@ -666,14 +666,20 @@ namespace CICMS {
 			 }
 
 	private: System::Void pd_b_delete_Click(System::Object^  sender, System::EventArgs^  e) {
-				 if(MessageBox::Show("Are you sure that you would like \nto delete this product?", 
-					 " Delete Product",
-					 MessageBoxButtons::YesNo,
-					 MessageBoxIcon::Warning) == System::Windows::Forms::DialogResult::Yes){
+				 if(Create_messageBox("delete") == System::Windows::Forms::DialogResult::Yes){
 						 Clear_selectedList();
 						 Clear_pd();
-						 Disable_pd_b();
+						 Control_pd_b(false);
 				 }
+			 }
+	private: System::Windows::Forms::DialogResult Create_messageBox(String^ typeMB){
+				if(typeMB == "delete")
+					return (MessageBox::Show("Are you sure that you would like \nto delete this product?", 
+						" Delete Product",
+						MessageBoxButtons::YesNo,
+						MessageBoxIcon::Warning));
+				//else
+				return MessageBox::Show("Hello! Our team: Ashray, Bob, Hui and Kai!", " About");
 			 }
 
 	private: Void Clear_selectedList(){
@@ -690,60 +696,59 @@ namespace CICMS {
 				 pd_tB_sold->Text = "";
 			 }
 
-	private: Void Disable_pd_b(){
-				 pd_b_delete->Enabled = false;
-				 pd_b_sell->Enabled = false;
-				 pd_b_restock->Enabled = false;
+	private: Void Control_pd_b(bool tof){
+				 pd_b_delete->Enabled = tof;
+				 pd_b_sell->Enabled = tof;
+				 pd_b_restock->Enabled = tof;
 			 }
 
 	private: System::Void pd_b_sell_Click(System::Object^  sender, System::EventArgs^  e) {
-				 inputForm^ dlg = gcnew inputForm(" Sell Products", "Sell:");
-				 dlg->StartPosition = FormStartPosition::CenterParent;
-				 dlg->ShowDialog();
-				 delete dlg;//should I?
+				 Create_inputForm(" Sell a product", "Sell:");//need to handle the input
 			 }
 	private: System::Void pd_b_restock_Click(System::Object^  sender, System::EventArgs^  e) {
-				 inputForm^ dlg = gcnew inputForm(" Restock Products", "Restock:");
+				 Create_inputForm(" Restock a product", "Restock:");//need to handle the input
+			 }
+
+	private: void Create_inputForm(String^ formTitle, String^ inputDescrip){
+				 inputForm^ dlg = gcnew inputForm(formTitle, inputDescrip);
 				 dlg->StartPosition = FormStartPosition::CenterParent;
 				 dlg->ShowDialog();
 			 }
 	private: System::Void menu_f_addANewProduct_Click(System::Object^  sender, System::EventArgs^  e) {
-				 addForm^ dlg1 = gcnew addForm();
-				 dlg1->StartPosition = FormStartPosition::CenterParent;
-				 if (dlg1->ShowDialog() == System::Windows::Forms::DialogResult::OK){
-					 System::Windows::Forms::ListViewItem^  temp = dlg1->get_product_details();
-					 this->list_lv->Items->AddRange(gcnew cli::array< System::Windows::Forms::ListViewItem^  >(1) {temp});
-					 delete temp;
+				 addPdForm^ dlg = gcnew addPdForm();
+				 dlg->StartPosition = FormStartPosition::CenterParent;
+				 if (dlg->ShowDialog() == System::Windows::Forms::DialogResult::OK){
+					 System::Windows::Forms::ListViewItem^ new_list_item = dlg->get_product_details();
+					 //need to refresh list first, then add this item.
+					 this->list_lv->Items->Add(new_list_item);
 				 }
-				 delete dlg1;//should I?
 			 }
 	private: System::Void menu_about_Click(System::Object^  sender, System::EventArgs^  e) {
-				 MessageBox::Show("Hello! Our team: Ashray, Bob, Hui and Kai!", " About");
+				 Create_messageBox("about");
 			 }
 	private: System::Void menu_f_loadProductList_Click(System::Object^  sender, System::EventArgs^  e) {
-				 openFileDialog1->ShowDialog();
+				 openFileDialog->ShowDialog();
 			 }
 	private: System::Void menu_f_saveProductList_Click(System::Object^  sender, System::EventArgs^  e) {
-				 saveFileDialog1->ShowDialog();
+				 saveFileDialog->ShowDialog();
 			 }
-	private: System::Void listView1_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
+	private: System::Void list_lv_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
 				 System::Collections::IEnumerator^ myEnum = this->list_lv->SelectedItems->GetEnumerator();
-				 pd_b_delete->Enabled = true;
-				 pd_b_sell->Enabled = true;
-				 pd_b_restock->Enabled = true;
+				 Control_pd_b(true);
 				 while ( myEnum->MoveNext() ){
 					 ListViewItem^ item = safe_cast<ListViewItem^>(myEnum->Current);
-					 pd_tB_name->Text = item->SubItems[0]->Text;// can be more elegant??
+					 Update_pd_tB(item);
+				 }
+			 }
+	private: void Update_pd_tB(ListViewItem^ item){
+					 // can use grp->button[x]??
+					 pd_tB_name->Text = item->SubItems[0]->Text;
 					 pd_tB_category->Text = item->SubItems[1]->Text;
 					 pd_tB_barcode->Text = item->SubItems[2]->Text;
 					 pd_tB_price->Text = item->SubItems[3]->Text;
 					 pd_tB_manuf->Text = item->SubItems[4]->Text;
 					 pd_tB_stock->Text = item->SubItems[5]->Text;
 					 pd_tB_sold->Text = item->SubItems[6]->Text;
-					 //String^ tb_M = "hi";
-					 //this->list_lv->Items->Add(tb_M);
-					 //tb_M = "Changed"; the new item will still be "hi" instead of "Changed"
-				 }
 			 }
 	};
 }
