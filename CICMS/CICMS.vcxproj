@@ -100,7 +100,7 @@
     <ResourceCompile Include="app.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="addForm.cpp" />
+    <ClCompile Include="addPdForm.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainForm.cpp" />
