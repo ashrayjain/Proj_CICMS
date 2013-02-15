@@ -99,6 +99,7 @@ namespace CICMS {
 			//
 			this->input_tB_input->MaxLength = 10;
 			this->input_tB_input->Name = L"input_tB_input";
+			this->input_tB_input->Text = "1";
 			if(inputDescrip == "Sell:"){
 				this->input_tB_input->Location = System::Drawing::Point(45, 21);
 				this->input_tB_input->Size = System::Drawing::Size(122, 20);
