@@ -31,20 +31,29 @@ namespace CICMS {
 	private: void menu_f_loadProductList_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void menu_f_saveProductList_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void menu_about_Click(System::Object^  sender, System::EventArgs^  e);
+	private: void Create_addPdForm();
 
 	//**********PRODUCT DETAILS COMPONENTS FUNCTION***********
 	private: void pd_b_delete_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void pd_b_sell_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void pd_b_restock_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void Update_pd_tB(ListViewItem^ item);
-	private: void Update_pd_tB(String^ s);
-	private: void Control_pd_b(bool tof);
+	private: void Update_pd_tB_Sell(int stock);
+	private: void Update_pd_tB_Restock(int stock);
+	private: void Clear_pd_tB();
+	private: void Toggle_pd_b(bool tof);
 	private: void Create_inputForm(String^ formTitle, String^ inputDescrip);
 
 	//**********LIST DETAILS COMPONENTS FUNCTION***********
-	private: void Clear_selectedList();
 	private: void list_lv_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e);
-	
+	private: void Update_selectedList_Sell(int stock);
+	private: void Update_selectedList_Restock(int stock);
+	private: void Clear_selectedList();
+
+	//**********STATUSBAR COMPONENTS FUNCTION***********
+	void Update_statusBar(String^ s);
+	void Set_statusBar(String^ s, System::Drawing::Color c);
+
 	//**********OTHER COMPONENTS FUNCTION***********
 	private: System::Windows::Forms::DialogResult Create_messageBox(String^ typeMB);
 	

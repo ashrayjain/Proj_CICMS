@@ -509,75 +509,175 @@ void mainForm::InitializeComponent(void)
 
 //**********MENU COMPONENTS FUNCTION***********
 void mainForm::menu_f_quit_Click(System::Object^  sender, System::EventArgs^  e) {
-	Close();
+	this->Close();
 }
 void mainForm::menu_f_addANewProduct_Click(System::Object^  sender, System::EventArgs^  e) {
+	this->Create_addPdForm();
+}
+void mainForm::menu_f_loadProductList_Click(System::Object^  sender, System::EventArgs^  e) {
+	this->openFileDialog->ShowDialog();//test only
+	if( false /*(stream = openFileDialog->ShowDialog()) != nullptr*/){
+		//handle stream here
+		this->Update_statusBar("loadS");
+	}
+	else
+		this->Update_statusBar("loadF");
+	//handle the stream
+}
+void mainForm::menu_f_saveProductList_Click(System::Object^  sender, System::EventArgs^  e) {
+	this->saveFileDialog->ShowDialog();//test only
+	if( false /*(stream = saveFileDialog->ShowDialog()) != nullptr*/){
+		//handle stream here
+		this->Update_statusBar("saveS");
+	}
+	else
+		this->Update_statusBar("saveF");
+	//handle the stream
+}
+void mainForm::menu_about_Click(System::Object^  sender, System::EventArgs^  e) {
+	this->Create_messageBox("about");
+}
+void mainForm::Create_addPdForm(){
 	addPdForm^ dlg = gcnew addPdForm();
 	dlg->StartPosition = FormStartPosition::CenterParent;
 	if (dlg->ShowDialog() == System::Windows::Forms::DialogResult::OK){
-		System::Windows::Forms::ListViewItem^ new_list_item = dlg->get_product_details();
-		//need to refresh list first, then add this item.
-		this->list_lv->Items->Add(new_list_item);
+		if( false /*handler.DB_add(dlg->get_product_details());*/ )
+			this->Update_statusBar("addS");
+		else
+			this->Update_statusBar("addF");
+		//no need to add an item into the list; 'cause the list will only show the result of search
 	}
-}
-void mainForm::menu_f_loadProductList_Click(System::Object^  sender, System::EventArgs^  e) {
-	openFileDialog->ShowDialog();
-}
-void mainForm::menu_f_saveProductList_Click(System::Object^  sender, System::EventArgs^  e) {
-	saveFileDialog->ShowDialog();
-}
-void mainForm::menu_about_Click(System::Object^  sender, System::EventArgs^  e) {
-	Create_messageBox("about");
 }
 
 //**********PRODUCT DETAILS COMPONENTS FUNCTION***********
-void mainForm::pd_b_delete_Click(System::Object^  sender, System::EventArgs^  e) {
-	if(Create_messageBox("delete") == System::Windows::Forms::DialogResult::Yes){
-		Clear_selectedList();
-		Update_pd_tB("");
-		Control_pd_b(false);
-	}
-}
-void mainForm::Update_pd_tB(ListViewItem^ item){
-	for(int i = 0, j = 0; i < pd_grp->Controls->Count; i++)
-		if( pd_grp->Controls[i]->GetType()->ToString() == "System.Windows.Forms.TextBox")
-			pd_grp->Controls[i]->Text = item->SubItems[j++]->Text;
-}
-void mainForm::Update_pd_tB(String^ s){
-	for(int i = 0; i < pd_grp->Controls->Count; i++)
-		if( pd_grp->Controls[i]->GetType()->ToString() == "System.Windows.Forms.TextBox")
-			pd_grp->Controls[i]->Text = s;
-}
-void mainForm::Control_pd_b(bool tof){
-	pd_b_delete->Enabled = tof;
-	pd_b_sell->Enabled = tof;
-	pd_b_restock->Enabled = tof;
-}
 void mainForm::pd_b_sell_Click(System::Object^  sender, System::EventArgs^  e) {
-	Create_inputForm(" Sell a product", "Sell:");//need to handle the input
+	this->Create_inputForm(" Sell a product", "Sell:");
 }
 void mainForm::pd_b_restock_Click(System::Object^  sender, System::EventArgs^  e) {
-	Create_inputForm(" Restock a product", "Restock:");//need to handle the input
+	this->Create_inputForm(" Restock a product", "Restock:");
+}
+void mainForm::pd_b_delete_Click(System::Object^  sender, System::EventArgs^  e) {
+	if(this->Create_messageBox("delete") == System::Windows::Forms::DialogResult::Yes){
+		if( false /*Handler.DB_update(pd_tB_barcode->Text, "delete")*/){
+			this->Clear_pd_tB();
+			this->Clear_selectedList();
+			this->Update_statusBar("deleteS");
+			this->Toggle_pd_b(false);
+		}
+		else
+			this->Update_statusBar("deleteF");
+	}
 }
 void mainForm::Create_inputForm(String^ formTitle, String^ inputDescrip){
 	inputForm^ dlg = gcnew inputForm(formTitle, inputDescrip);
 	dlg->StartPosition = FormStartPosition::CenterParent;
-	dlg->ShowDialog();
+	if (dlg->ShowDialog() == System::Windows::Forms::DialogResult::OK){
+		if(formTitle->Contains("Sell")){
+			if( false /*int stock = handler.DB_sell(pd_tB_barcode->Text, dlg->getInput())*/){
+				//Update_pd_tB_Sell(stock);
+				//Update_selectedList_Sell(stock);
+				this->Update_statusBar("sellS");
+			}
+			else{
+				this->Update_statusBar("sellF");
+			}
+		}
+		else if(formTitle->Contains("Restock")){
+			if( false /*int stock = handler.DB_restock(pd_tB_barcode->Text, dlg->getInput())*/){
+				//Update_pd_tB_Restock(stock);
+				//Update_selectedList_Restock(stock);
+				this->Update_statusBar("restockS");
+			}
+			else{
+				this->Update_statusBar("restockF");
+			}
+		}
+	}
+}
+void mainForm::Update_pd_tB(ListViewItem^ item){
+	for(int i = 0, j = 0; i < this->pd_grp->Controls->Count && j < item->SubItems->Count; i++)
+		if( this->pd_grp->Controls[i]->GetType()->ToString() == "System.Windows.Forms.TextBox")
+			this->pd_grp->Controls[i]->Text = item->SubItems[j++]->Text;
+}
+void mainForm::Clear_pd_tB(){
+	for(int i = 0; i < this->pd_grp->Controls->Count; i++)
+		if( this->pd_grp->Controls[i]->GetType()->ToString() == "System.Windows.Forms.TextBox")
+			this->pd_grp->Controls[i]->Text = "";
+}
+void mainForm::Update_pd_tB_Sell(int stock){
+	int sold = System::Int32::Parse(this->pd_tB_stock->Text) - stock + System::Int32::Parse(this->pd_tB_sold->Text);
+	this->pd_tB_sold->Text = System::Convert::ToString(sold);
+	this->pd_tB_stock->Text = System::Convert::ToString(stock);
+}
+void mainForm::Update_pd_tB_Restock(int stock){
+	this->pd_tB_stock->Text = System::Convert::ToString(stock);
+}
+void mainForm::Toggle_pd_b(bool tof){
+	this->pd_b_delete->Enabled = tof;
+	this->pd_b_sell->Enabled = tof;
+	this->pd_b_restock->Enabled = tof;
 }
 
 //**********LIST DETAILS COMPONENTS FUNCTION***********
-void mainForm::Clear_selectedList(){
-	list_lv->Items->RemoveAt(list_lv->SelectedIndices[0]);
-}
 void mainForm::list_lv_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
-	System::Collections::IEnumerator^ myEnum = this->list_lv->SelectedItems->GetEnumerator();
-	Control_pd_b(true);// then can press lah
-	while ( myEnum->MoveNext() ){
-		ListViewItem^ item = safe_cast<ListViewItem^>(myEnum->Current);
-		Update_pd_tB(item);
+	if(this->list_lv->SelectedItems->Count != 0){// must ensure there is at least one selectedItem 
+		this->Toggle_pd_b(true);
+		this->Update_pd_tB(this->list_lv->SelectedItems[0]);
 	}
 }
+void mainForm::Clear_selectedList(){
+	if( this->list_lv->SelectedItems->Count != 0)
+		this->list_lv->SelectedItems[0]->Remove();
+}
+void mainForm::Update_selectedList_Sell(int stock){
+	if( this->list_lv->SelectedItems->Count != 0 ){
+		int sold = 
+			System::Int32::Parse(this->list_lv->SelectedItems[0]->SubItems[5]->Text)/*old restock*/ - stock + System::Int32::Parse(this->list_lv->SelectedItems[0]->SubItems[6]->Text)/*old sold*/;
+		this->list_lv->SelectedItems[0]->SubItems[5]->Text = System::Convert::ToString(stock);
+		this->list_lv->SelectedItems[0]->SubItems[6]->Text = System::Convert::ToString(sold);
+	}
+}
+void mainForm::Update_selectedList_Restock(int stock){
+	if( this->list_lv->SelectedItems->Count != 0 )
+		this->list_lv->SelectedItems[0]->SubItems[5]->Text = System::Convert::ToString(stock);
+}
+//**********STATUSBAR COMPONENTS FUNCTION***********
+void mainForm::Update_statusBar(String^ s){
+	//can improved by 2 arrays
+	if( s == "addS" )
+		this->Set_statusBar("Product added successfully", System::Drawing::Color::LightSkyBlue);
+	else if( s == "addF" )
+		this->Set_statusBar("Product added unsuccessfully", System::Drawing::Color::RosyBrown);
 
+	else if( s == "sellS" )
+		this->Set_statusBar("Product sold successfully", System::Drawing::Color::LightSkyBlue);
+	else if( s == "sellF" )
+		this->Set_statusBar("Product sold unsuccessfully", System::Drawing::Color::RosyBrown);
+
+	else if( s == "restockS" )
+		this->Set_statusBar("Product restocked successfully", System::Drawing::Color::LightSkyBlue);
+	else if( s == "restockF" )
+		this->Set_statusBar("Product restocked unsuccessfully", System::Drawing::Color::RosyBrown);
+
+	else if( s == "deleteS" )
+		this->Set_statusBar("Product deleted successfully", System::Drawing::Color::LightSkyBlue);
+	else if( s == "deleteF" )
+		this->Set_statusBar("Product deleted unsuccessfully", System::Drawing::Color::RosyBrown)
+		;
+	else if( s == "loadS" )
+		this->Set_statusBar("Loaded successfully", System::Drawing::Color::LightSkyBlue);
+	else if( s == "loadF" )
+		this->Set_statusBar("Loaded unsuccessfully", System::Drawing::Color::RosyBrown);
+
+	else if( s == "saveS" )
+		this->Set_statusBar("Saved successfully", System::Drawing::Color::LightSkyBlue);
+	else if( s == "saveF" )
+		this->Set_statusBar("Saved unsuccessfully", System::Drawing::Color::RosyBrown);
+}
+void mainForm::Set_statusBar(String^ s, System::Drawing::Color c){
+	this->toolStripStatusLabel1->Text = s;
+	this->statusStrip1->BackColor = c;
+}
 //**********OTHER COMPONENTS FUNCTION***********
 System::Windows::Forms::DialogResult mainForm::Create_messageBox(String^ typeMB){
 	if(typeMB == "delete")

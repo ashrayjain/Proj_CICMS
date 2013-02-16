@@ -77,6 +77,7 @@ namespace CICMS {
 			// 
 			// input_b_yes
 			// 
+			this->input_b_yes->DialogResult = System::Windows::Forms::DialogResult::OK;
 			this->input_b_yes->Location = System::Drawing::Point(13, 59);
 			this->input_b_yes->Name = L"input_b_yes";
 			this->input_b_yes->Size = System::Drawing::Size(75, 23);
@@ -131,10 +132,13 @@ namespace CICMS {
 		}
 #pragma endregion
 	private: System::Void input_b_yes_Click(System::Object^  sender, System::EventArgs^  e) {
-				Close();
+				 Close();
 			 }
 	private: System::Void input_b_no_Click(System::Object^  sender, System::EventArgs^  e) {
-				Close();
+				 Close();
 			 }
-};
+	public: String^ getInput(){
+				return input_tB_input->Text;
+			}
+	};
 }
