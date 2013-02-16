@@ -532,7 +532,6 @@ void mainForm::menu_f_saveProductList_Click(System::Object^  sender, System::Eve
 	}
 	else
 		this->Update_statusBar("saveF");
-	//handle the stream
 }
 void mainForm::menu_about_Click(System::Object^  sender, System::EventArgs^  e) {
 	this->Create_messageBox("about");
