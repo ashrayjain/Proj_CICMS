@@ -10,12 +10,18 @@ namespace CICMS_UI {
 		{
 			InitializeComponent(formTitle, inputDescrip);
 		}
+	//********************************************************
+	//*****************PROPERTIES DECLEARATION****************
+	//********************************************************
 	private: System::Windows::Forms::Label^  input_l_descrip;
 	private: System::Windows::Forms::Button^  input_b_yes;
 	private: System::Windows::Forms::Button^  input_b_no;
 	private: System::Windows::Forms::TextBox^  input_tB_input;
-	private: 
-		void InitializeComponent(System::String^ formTitle, System::String^ inputDescrip)
+
+	//********************************************************
+	//*************MEMBER FUNCTION DECLEARATION***************
+	//********************************************************
+	private: void InitializeComponent(System::String^ formTitle, System::String^ inputDescrip)
 		{
 			this->input_l_descrip = (gcnew System::Windows::Forms::Label());
 			this->input_b_yes = (gcnew System::Windows::Forms::Button());

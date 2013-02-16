@@ -10,7 +10,10 @@ namespace CICMS_UI {
 		{
 			InitializeComponent();
 		}
-
+	
+	//********************************************************
+	//*****************PROPERTIES DECLEARATION****************
+	//********************************************************
 	private: System::Windows::Forms::GroupBox^  npd_grp;
 	private: System::Windows::Forms::TextBox^  npd_tB_name;
 	private: System::Windows::Forms::TextBox^  npd_tB_category;
@@ -29,7 +32,10 @@ namespace CICMS_UI {
 	private: System::Windows::Forms::Button^  npd_b_cancel;
 	private: System::Windows::Forms::Button^  npd_b_ok;
 
-			 void InitializeComponent(void)
+	//********************************************************
+	//*************MEMBER FUNCTION DECLEARATION***************
+	//********************************************************
+	private: void InitializeComponent(void)
 			 {
 				 this->npd_grp = (gcnew System::Windows::Forms::GroupBox());
 				 this->npd_tB_name = (gcnew System::Windows::Forms::TextBox());

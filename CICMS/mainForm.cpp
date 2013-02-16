@@ -741,8 +741,8 @@ void mainForm::Update_selectedList_Sell(int stock){
 	if( this->list_lv->SelectedItems->Count != 0 ){
 		int sold = 
 			System::Int32::Parse(this->list_lv->SelectedItems[0]->SubItems[5]->Text)/*old restock*/ - stock + System::Int32::Parse(this->list_lv->SelectedItems[0]->SubItems[6]->Text)/*old sold*/;
-		this->list_lv->SelectedItems[0]->SubItems[5]->Text = System::Convert::ToString(stock);
-		this->list_lv->SelectedItems[0]->SubItems[6]->Text = System::Convert::ToString(sold);
+		this->list_lv->SelectedItems[0]->SubItems[5]->Text/*restock*/ = System::Convert::ToString(stock);
+		this->list_lv->SelectedItems[0]->SubItems[6]->Text/*sold*/ = System::Convert::ToString(sold);
 	}
 }
 //Function: update selected item in the list, after restock certain number of products
