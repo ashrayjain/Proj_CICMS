@@ -1,15 +1,88 @@
 #ifndef _GUARD_UI_mainForm
 #define _GUARD_UI_mainForm
-
-#include "inputForm.h"
-#include "addPdForm.h"
-
-//naming
-//"pd_b_delete" means a button for deletion in ProductDetails part
-//"pd_l_name" means a label for name in ProductDetails part
-//etc etc
+/*************************************************************************************************/
 //
-namespace CICMS {
+//  class mainForm: mainForm.h
+//
+//  Description: mainForm.h contains the specification part of class mainForm. class mainForm is 
+//  the main window for CICMS. When CICMS runs, mainForm shows. In our top-down design, mainForm 
+//  is the top, exactly. It contains 5 main regions: search (s), product details (pd), list, menu 
+//  and statusBar. Within each region, there are components, like buttons, that call/create/interact 
+//  with other classes.
+//
+//  API:
+//  CICMS_UI::mainForm::mainForm(); //create a mainForm class
+//
+//  Main authors: XIE KAI(A0102016E), 
+//
+/*************************************************************************************************/
+//
+//  Naming Rule for variables
+//
+//  for variables, we name them as follow:
+//  [abbreviation for grp]_[abbreviation for type of components/its parent in menu]_[name of component]
+//  E.g.
+//  "pd_b_delete" means a button for deletion in ProductDetails group
+//  "pd_l_name" means a label for name in ProductDetails group
+////////////////////////////////////
+//
+//  options for [abbreviation for grp] (grp, or group/groupBox, is where the components locate)
+//
+//  menu;
+//  pd, for product details;
+//  list;
+//  s, for search;
+//  other: whatever :)
+////////////////////////////////////
+//
+//  options for [abbreviation for type of components/its parent in menu]
+//
+//  f, for file;
+//  b, for button;
+//  tB, for textBox;
+//  lv, for listview;
+//  selectedList;
+//  grp, for groupBox;
+//  l, for label;
+//  rB, for radioBox;
+//  col, for column;
+//  other: whatever :)
+//  But if that component is in menu and it has no parent, then this part is no need
+////////////////////////////////////
+//
+//  options for [name of component]
+//
+//  you decide :) be meaningful
+//
+/*************************************************************************************************/
+//
+//  Naming Rule for functions
+//
+//  for functions, we name them as follow:
+//  [Verb]_[abbreviation for grp]_[abbreviation for kind of components/its parent in menu]_[name of component]
+//  or
+//  [Verb]_[name of component/name of class]
+//  or
+//  whatever you like :) be meaningful
+//  E.g.
+//  "Update_pd_tB" means update all textBox components in product details group.
+//
+/*************************************************************************************************/
+//
+//  Naming Rule for events
+//
+//  for event, we name them as follow:
+//  [abbreviation for grp]_[abbreviation for kind of components/its parent in menu]_[name of component]_[Verb]
+//  or
+//  [name of component/name of class]_[Verb]
+//  or
+//  whatever you like :) be meaningful
+//  E.g.
+//  "menu_about_Click" means the event - when user clicks the about item in the menu.
+//
+/*************************************************************************************************/
+
+namespace CICMS_UI {
 
 	public ref class mainForm : public System::Windows::Forms::Form
 	{
@@ -23,7 +96,7 @@ namespace CICMS {
 	//*************MEMBER FUNCTION DECLEARATION***************
 	//********************************************************
 
-	private: void CICMS::mainForm::InitializeComponent(void);
+	private: void InitializeComponent();
 
 	//**********MENU COMPONENTS FUNCTION***********
 	private: void menu_f_quit_Click(System::Object^  sender, System::EventArgs^  e);
@@ -37,12 +110,12 @@ namespace CICMS {
 	private: void pd_b_delete_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void pd_b_sell_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void pd_b_restock_Click(System::Object^  sender, System::EventArgs^  e);
-	private: void Update_pd_tB(ListViewItem^ item);
+	private: void Update_pd_tB(System::Windows::Forms::ListViewItem^ item);
 	private: void Update_pd_tB_Sell(int stock);
 	private: void Update_pd_tB_Restock(int stock);
 	private: void Clear_pd_tB();
 	private: void Toggle_pd_b(bool tof);
-	private: void Create_inputForm(String^ formTitle, String^ inputDescrip);
+	private: void Create_inputForm(System::String^ formTitle, System::String^ inputDescrip);
 
 	//**********LIST DETAILS COMPONENTS FUNCTION***********
 	private: void list_lv_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e);
@@ -51,11 +124,11 @@ namespace CICMS {
 	private: void Clear_selectedList();
 
 	//**********STATUSBAR COMPONENTS FUNCTION***********
-	void Update_statusBar(String^ s);
-	void Set_statusBar(String^ s, System::Drawing::Color c);
+	void Update_statusBar(System::String^ s);
+	void Set_statusBar(System::String^ s, System::Drawing::Color c);
 
 	//**********OTHER COMPONENTS FUNCTION***********
-	private: System::Windows::Forms::DialogResult Create_messageBox(String^ typeMB);
+	private: System::Windows::Forms::DialogResult Create_messageBox(System::String^ typeMB);
 	
 	
 	//********************************************************

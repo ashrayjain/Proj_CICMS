@@ -1,6 +1,6 @@
 #pragma once
 
-namespace CICMS {
+namespace CICMS_UI {
 
 	using namespace System;
 	using namespace System::ComponentModel;

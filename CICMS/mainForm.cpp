@@ -1,18 +1,94 @@
+/*************************************************************************************************/
+//
+//  class mainForm: mainForm.cpp
+//
+//  Description: mainForm.h contains the implementation part of class mainForm.
+//
+//  API:
+//  CICMS_UI::mainForm::mainForm(); //create a mainForm class
+//
+//  Main authors: XIE KAI(A0102016E), 
+//
+/*************************************************************************************************/
+//
+//  Naming Rule for variables
+//
+//  for variables, we name them as follow:
+//  [abbreviation for grp]_[abbreviation for type of components/its parent in menu]_[name of component]
+//  E.g.
+//  "pd_b_delete" means a button for deletion in ProductDetails group
+//  "pd_l_name" means a label for name in ProductDetails group
+////////////////////////////////////
+//
+//  options for [abbreviation for grp] (grp, or group/groupBox, is where the components locate)
+//
+//  menu;
+//  pd, for product details;
+//  list;
+//  s, for search;
+//  other: whatever :)
+////////////////////////////////////
+//
+//  options for [abbreviation for type of components/its parent in menu]
+//
+//  f, for file;
+//  b, for button;
+//  tB, for textBox;
+//  lv, for listview;
+//  selectedList;
+//  grp, for groupBox;
+//  l, for label;
+//  rB, for radioBox;
+//  col, for column;
+//  other: whatever :)
+//  But if that component is in menu and it has no parent, then this part is no need
+////////////////////////////////////
+//
+//  options for [name of component]
+//
+//  you decide :) be meaningful
+//
+/*************************************************************************************************/
+//
+//  Naming Rule for functions
+//
+//  for functions, we name them as follow:
+//  [Verb]_[abbreviation for grp]_[abbreviation for kind of components/its parent in menu]_[name of component]
+//  or
+//  [Verb]_[name of component/name of class]
+//  or
+//  whatever you like :) be meaningful
+//  E.g.
+//  "Update_pd_tB" means update all textBox components in product details group.
+//
+/*************************************************************************************************/
+//
+//  Naming Rule for events
+//
+//  for event, we name them as follow:
+//  [abbreviation for grp]_[abbreviation for kind of components/its parent in menu]_[name of component]_[Verb]
+//  or
+//  [name of component/name of class]_[Verb]
+//  or
+//  whatever you like :) be meaningful
+//  E.g.
+//  "menu_about_Click" means the event - when user clicks the about item in the menu.
+//
+/*************************************************************************************************/
+
 #include "stdafx.h"
 #include "mainForm.h"
+#include "inputForm.h"
+#include "addPdForm.h"
 
-using namespace CICMS;
-//naming
-//"pd_b_delete" means a button for deletion in ProductDetails part
-//"pd_l_name" means a label for name in ProductDetails part
-//etc etc
-//
+using namespace CICMS_UI;
 
 //********************************************************
 //*************MEMBER FUNCTION DECLEARATION***************
 //********************************************************
 
-void mainForm::InitializeComponent(void)
+//Initialize the components & set their properties; run at startup of class mainForm
+void mainForm::InitializeComponent()
 {
 	//************MENU COMPONENTS INITIALIZATION***************
 	this->menu = (gcnew System::Windows::Forms::MenuStrip());
@@ -69,8 +145,10 @@ void mainForm::InitializeComponent(void)
 	this->statusStrip1 = (gcnew System::Windows::Forms::StatusStrip());
 	this->toolStripStatusLabel1 = (gcnew System::Windows::Forms::ToolStripStatusLabel());
 
+	
+	//*********************************************
 	//************COMPONENTS SETTING***************
-	// *******************************************
+	//*********************************************
 	//
 	// menu
 	// 
@@ -508,12 +586,16 @@ void mainForm::InitializeComponent(void)
 }
 
 //**********MENU COMPONENTS FUNCTION***********
+
+//Event: when click menu_f_quit, close the mainForm window
 void mainForm::menu_f_quit_Click(System::Object^  sender, System::EventArgs^  e) {
 	this->Close();
 }
+//Event: when click menu_f_addANewProduct, open the addPdForm window to add a new product
 void mainForm::menu_f_addANewProduct_Click(System::Object^  sender, System::EventArgs^  e) {
 	this->Create_addPdForm();
 }
+//Event: when click menu_f_loadProductList, open the openFileDialog window to load data
 void mainForm::menu_f_loadProductList_Click(System::Object^  sender, System::EventArgs^  e) {
 	this->openFileDialog->ShowDialog();//test only
 	if( false /*(stream = openFileDialog->ShowDialog()) != nullptr*/){
@@ -524,6 +606,7 @@ void mainForm::menu_f_loadProductList_Click(System::Object^  sender, System::Eve
 		this->Update_statusBar("loadF");
 	//handle the stream
 }
+//Event: when click menu_f_saveProductList, open the saveFileDialog window to save data
 void mainForm::menu_f_saveProductList_Click(System::Object^  sender, System::EventArgs^  e) {
 	this->saveFileDialog->ShowDialog();//test only
 	if( false /*(stream = saveFileDialog->ShowDialog()) != nullptr*/){
@@ -533,9 +616,11 @@ void mainForm::menu_f_saveProductList_Click(System::Object^  sender, System::Eve
 	else
 		this->Update_statusBar("saveF");
 }
+//Event: when click menu_about, open a messageBox that contains our team's description
 void mainForm::menu_about_Click(System::Object^  sender, System::EventArgs^  e) {
 	this->Create_messageBox("about");
 }
+//Fuction: create a addPdForm window, and let logic/handler part handle the input
 void mainForm::Create_addPdForm(){
 	addPdForm^ dlg = gcnew addPdForm();
 	dlg->StartPosition = FormStartPosition::CenterParent;
@@ -549,12 +634,15 @@ void mainForm::Create_addPdForm(){
 }
 
 //**********PRODUCT DETAILS COMPONENTS FUNCTION***********
+//Event: when click pd_b_sell button, open an inputForm window for input sale data
 void mainForm::pd_b_sell_Click(System::Object^  sender, System::EventArgs^  e) {
 	this->Create_inputForm(" Sell a product", "Sell:");
 }
+//Event: when click pd_b_restock button, open an inputForm window for input restock data
 void mainForm::pd_b_restock_Click(System::Object^  sender, System::EventArgs^  e) {
 	this->Create_inputForm(" Restock a product", "Restock:");
 }
+//Event: when click pd_b_delete button, open a msgBox to check whether delete the selectedItem or not
 void mainForm::pd_b_delete_Click(System::Object^  sender, System::EventArgs^  e) {
 	if(this->Create_messageBox("delete") == System::Windows::Forms::DialogResult::Yes){
 		if( false /*Handler.DB_update(pd_tB_barcode->Text, "delete")*/){
@@ -567,9 +655,10 @@ void mainForm::pd_b_delete_Click(System::Object^  sender, System::EventArgs^  e)
 			this->Update_statusBar("deleteF");
 	}
 }
-void mainForm::Create_inputForm(String^ formTitle, String^ inputDescrip){
+//Function: create an inputForm for input; used by pd_b_sell_Click & pd_b_restock_Click events.
+void mainForm::Create_inputForm(System::String^ formTitle, System::String^ inputDescrip){
 	inputForm^ dlg = gcnew inputForm(formTitle, inputDescrip);
-	dlg->StartPosition = FormStartPosition::CenterParent;
+	dlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 	if (dlg->ShowDialog() == System::Windows::Forms::DialogResult::OK){
 		if(formTitle->Contains("Sell")){
 			if( false /*int stock = handler.DB_sell(pd_tB_barcode->Text, dlg->getInput())*/){
@@ -593,24 +682,29 @@ void mainForm::Create_inputForm(String^ formTitle, String^ inputDescrip){
 		}
 	}
 }
-void mainForm::Update_pd_tB(ListViewItem^ item){
+//Function: update all pd_tb textBoxes by using a listViewItem
+void mainForm::Update_pd_tB(System::Windows::Forms::ListViewItem^ item){
 	for(int i = 0, j = 0; i < this->pd_grp->Controls->Count && j < item->SubItems->Count; i++)
 		if( this->pd_grp->Controls[i]->GetType()->ToString() == "System.Windows.Forms.TextBox")
 			this->pd_grp->Controls[i]->Text = item->SubItems[j++]->Text;
 }
+//Function: clear all pd_tb textBoxes
 void mainForm::Clear_pd_tB(){
 	for(int i = 0; i < this->pd_grp->Controls->Count; i++)
 		if( this->pd_grp->Controls[i]->GetType()->ToString() == "System.Windows.Forms.TextBox")
 			this->pd_grp->Controls[i]->Text = "";
 }
+//Function: update pd_tB_sold & pd_tB_stock textBoxes, after sell certain number of products
 void mainForm::Update_pd_tB_Sell(int stock){
 	int sold = System::Int32::Parse(this->pd_tB_stock->Text) - stock + System::Int32::Parse(this->pd_tB_sold->Text);
 	this->pd_tB_sold->Text = System::Convert::ToString(sold);
 	this->pd_tB_stock->Text = System::Convert::ToString(stock);
 }
+//Function: update pd_tB_sold & pd_tB_stock textBoxes, after restock certain number of products
 void mainForm::Update_pd_tB_Restock(int stock){
 	this->pd_tB_stock->Text = System::Convert::ToString(stock);
 }
+//Function: toggle 'enabled' properties for pd_b_delete, pd_b_sell, pd_b_restock buttons
 void mainForm::Toggle_pd_b(bool tof){
 	this->pd_b_delete->Enabled = tof;
 	this->pd_b_sell->Enabled = tof;
@@ -618,16 +712,19 @@ void mainForm::Toggle_pd_b(bool tof){
 }
 
 //**********LIST DETAILS COMPONENTS FUNCTION***********
+//Event: when select an item in the list, update all pd_tB textBoxes by using this item's properties.
 void mainForm::list_lv_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
 	if(this->list_lv->SelectedItems->Count != 0){// must ensure there is at least one selectedItem 
 		this->Toggle_pd_b(true);
 		this->Update_pd_tB(this->list_lv->SelectedItems[0]);
 	}
 }
+//Function: clear the selected item in the list
 void mainForm::Clear_selectedList(){
 	if( this->list_lv->SelectedItems->Count != 0)
 		this->list_lv->SelectedItems[0]->Remove();
 }
+//Function: update selected item in the list, after sell certain number of products
 void mainForm::Update_selectedList_Sell(int stock){
 	if( this->list_lv->SelectedItems->Count != 0 ){
 		int sold = 
@@ -636,12 +733,14 @@ void mainForm::Update_selectedList_Sell(int stock){
 		this->list_lv->SelectedItems[0]->SubItems[6]->Text = System::Convert::ToString(sold);
 	}
 }
+//Function: update selected item in the list, after restock certain number of products
 void mainForm::Update_selectedList_Restock(int stock){
 	if( this->list_lv->SelectedItems->Count != 0 )
 		this->list_lv->SelectedItems[0]->SubItems[5]->Text = System::Convert::ToString(stock);
 }
 //**********STATUSBAR COMPONENTS FUNCTION***********
-void mainForm::Update_statusBar(String^ s){
+//Function: update statusBar's Text and BackColor
+void mainForm::Update_statusBar(System::String^ s){
 	//can improved by 2 arrays
 	if( s == "addS" )
 		this->Set_statusBar("Product added successfully", System::Drawing::Color::LightSkyBlue);
@@ -673,17 +772,19 @@ void mainForm::Update_statusBar(String^ s){
 	else if( s == "saveF" )
 		this->Set_statusBar("Saved unsuccessfully", System::Drawing::Color::RosyBrown);
 }
-void mainForm::Set_statusBar(String^ s, System::Drawing::Color c){
+//Function: set statusBus's Text and BackColor
+void mainForm::Set_statusBar(System::String^ s, System::Drawing::Color c){
 	this->toolStripStatusLabel1->Text = s;
 	this->statusStrip1->BackColor = c;
 }
 //**********OTHER COMPONENTS FUNCTION***********
-System::Windows::Forms::DialogResult mainForm::Create_messageBox(String^ typeMB){
+//Function: create a type of msgBox according to a string (typeMB, for type for messageBox)
+System::Windows::Forms::DialogResult mainForm::Create_messageBox(System::String^ typeMB){
 	if(typeMB == "delete")
-		return (MessageBox::Show("Are you sure that you would like \nto delete this product?", 
+		return (System::Windows::Forms::MessageBox::Show("Are you sure that you would like \nto delete this product?", 
 		" Delete Product",
-		MessageBoxButtons::YesNo,
-		MessageBoxIcon::Warning));
+		System::Windows::Forms::MessageBoxButtons::YesNo,
+		System::Windows::Forms::MessageBoxIcon::Warning));
 	//else
-	return MessageBox::Show("Hello! Our team: Ashray, Bob, Hui and Kai!", " About");
+	return System::Windows::Forms::MessageBox::Show("Hello! Our team: Ashray, Bob, Hui and Kai!", " About");
 }
