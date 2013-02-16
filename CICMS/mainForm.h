@@ -59,9 +59,9 @@
 //  Naming Rule for functions
 //
 //  for functions, we name them as follow:
-//  [Verb]_[abbreviation for grp]_[abbreviation for kind of components/its parent in menu]_[name of component]
+//  [Verb]_[abbreviation for grp]_[abbreviation for kind of components/its parent in menu]_[name of component]_[Objective]
 //  or
-//  [Verb]_[name of component/name of class]
+//  [Verb]_[name of component/name of class]_[Objective]
 //  or
 //  whatever you like :) be meaningful
 //  E.g.

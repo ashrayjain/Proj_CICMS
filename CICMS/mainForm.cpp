@@ -53,9 +53,9 @@
 //  Naming Rule for functions
 //
 //  for functions, we name them as follow:
-//  [Verb]_[abbreviation for grp]_[abbreviation for kind of components/its parent in menu]_[name of component]
+//  [Verb]_[abbreviation for grp]_[abbreviation for kind of components/its parent in menu]_[name of component]_[Objective]
 //  or
-//  [Verb]_[name of component/name of class]
+//  [Verb]_[name of component/name of class]_[Objective]
 //  or
 //  whatever you like :) be meaningful
 //  E.g.
@@ -84,7 +84,9 @@
 using namespace CICMS_UI;
 
 //********************************************************
+//*************                            ***************
 //*************MEMBER FUNCTION DECLEARATION***************
+//*************                            ***************
 //********************************************************
 
 //Initialize the components & set their properties; run at startup of class mainForm
@@ -536,7 +538,7 @@ void mainForm::InitializeComponent()
 	this->list_grp->Size = System::Drawing::Size(561, 343);
 	this->list_grp->TabIndex = 11;
 	this->list_grp->TabStop = false;
-	this->list_grp->Text = L"List of products";
+	this->list_grp->Text = L"Result list";
 	// 
 	// statusStrip1
 	// 
@@ -585,17 +587,19 @@ void mainForm::InitializeComponent()
 	this->PerformLayout();
 }
 
+//*********************************************
 //**********MENU COMPONENTS FUNCTION***********
+//*********************************************
 
-//Event: when click menu_f_quit, close the mainForm window
+//Event: when click menu_f_quit item, close the mainForm window
 void mainForm::menu_f_quit_Click(System::Object^  sender, System::EventArgs^  e) {
 	this->Close();
 }
-//Event: when click menu_f_addANewProduct, open the addPdForm window to add a new product
+//Event: when click menu_f_addANewProduct item, open the addPdForm window to add a new product
 void mainForm::menu_f_addANewProduct_Click(System::Object^  sender, System::EventArgs^  e) {
 	this->Create_addPdForm();
 }
-//Event: when click menu_f_loadProductList, open the openFileDialog window to load data
+//Event: when click menu_f_loadProductList item, open the openFileDialog window to load data
 void mainForm::menu_f_loadProductList_Click(System::Object^  sender, System::EventArgs^  e) {
 	this->openFileDialog->ShowDialog();//test only
 	if( false /*(stream = openFileDialog->ShowDialog()) != nullptr*/){
@@ -606,7 +610,7 @@ void mainForm::menu_f_loadProductList_Click(System::Object^  sender, System::Eve
 		this->Update_statusBar("loadF");
 	//handle the stream
 }
-//Event: when click menu_f_saveProductList, open the saveFileDialog window to save data
+//Event: when click menu_f_saveProductList item, open the saveFileDialog window to save data
 void mainForm::menu_f_saveProductList_Click(System::Object^  sender, System::EventArgs^  e) {
 	this->saveFileDialog->ShowDialog();//test only
 	if( false /*(stream = saveFileDialog->ShowDialog()) != nullptr*/){
@@ -616,24 +620,29 @@ void mainForm::menu_f_saveProductList_Click(System::Object^  sender, System::Eve
 	else
 		this->Update_statusBar("saveF");
 }
-//Event: when click menu_about, open a messageBox that contains our team's description
+//Event: when click menu_about item, open a messageBox that contains our team's description
 void mainForm::menu_about_Click(System::Object^  sender, System::EventArgs^  e) {
 	this->Create_messageBox("about");
 }
 //Fuction: create a addPdForm window, and let logic/handler part handle the input
 void mainForm::Create_addPdForm(){
 	addPdForm^ dlg = gcnew addPdForm();
-	dlg->StartPosition = FormStartPosition::CenterParent;
+	dlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 	if (dlg->ShowDialog() == System::Windows::Forms::DialogResult::OK){
-		if( false /*handler.DB_add(dlg->get_product_details());*/ )
+		if( false /*handler.DB_add(dlg->get_product_details());*/ ){
+			this->list_lv->Items->Add(dlg->get_product_details());
 			this->Update_statusBar("addS");
+		}
 		else
 			this->Update_statusBar("addF");
 		//no need to add an item into the list; 'cause the list will only show the result of search
 	}
 }
 
+//********************************************************
 //**********PRODUCT DETAILS COMPONENTS FUNCTION***********
+//********************************************************
+
 //Event: when click pd_b_sell button, open an inputForm window for input sale data
 void mainForm::pd_b_sell_Click(System::Object^  sender, System::EventArgs^  e) {
 	this->Create_inputForm(" Sell a product", "Sell:");
@@ -711,7 +720,10 @@ void mainForm::Toggle_pd_b(bool tof){
 	this->pd_b_restock->Enabled = tof;
 }
 
+//*****************************************************
 //**********LIST DETAILS COMPONENTS FUNCTION***********
+//*****************************************************
+
 //Event: when select an item in the list, update all pd_tB textBoxes by using this item's properties.
 void mainForm::list_lv_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
 	if(this->list_lv->SelectedItems->Count != 0){// must ensure there is at least one selectedItem 
@@ -738,10 +750,14 @@ void mainForm::Update_selectedList_Restock(int stock){
 	if( this->list_lv->SelectedItems->Count != 0 )
 		this->list_lv->SelectedItems[0]->SubItems[5]->Text = System::Convert::ToString(stock);
 }
+
+//**************************************************
 //**********STATUSBAR COMPONENTS FUNCTION***********
+//**************************************************
+
 //Function: update statusBar's Text and BackColor
 void mainForm::Update_statusBar(System::String^ s){
-	//can improved by 2 arrays
+	//can improve
 	if( s == "addS" )
 		this->Set_statusBar("Product added successfully", System::Drawing::Color::LightSkyBlue);
 	else if( s == "addF" )
@@ -777,7 +793,11 @@ void mainForm::Set_statusBar(System::String^ s, System::Drawing::Color c){
 	this->toolStripStatusLabel1->Text = s;
 	this->statusStrip1->BackColor = c;
 }
+
+//**********************************************
 //**********OTHER COMPONENTS FUNCTION***********
+//**********************************************
+
 //Function: create a type of msgBox according to a string (typeMB, for type for messageBox)
 System::Windows::Forms::DialogResult mainForm::Create_messageBox(System::String^ typeMB){
 	if(typeMB == "delete")

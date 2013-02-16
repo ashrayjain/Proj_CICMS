@@ -1,277 +1,243 @@
-#pragma once
+#ifndef _GUARD_UI_addPdForm
+#define _GUARD_UI_addPdForm
 
 namespace CICMS_UI {
 
-	using namespace System;
-	using namespace System::ComponentModel;
-	using namespace System::Collections;
-	using namespace System::Windows::Forms;
-	using namespace System::Data;
-	using namespace System::Drawing;
-
-	/// <summary>
-	/// Summary for addPdForm
-	/// </summary>
 	public ref class addPdForm : public System::Windows::Forms::Form
 	{
 	public:
 		addPdForm(void)
 		{
 			InitializeComponent();
-			//
-			//TODO: Add the constructor code here
-			//
 		}
 
-	protected:
-		/// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
-		~addPdForm()
-		{
-			if (components)
-			{
-				delete components;
-			}
-		}
-	private: System::Windows::Forms::GroupBox^  groupBox2;
-	protected: 
-	private: System::Windows::Forms::TextBox^  textBox2;
+	private: System::Windows::Forms::GroupBox^  npd_grp;
+	private: System::Windows::Forms::TextBox^  npd_tB_name;
+	private: System::Windows::Forms::TextBox^  npd_tB_category;
+	private: System::Windows::Forms::TextBox^  npd_tB_barcode;
+	private: System::Windows::Forms::TextBox^  npd_tB_price;
+	private: System::Windows::Forms::TextBox^  npd_tB_manuf;
+	private: System::Windows::Forms::TextBox^  npd_tB_stock;
+	private: System::Windows::Forms::TextBox^  npd_tB_sold;
+	private: System::Windows::Forms::Label^  npd_l_sold;
+	private: System::Windows::Forms::Label^  npd_l_stock;
+	private: System::Windows::Forms::Label^  npd_l_price;
+	private: System::Windows::Forms::Label^  npd_l_manuf;
+	private: System::Windows::Forms::Label^  npd_l_category;
+	private: System::Windows::Forms::Label^  npd_l_barcode;
+	private: System::Windows::Forms::Label^  npd_l_name;
+	private: System::Windows::Forms::Button^  npd_b_cancel;
+	private: System::Windows::Forms::Button^  npd_b_ok;
 
-	private: System::Windows::Forms::TextBox^  textBox3;
+			 void InitializeComponent(void)
+			 {
+				 this->npd_grp = (gcnew System::Windows::Forms::GroupBox());
+				 this->npd_tB_name = (gcnew System::Windows::Forms::TextBox());
+				 this->npd_tB_category = (gcnew System::Windows::Forms::TextBox());
+				 this->npd_tB_barcode = (gcnew System::Windows::Forms::TextBox());
+				 this->npd_tB_price = (gcnew System::Windows::Forms::TextBox());
+				 this->npd_tB_manuf = (gcnew System::Windows::Forms::TextBox());
+				 this->npd_tB_stock = (gcnew System::Windows::Forms::TextBox());
+				 this->npd_tB_sold = (gcnew System::Windows::Forms::TextBox());
+				 this->npd_l_sold = (gcnew System::Windows::Forms::Label());
+				 this->npd_l_stock = (gcnew System::Windows::Forms::Label());
+				 this->npd_l_price = (gcnew System::Windows::Forms::Label());
+				 this->npd_l_manuf = (gcnew System::Windows::Forms::Label());
+				 this->npd_l_category = (gcnew System::Windows::Forms::Label());
+				 this->npd_l_barcode = (gcnew System::Windows::Forms::Label());
+				 this->npd_l_name = (gcnew System::Windows::Forms::Label());
+				 this->npd_b_cancel = (gcnew System::Windows::Forms::Button());
+				 this->npd_b_ok = (gcnew System::Windows::Forms::Button());
+				 this->npd_grp->SuspendLayout();
+				 this->SuspendLayout();
+				 // 
+				 // npd_grp
+				 // 
+				 this->npd_grp->Controls->Add(this->npd_tB_name);
+				 this->npd_grp->Controls->Add(this->npd_tB_category);
+				 this->npd_grp->Controls->Add(this->npd_tB_barcode);
+				 this->npd_grp->Controls->Add(this->npd_tB_price);
+				 this->npd_grp->Controls->Add(this->npd_tB_manuf);
+				 this->npd_grp->Controls->Add(this->npd_tB_stock);
+				 this->npd_grp->Controls->Add(this->npd_tB_sold);
+				 this->npd_grp->Controls->Add(this->npd_l_sold);
+				 this->npd_grp->Controls->Add(this->npd_l_stock);
+				 this->npd_grp->Controls->Add(this->npd_l_price);
+				 this->npd_grp->Controls->Add(this->npd_l_manuf);
+				 this->npd_grp->Controls->Add(this->npd_l_category);
+				 this->npd_grp->Controls->Add(this->npd_l_barcode);
+				 this->npd_grp->Controls->Add(this->npd_l_name);
+				 this->npd_grp->Location = System::Drawing::Point(14, 10);
+				 this->npd_grp->Name = L"npd_grp";
+				 this->npd_grp->Size = System::Drawing::Size(247, 213);
+				 this->npd_grp->TabIndex = 5;
+				 this->npd_grp->TabStop = false;
+				 this->npd_grp->Text = L"New product details";
+				 // 
+				 // npd_tB_name
+				 // 
+				 this->npd_tB_name->Location = System::Drawing::Point(88, 24);
+				 this->npd_tB_name->Name = L"npd_tB_name";
+				 this->npd_tB_name->Size = System::Drawing::Size(138, 20);
+				 this->npd_tB_name->TabIndex = 5;
+				 // 
+				 // npd_tB_category
+				 // 
+				 this->npd_tB_category->Location = System::Drawing::Point(87, 50);
+				 this->npd_tB_category->Name = L"npd_tB_category";
+				 this->npd_tB_category->Size = System::Drawing::Size(138, 20);
+				 this->npd_tB_category->TabIndex = 6;
+				 // 
+				 // npd_tB_barcode
+				 // 
+				 this->npd_tB_barcode->Location = System::Drawing::Point(87, 76);
+				 this->npd_tB_barcode->Name = L"npd_tB_barcode";
+				 this->npd_tB_barcode->Size = System::Drawing::Size(138, 20);
+				 this->npd_tB_barcode->TabIndex = 7;
+				 // 
+				 // npd_tB_price
+				 // 
+				 this->npd_tB_price->Location = System::Drawing::Point(87, 102);
+				 this->npd_tB_price->Name = L"npd_tB_price";
+				 this->npd_tB_price->Size = System::Drawing::Size(138, 20);
+				 this->npd_tB_price->TabIndex = 8;
+				 // 
+				 // npd_tB_manuf
+				 // 
+				 this->npd_tB_manuf->Location = System::Drawing::Point(87, 128);
+				 this->npd_tB_manuf->Name = L"npd_tB_manuf";
+				 this->npd_tB_manuf->Size = System::Drawing::Size(138, 20);
+				 this->npd_tB_manuf->TabIndex = 9;
+				 // 
+				 // npd_tB_stock
+				 // 
+				 this->npd_tB_stock->Location = System::Drawing::Point(87, 154);
+				 this->npd_tB_stock->Name = L"npd_tB_stock";
+				 this->npd_tB_stock->Size = System::Drawing::Size(138, 20);
+				 this->npd_tB_stock->TabIndex = 10;
+				 // 
+				 // npd_tB_sold
+				 // 
+				 this->npd_tB_sold->Location = System::Drawing::Point(87, 180);
+				 this->npd_tB_sold->Name = L"npd_tB_sold";
+				 this->npd_tB_sold->Size = System::Drawing::Size(138, 20);
+				 this->npd_tB_sold->TabIndex = 11;
+				 // 
+				 // npd_l_sold
+				 // 
+				 this->npd_l_sold->AutoSize = true;
+				 this->npd_l_sold->Location = System::Drawing::Point(11, 183);
+				 this->npd_l_sold->Name = L"npd_l_sold";
+				 this->npd_l_sold->Size = System::Drawing::Size(28, 13);
+				 this->npd_l_sold->TabIndex = 6;
+				 this->npd_l_sold->Text = L"Sold";
+				 // 
+				 // npd_l_stock
+				 // 
+				 this->npd_l_stock->AutoSize = true;
+				 this->npd_l_stock->Location = System::Drawing::Point(11, 157);
+				 this->npd_l_stock->Name = L"npd_l_stock";
+				 this->npd_l_stock->Size = System::Drawing::Size(35, 13);
+				 this->npd_l_stock->TabIndex = 5;
+				 this->npd_l_stock->Text = L"Stock";
+				 // 
+				 // npd_l_price
+				 // 
+				 this->npd_l_price->AutoSize = true;
+				 this->npd_l_price->Location = System::Drawing::Point(11, 105);
+				 this->npd_l_price->Name = L"npd_l_price";
+				 this->npd_l_price->Size = System::Drawing::Size(31, 13);
+				 this->npd_l_price->TabIndex = 4;
+				 this->npd_l_price->Text = L"Price";
+				 // 
+				 // npd_l_manuf
+				 // 
+				 this->npd_l_manuf->AutoSize = true;
+				 this->npd_l_manuf->Location = System::Drawing::Point(11, 131);
+				 this->npd_l_manuf->Name = L"npd_l_manuf";
+				 this->npd_l_manuf->Size = System::Drawing::Size(70, 13);
+				 this->npd_l_manuf->TabIndex = 3;
+				 this->npd_l_manuf->Text = L"Manufacturer";
+				 // 
+				 // npd_l_category
+				 // 
+				 this->npd_l_category->AutoSize = true;
+				 this->npd_l_category->Location = System::Drawing::Point(11, 53);
+				 this->npd_l_category->Name = L"npd_l_category";
+				 this->npd_l_category->Size = System::Drawing::Size(49, 13);
+				 this->npd_l_category->TabIndex = 2;
+				 this->npd_l_category->Text = L"Category";
+				 // 
+				 // npd_l_barcode
+				 // 
+				 this->npd_l_barcode->AutoSize = true;
+				 this->npd_l_barcode->Location = System::Drawing::Point(11, 79);
+				 this->npd_l_barcode->Name = L"npd_l_barcode";
+				 this->npd_l_barcode->Size = System::Drawing::Size(47, 13);
+				 this->npd_l_barcode->TabIndex = 1;
+				 this->npd_l_barcode->Text = L"Barcode";
+				 // 
+				 // npd_l_name
+				 // 
+				 this->npd_l_name->AutoSize = true;
+				 this->npd_l_name->Location = System::Drawing::Point(11, 27);
+				 this->npd_l_name->Name = L"npd_l_name";
+				 this->npd_l_name->Size = System::Drawing::Size(35, 13);
+				 this->npd_l_name->TabIndex = 0;
+				 this->npd_l_name->Text = L"Name";
+				 // 
+				 // npd_b_cancel
+				 // 
+				 this->npd_b_cancel->DialogResult = System::Windows::Forms::DialogResult::Cancel;
+				 this->npd_b_cancel->Location = System::Drawing::Point(155, 231);
+				 this->npd_b_cancel->Name = L"npd_b_cancel";
+				 this->npd_b_cancel->Size = System::Drawing::Size(75, 23);
+				 this->npd_b_cancel->TabIndex = 7;
+				 this->npd_b_cancel->Text = L"Cancel";
+				 this->npd_b_cancel->UseVisualStyleBackColor = true;
+				 this->npd_b_cancel->Click += gcnew System::EventHandler(this, &addPdForm::npd_b_cancel_Click);
+				 // 
+				 // npd_b_ok
+				 // 
+				 this->npd_b_ok->DialogResult = System::Windows::Forms::DialogResult::OK;
+				 this->npd_b_ok->Location = System::Drawing::Point(39, 232);
+				 this->npd_b_ok->Name = L"npd_b_ok";
+				 this->npd_b_ok->Size = System::Drawing::Size(75, 23);
+				 this->npd_b_ok->TabIndex = 6;
+				 this->npd_b_ok->Text = L"OK";
+				 this->npd_b_ok->UseVisualStyleBackColor = true;
+				 this->npd_b_ok->Click += gcnew System::EventHandler(this, &addPdForm::npd_b_ok_Click);
+				 // 
+				 // addPdForm
+				 // 
+				 this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
+				 this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+				 this->ClientSize = System::Drawing::Size(275, 265);
+				 this->Controls->Add(this->npd_b_cancel);
+				 this->Controls->Add(this->npd_b_ok);
+				 this->Controls->Add(this->npd_grp);
+				 this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
+				 this->MaximizeBox = false;
+				 this->MinimizeBox = false;
+				 this->Name = L"addPdForm";
+				 this->Text = L"Add a new product";
+				 this->npd_grp->ResumeLayout(false);
+				 this->npd_grp->PerformLayout();
+				 this->ResumeLayout(false);
 
-	private: System::Windows::Forms::TextBox^  textBox4;
-	private: System::Windows::Forms::TextBox^  textBox5;
+			 }
 
-	private: System::Windows::Forms::TextBox^  textBox6;
-	private: System::Windows::Forms::TextBox^  textBox7;
-	private: System::Windows::Forms::TextBox^  textBox8;
-	private: System::Windows::Forms::Label^  label8;
-	private: System::Windows::Forms::Label^  label7;
-	private: System::Windows::Forms::Label^  label6;
-	private: System::Windows::Forms::Label^  label5;
-	private: System::Windows::Forms::Label^  label4;
-	private: System::Windows::Forms::Label^  label3;
-	private: System::Windows::Forms::Label^  label2;
-	private: System::Windows::Forms::Button^  button2;
-	private: System::Windows::Forms::Button^  button1;
-
-	private:
-		/// <summary>
-		/// Required designer variable.
-		/// </summary>
-		System::ComponentModel::Container ^components;
-
-#pragma region Windows Form Designer generated code
-		/// <summary>
-		/// Required method for Designer support - do not modify
-		/// the contents of this method with the code editor.
-		/// </summary>
-		void InitializeComponent(void)
-		{
-			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
-			this->textBox2 = (gcnew System::Windows::Forms::TextBox());
-			this->textBox3 = (gcnew System::Windows::Forms::TextBox());
-			this->textBox4 = (gcnew System::Windows::Forms::TextBox());
-			this->textBox5 = (gcnew System::Windows::Forms::TextBox());
-			this->textBox6 = (gcnew System::Windows::Forms::TextBox());
-			this->textBox7 = (gcnew System::Windows::Forms::TextBox());
-			this->textBox8 = (gcnew System::Windows::Forms::TextBox());
-			this->label8 = (gcnew System::Windows::Forms::Label());
-			this->label7 = (gcnew System::Windows::Forms::Label());
-			this->label6 = (gcnew System::Windows::Forms::Label());
-			this->label5 = (gcnew System::Windows::Forms::Label());
-			this->label4 = (gcnew System::Windows::Forms::Label());
-			this->label3 = (gcnew System::Windows::Forms::Label());
-			this->label2 = (gcnew System::Windows::Forms::Label());
-			this->button2 = (gcnew System::Windows::Forms::Button());
-			this->button1 = (gcnew System::Windows::Forms::Button());
-			this->groupBox2->SuspendLayout();
-			this->SuspendLayout();
-			// 
-			// groupBox2
-			// 
-			this->groupBox2->Controls->Add(this->textBox2);
-			this->groupBox2->Controls->Add(this->textBox3);
-			this->groupBox2->Controls->Add(this->textBox4);
-			this->groupBox2->Controls->Add(this->textBox5);
-			this->groupBox2->Controls->Add(this->textBox6);
-			this->groupBox2->Controls->Add(this->textBox7);
-			this->groupBox2->Controls->Add(this->textBox8);
-			this->groupBox2->Controls->Add(this->label8);
-			this->groupBox2->Controls->Add(this->label7);
-			this->groupBox2->Controls->Add(this->label6);
-			this->groupBox2->Controls->Add(this->label5);
-			this->groupBox2->Controls->Add(this->label4);
-			this->groupBox2->Controls->Add(this->label3);
-			this->groupBox2->Controls->Add(this->label2);
-			this->groupBox2->Location = System::Drawing::Point(14, 10);
-			this->groupBox2->Name = L"groupBox2";
-			this->groupBox2->Size = System::Drawing::Size(247, 213);
-			this->groupBox2->TabIndex = 5;
-			this->groupBox2->TabStop = false;
-			this->groupBox2->Text = L"New product details";
-			// 
-			// textBox2
-			// 
-			this->textBox2->Location = System::Drawing::Point(88, 24);
-			this->textBox2->Name = L"textBox2";
-			this->textBox2->Size = System::Drawing::Size(138, 20);
-			this->textBox2->TabIndex = 5;
-			// 
-			// textBox3
-			// 
-			this->textBox3->Location = System::Drawing::Point(87, 50);
-			this->textBox3->Name = L"textBox3";
-			this->textBox3->Size = System::Drawing::Size(138, 20);
-			this->textBox3->TabIndex = 6;
-			// 
-			// textBox4
-			// 
-			this->textBox4->Location = System::Drawing::Point(87, 76);
-			this->textBox4->Name = L"textBox4";
-			this->textBox4->Size = System::Drawing::Size(138, 20);
-			this->textBox4->TabIndex = 7;
-			// 
-			// textBox5
-			// 
-			this->textBox5->Location = System::Drawing::Point(87, 102);
-			this->textBox5->Name = L"textBox5";
-			this->textBox5->Size = System::Drawing::Size(138, 20);
-			this->textBox5->TabIndex = 8;
-			// 
-			// textBox6
-			// 
-			this->textBox6->Location = System::Drawing::Point(87, 128);
-			this->textBox6->Name = L"textBox6";
-			this->textBox6->Size = System::Drawing::Size(138, 20);
-			this->textBox6->TabIndex = 9;
-			// 
-			// textBox7
-			// 
-			this->textBox7->Location = System::Drawing::Point(87, 154);
-			this->textBox7->Name = L"textBox7";
-			this->textBox7->Size = System::Drawing::Size(138, 20);
-			this->textBox7->TabIndex = 10;
-			// 
-			// textBox8
-			// 
-			this->textBox8->Location = System::Drawing::Point(87, 180);
-			this->textBox8->Name = L"textBox8";
-			this->textBox8->Size = System::Drawing::Size(138, 20);
-			this->textBox8->TabIndex = 11;
-			// 
-			// label8
-			// 
-			this->label8->AutoSize = true;
-			this->label8->Location = System::Drawing::Point(11, 183);
-			this->label8->Name = L"label8";
-			this->label8->Size = System::Drawing::Size(28, 13);
-			this->label8->TabIndex = 6;
-			this->label8->Text = L"Sold";
-			// 
-			// label7
-			// 
-			this->label7->AutoSize = true;
-			this->label7->Location = System::Drawing::Point(11, 157);
-			this->label7->Name = L"label7";
-			this->label7->Size = System::Drawing::Size(35, 13);
-			this->label7->TabIndex = 5;
-			this->label7->Text = L"Stock";
-			// 
-			// label6
-			// 
-			this->label6->AutoSize = true;
-			this->label6->Location = System::Drawing::Point(11, 105);
-			this->label6->Name = L"label6";
-			this->label6->Size = System::Drawing::Size(31, 13);
-			this->label6->TabIndex = 4;
-			this->label6->Text = L"Price";
-			// 
-			// label5
-			// 
-			this->label5->AutoSize = true;
-			this->label5->Location = System::Drawing::Point(11, 131);
-			this->label5->Name = L"label5";
-			this->label5->Size = System::Drawing::Size(70, 13);
-			this->label5->TabIndex = 3;
-			this->label5->Text = L"Manufacturer";
-			// 
-			// label4
-			// 
-			this->label4->AutoSize = true;
-			this->label4->Location = System::Drawing::Point(11, 53);
-			this->label4->Name = L"label4";
-			this->label4->Size = System::Drawing::Size(49, 13);
-			this->label4->TabIndex = 2;
-			this->label4->Text = L"Category";
-			// 
-			// label3
-			// 
-			this->label3->AutoSize = true;
-			this->label3->Location = System::Drawing::Point(11, 79);
-			this->label3->Name = L"label3";
-			this->label3->Size = System::Drawing::Size(47, 13);
-			this->label3->TabIndex = 1;
-			this->label3->Text = L"Barcode";
-			// 
-			// label2
-			// 
-			this->label2->AutoSize = true;
-			this->label2->Location = System::Drawing::Point(11, 27);
-			this->label2->Name = L"label2";
-			this->label2->Size = System::Drawing::Size(35, 13);
-			this->label2->TabIndex = 0;
-			this->label2->Text = L"Name";
-			// 
-			// button2
-			// 
-			this->button2->DialogResult = System::Windows::Forms::DialogResult::Cancel;
-			this->button2->Location = System::Drawing::Point(155, 231);
-			this->button2->Name = L"button2";
-			this->button2->Size = System::Drawing::Size(75, 23);
-			this->button2->TabIndex = 7;
-			this->button2->Text = L"Cancel";
-			this->button2->UseVisualStyleBackColor = true;
-			this->button2->Click += gcnew System::EventHandler(this, &addPdForm::button2_Click);
-			// 
-			// button1
-			// 
-			this->button1->DialogResult = System::Windows::Forms::DialogResult::OK;
-			this->button1->Location = System::Drawing::Point(39, 232);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(75, 23);
-			this->button1->TabIndex = 6;
-			this->button1->Text = L"OK";
-			this->button1->UseVisualStyleBackColor = true;
-			this->button1->Click += gcnew System::EventHandler(this, &addPdForm::button1_Click);
-			// 
-			// addPdForm
-			// 
-			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
-			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(275, 265);
-			this->Controls->Add(this->button2);
-			this->Controls->Add(this->button1);
-			this->Controls->Add(this->groupBox2);
-			this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
-			this->Name = L"addPdForm";
-			this->Text = L"Add a new product";
-			this->groupBox2->ResumeLayout(false);
-			this->groupBox2->PerformLayout();
-			this->ResumeLayout(false);
-
-		}
-#pragma endregion
-	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
-				Close();
-			}
-	private: System::Void button2_Click(System::Object^  sender, System::EventArgs^  e) {
-				Close();
-			}
+	private: void npd_b_ok_Click(System::Object^  sender, System::EventArgs^  e) {
+				 Close();
+			 }
+	private: void npd_b_cancel_Click(System::Object^  sender, System::EventArgs^  e) {
+				 Close();
+			 }
+	//Function: get the input
 	public: System::Windows::Forms::ListViewItem^ get_product_details(){
-				return gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {textBox2->Text, 
-				textBox3->Text, textBox4->Text, textBox5->Text, textBox6->Text, textBox7->Text, textBox8->Text}, -1);
+				return gcnew System::Windows::Forms::ListViewItem(gcnew cli::array<System::String^>(7) {npd_tB_name->Text, 
+				npd_tB_category->Text, npd_tB_barcode->Text, npd_tB_price->Text, npd_tB_manuf->Text, npd_tB_stock->Text, npd_tB_sold->Text});
 			}
-};
+	};
 }
+#endif

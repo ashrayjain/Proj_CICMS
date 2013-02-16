@@ -1,62 +1,21 @@
-#pragma once
+#ifndef _GUARD_UI_inputForm
+#define _GUARD_UI_inputForm
 
 namespace CICMS_UI {
 
-	using namespace System;
-	using namespace System::ComponentModel;
-	using namespace System::Collections;
-	using namespace System::Windows::Forms;
-	using namespace System::Data;
-	using namespace System::Drawing;
-
-	/// <summary>
-	/// Summary for inputForm
-	/// </summary>
 	public ref class inputForm : public System::Windows::Forms::Form
 	{
 	public:
-		inputForm(String^ formTitle, String^ inputDescrip)
+		inputForm(System::String^ formTitle, System::String^ inputDescrip)
 		{
 			InitializeComponent(formTitle, inputDescrip);
-			//
-			//TODO: Add the constructor code here
-			//
-		}
-
-	protected:
-		/// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
-		~inputForm()
-		{
-			if (components)
-			{
-				delete components;
-			}
 		}
 	private: System::Windows::Forms::Label^  input_l_descrip;
 	private: System::Windows::Forms::Button^  input_b_yes;
 	private: System::Windows::Forms::Button^  input_b_no;
-	protected: 
-
-
-
 	private: System::Windows::Forms::TextBox^  input_tB_input;
-
-	protected: 
-
-	private:
-		/// <summary>
-		/// Required designer variable.
-		/// </summary>
-		System::ComponentModel::Container ^components;
-
-#pragma region Windows Form Designer generated code
-		/// <summary>
-		/// Required method for Designer support - do not modify
-		/// the contents of this method with the code editor.
-		/// </summary>
-		void InitializeComponent(String^ formTitle, String^ inputDescrip)
+	private: 
+		void InitializeComponent(System::String^ formTitle, System::String^ inputDescrip)
 		{
 			this->input_l_descrip = (gcnew System::Windows::Forms::Label());
 			this->input_b_yes = (gcnew System::Windows::Forms::Button());
@@ -130,15 +89,16 @@ namespace CICMS_UI {
 			this->PerformLayout();
 
 		}
-#pragma endregion
 	private: System::Void input_b_yes_Click(System::Object^  sender, System::EventArgs^  e) {
 				 Close();
 			 }
 	private: System::Void input_b_no_Click(System::Object^  sender, System::EventArgs^  e) {
 				 Close();
 			 }
-	public: String^ getInput(){
+	//Function: get the input from inputForm
+	public: System::String^ getInput(){
 				return input_tB_input->Text;
 			}
 	};
 }
+#endif
