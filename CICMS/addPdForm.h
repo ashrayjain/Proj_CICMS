@@ -201,7 +201,6 @@ namespace CICMS_UI {
 				 this->npd_b_cancel->TabIndex = 7;
 				 this->npd_b_cancel->Text = L"Cancel";
 				 this->npd_b_cancel->UseVisualStyleBackColor = true;
-				 this->npd_b_cancel->Click += gcnew System::EventHandler(this, &addPdForm::npd_b_cancel_Click);
 				 // 
 				 // npd_b_ok
 				 // 
@@ -216,8 +215,10 @@ namespace CICMS_UI {
 				 // 
 				 // addPdForm
 				 // 
+				 this->AcceptButton = this->npd_b_ok;
 				 this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 				 this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+				 this->CancelButton = this->npd_b_cancel;
 				 this->ClientSize = System::Drawing::Size(275, 265);
 				 this->Controls->Add(this->npd_b_cancel);
 				 this->Controls->Add(this->npd_b_ok);
@@ -234,15 +235,21 @@ namespace CICMS_UI {
 			 }
 
 	private: void npd_b_ok_Click(System::Object^  sender, System::EventArgs^  e) {
-				 Close();
-			 }
-	private: void npd_b_cancel_Click(System::Object^  sender, System::EventArgs^  e) {
-				 Close();
+				 //submit check here
+				 this->Close();
 			 }
 	//Function: get the input
 	public: System::Windows::Forms::ListViewItem^ get_product_details(){
-				return gcnew System::Windows::Forms::ListViewItem(gcnew cli::array<System::String^>(7) {npd_tB_name->Text, 
-				npd_tB_category->Text, npd_tB_barcode->Text, npd_tB_price->Text, npd_tB_manuf->Text, npd_tB_stock->Text, npd_tB_sold->Text});
+				//need to check whether they are blank/number/...
+				return gcnew System::Windows::Forms::ListViewItem(gcnew cli::array<System::String^>(7) {
+					this->npd_tB_name->Text, 
+					this->npd_tB_category->Text, 
+					this->npd_tB_barcode->Text, 
+					this->npd_tB_price->Text, 
+					this->npd_tB_manuf->Text, 
+					this->npd_tB_stock->Text, 
+					this->npd_tB_sold->Text
+				});
 			}
 	};
 }

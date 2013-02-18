@@ -16,14 +16,13 @@
 //  for variables, we name them as follow:
 //  [abbreviation for grp]_[abbreviation for type of components/its parent in menu]_[name of component]
 //  E.g.
-//  "pd_b_delete" means a button for deletion in ProductDetails group
-//  "pd_l_name" means a label for name in ProductDetails group
+//  "list_b_delete" means a button for deletion in list group
+//  "list_l_name" means a label for name in list group
 ////////////////////////////////////
 //
 //  options for [abbreviation for grp] (grp, or group/groupBox, is where the components locate)
 //
 //  menu;
-//  pd, for product details;
 //  list;
 //  s, for search;
 //  other: whatever :)
@@ -59,7 +58,7 @@
 //  or
 //  whatever you like :) be meaningful
 //  E.g.
-//  "Update_pd_tB" means update all textBox components in product details group.
+//  "Update_selectedList_Sell" means update all selected listItems's sold property.
 //
 /*************************************************************************************************/
 //
@@ -80,8 +79,24 @@
 #include "mainForm.h"
 #include "inputForm.h"
 #include "addPdForm.h"
+#include <vector>
+#include <string>
 
 using namespace CICMS_UI;
+
+//definitions for Update_statusBar()'s parameter
+enum STATUSBAR {
+	addS, addF,
+	loadS, loadF,
+	saveS, saveF,
+	sellS, sellF,
+	restockS, restockF,
+	deleteS, deleteF,
+	discountS, discountF,
+	searchS, searchF
+};
+
+enum BYMETHOD { byName, byBarcode, byCategory, byStock, byManuf };
 
 //********************************************************
 //*************                            ***************
@@ -89,50 +104,312 @@ using namespace CICMS_UI;
 //*************                            ***************
 //********************************************************
 
+//*********************************************
+//**********MENU COMPONENTS FUNCTION***********
+//*********************************************
+
+//Event: when click menu_f_quit item, close the mainForm window
+void mainForm::menu_f_quit_Click(System::Object^  sender, System::EventArgs^  e) {
+	this->Close();
+}
+//Event: when click menu_f_addNewProducts item, open the addPdForm window to add new products
+void mainForm::menu_f_addNewProducts_Click(System::Object^  sender, System::EventArgs^  e) {
+	this->Create_addPdForms();
+}
+//Event: when click menu_f_loadProductList item, open the openFileDialog window to load data
+void mainForm::menu_f_loadProductList_Click(System::Object^  sender, System::EventArgs^  e) {
+	this->Create_openFileDlg();
+}
+//Event: when click menu_f_saveProductList item, open the saveFileDialog window to save data
+void mainForm::menu_f_saveProductList_Click(System::Object^  sender, System::EventArgs^  e) {
+	this->Create_saveFileDlg();
+}
+//Event: when click menu_about item, open a messageBox that contains our team's description
+void mainForm::menu_about_Click(System::Object^  sender, System::EventArgs^  e) {
+	this->Create_messageBox("about", "Hello! Our team: Ashray, Bob, Hui and Kai!");
+}
+//Fuction: create a addPdForm window, and let logic/handler part handle the input
+void mainForm::Create_addPdForms(){
+	int num = (int) Create_inputForm(" Add products", "How many products to add?", "Number:", "1");
+	for( int i = 0; i < num; i++){
+		addPdForm^ dlg = gcnew addPdForm();
+		dlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
+		if (dlg->ShowDialog() == System::Windows::Forms::DialogResult::OK){
+			if( false /*handler.DB_add(dlg->get_product_details());*/ )
+				this->Update_statusBar(addS);
+			else
+				this->Update_statusBar(addF);
+		}
+	}
+}
+//Function: create an openfiledialog to handle loading data
+void mainForm::Create_openFileDlg(){
+	System::IO::Stream^ stm;
+	if(this->openFileDialog->ShowDialog() == System::Windows::Forms::DialogResult::OK){
+		if((stm = this->openFileDialog->OpenFile()) != nullptr){
+			//handle stream here
+			stm->Close();
+			//this->Update_statusBar(loadS); /*under construction*/
+			this->Update_statusBar(loadF);
+		}
+		else
+			this->Update_statusBar(loadF);
+	}
+}
+//Function: create an savefiledialog to handle saving data
+void mainForm::Create_saveFileDlg(){
+	System::IO::Stream^ stm;
+	if(this->saveFileDialog->ShowDialog() == System::Windows::Forms::DialogResult::OK){
+		if((stm = this->saveFileDialog->OpenFile()) != nullptr){
+			//handle stream here
+			stm->Close();
+			//this->Update_statusBar(saveS); /*under construction*/
+			this->Update_statusBar(saveF);
+		}
+		else
+			this->Update_statusBar(saveF);
+	}
+}
+
+//***********************************************
+//**********SEARCH COMPONENTS FUNCTION***********
+//***********************************************
+
+//Event: when s_b_submit button is clicked
+void mainForm::s_b_submit_Click(System::Object^  sender, System::EventArgs^  e){
+	int by_method = this->Get_byMethod();
+	this->Search_product(this->s_tB_input->Text, by_method);
+}
+//Function: get the result of checked radioButton (by which method to search)
+int mainForm::Get_byMethod(){
+	if(this->s_rB_byName->Checked == true)
+		return byName;
+	else if(this->s_rB_byBarcode->Checked == true)
+		return byBarcode;
+	else if(this->s_rB_byCategory->Checked == true)
+		return byCategory;
+	else if(this->s_rB_stockLT->Checked == true)
+		return byStock;
+	else if(this->s_rB_byManuf->Checked == true)
+		return byManuf;
+	else
+		return byName;
+}
+//Function: search the products according to a text and a method; if the result is non-empty, it will add an item onto the listView component
+void mainForm::Search_product(System::String^ s, int m){
+	//std::vector<Product> r = handler.DB_search(s, m);// may need System::String to std::string
+	if(false /*!r.empty()*/){
+		/*this->list_lv->Clear();
+		for(int i = 0; i < r.size(); i++){
+			this->list_lv->Items->Add(gcnew System::Windows::Forms::ListViewItem(gcnew cli::array<System::String^>(7) {
+					gcnew System::String(r[i].getName().c_str()), 
+					gcnew System::String(r[i].getCategory().c_str()), 
+					gcnew System::String(r[i].getBarcode().c_str()), 
+					gcnew System::String(r[i].getPrice().c_str()), 
+					gcnew System::String(r[i].getManuf().c_str()), 
+					gcnew System::String(r[i].getStock().c_str()), 
+					gcnew System::String(r[i].getSold().c_str())
+				}));
+		}*/
+		this->Update_statusBar(searchS);
+	}
+	else
+		this->Update_statusBar(searchF);
+}
+//*****************************************************
+//**********LIST DETAILS COMPONENTS FUNCTION***********
+//*****************************************************
+
+//Event: when click pd_b_sell button, open an inputForm window for input sale data
+void mainForm::list_b_sell_Click(System::Object^  sender, System::EventArgs^  e) {
+	Create_sellForm();
+}
+//Event: when click pd_b_restock button, open an inputForm window for input restock data
+void mainForm::list_b_restock_Click(System::Object^  sender, System::EventArgs^  e) {
+	Create_restockForm();
+}
+//Event: when click pd_b_discount button, open an inputForm window for input discount data
+void mainForm::list_b_discount_Click(System::Object^  sender, System::EventArgs^  e) {
+	Create_discountForm();
+}
+//Event: when click pd_b_delete button, open a msgBox to check whether delete the selectedItem or not
+void mainForm::list_b_delete_Click(System::Object^  sender, System::EventArgs^  e) {
+	Create_deleteForm();
+}
+//Function: create an inputForm for input; used by pd_b_sell_Click & pd_b_restock_Click events.
+double mainForm::Create_inputForm(System::String^ formTitle, System::String^ pdDescript, System::String^ inputDescript, System::String^ stringInTB){
+	inputForm^ dlg = gcnew inputForm();
+	dlg->set_inputForm(formTitle, pdDescript, inputDescript, stringInTB);
+	dlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
+	if (dlg->ShowDialog() == System::Windows::Forms::DialogResult::OK)
+		return dlg->get_input();
+	else
+		return 0;
+}
+void mainForm::Create_sellForm(){
+	for(int i = 0; i < this->list_lv->SelectedItems->Count; i++){
+		int num = (int) this->Create_inputForm(" Sell a product",
+			this->list_lv->SelectedItems[i]->SubItems[0]->Text + " - " + 
+			this->list_lv->SelectedItems[i]->SubItems[2]->Text//Product name - barcode
+			, "Sell:", "1"),
+			barcode = System::Convert::ToInt32(this->list_lv->SelectedItems[i]->SubItems[2]->Text);
+
+		//int sold = handler.DB_sell(barcode, num),
+		//stock = handler.DB_restock(barcode, -num);
+		if(false/*sold != -1 && stock != -1*/){
+			//Update_selectedList_Sell(i,sold);
+			//Update_selectedList_Restock(i,stock);
+			this->Update_statusBar(sellS);
+		}
+		else
+			this->Update_statusBar(sellF);
+	}
+}
+void mainForm::Create_restockForm(){
+	for(int i = 0; i < this->list_lv->SelectedItems->Count; i++){
+		int num = (int) this->Create_inputForm(" Restock a product",
+			this->list_lv->SelectedItems[i]->SubItems[0]->Text + " - " + 
+			this->list_lv->SelectedItems[i]->SubItems[2]->Text//Product name - barcode
+			, "Restock:", "1"),
+			barcode = System::Convert::ToInt32(this->list_lv->SelectedItems[i]->SubItems[2]->Text);
+		//int stock = handler.DB_restock(barcode, num));
+		if(false/*stock != -1*/){
+			//Update_selectedList_Restock(i,stock);
+			this->Update_statusBar(restockS);
+		}
+		else
+			this->Update_statusBar(restockF);
+	}
+}
+void mainForm::Create_discountForm(){
+	for(int i = 0; i < this->list_lv->SelectedItems->Count; i++){
+		double num = this->Create_inputForm(" Discount a price",
+			this->list_lv->SelectedItems[i]->SubItems[0]->Text + " - " + 
+			this->list_lv->SelectedItems[i]->SubItems[2]->Text//Product name - barcode
+			,"Discount:", "0.9"),
+			barcode = System::Convert::ToInt32(this->list_lv->SelectedItems[i]->SubItems[2]->Text);
+		//double price = handler.DB_discount(barcode, num);
+		if(false/*price != -1*/)
+			this->Update_statusBar(discountS);
+		else
+			this->Update_statusBar(discountF);
+	}
+}
+void mainForm::Create_deleteForm(){
+	for(int i = 0; i < this->list_lv->SelectedItems->Count; i++){
+		int barcode = System::Convert::ToInt32(this->list_lv->SelectedItems[i]->SubItems[2]->Text);
+		if(this->Create_messageBox("delete", 
+			"Are you sure that you would like \nto delete this product, " +
+			this->list_lv->SelectedItems[i]->SubItems[0]->Text + " - " + 
+			this->list_lv->SelectedItems[i]->SubItems[2]->Text +//Product name - barcode
+			"?"
+			) == System::Windows::Forms::DialogResult::Yes){
+				if( false/*Handler.DB_delete(barcode)*/){
+					this->Clear_selectedList();
+					this->Update_statusBar(deleteS);
+					this->Toggle_list_b(false);
+				}
+				else
+					this->Update_statusBar(deleteF);
+		}
+	}
+}
+//Function: toggle 'enabled' properties for pd_b_delete, pd_b_sell, pd_b_restock buttons
+void mainForm::Toggle_list_b(bool tof){
+	this->list_b_delete->Enabled = tof;
+	this->list_b_sell->Enabled = tof;
+	this->list_b_restock->Enabled = tof;
+	this->list_b_discount->Enabled = tof;
+}
+//Event: when select an item in the list, update all pd_tB textBoxes by using this item's properties.
+void mainForm::list_lv_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
+	this->list_lv->SelectedItems->Count != 0 ? this->Toggle_list_b(true): this->Toggle_list_b(false);
+}
+//Function: clear the selected item in the list
+void mainForm::Clear_selectedList(){
+	for(int i = 0; i < this->list_lv->SelectedItems->Count; i++)
+		this->list_lv->SelectedItems[i]->Remove();
+}
+//Function: update selected item in the list, after sell certain number of products
+void mainForm::Update_selectedList_Sell(int index,int num_sold){
+	this->list_lv->SelectedItems[index]->SubItems[6]->Text/*sold*/ = System::Convert::ToString(num_sold);
+}
+//Function: update selected item in the list, after restock certain number of products
+void mainForm::Update_selectedList_Restock(int index,int num_stock){
+	this->list_lv->SelectedItems[index]->SubItems[5]->Text/*stock*/ = System::Convert::ToString(num_stock);
+}
+
+//**************************************************
+//**********STATUSBAR COMPONENTS FUNCTION***********
+//**************************************************
+
+//Function: update statusBar's Text and BackColor
+void mainForm::Update_statusBar(int i){
+	array<System::String^>^ text = gcnew array<System::String^>{
+		"Product(s) added successfully", "Product(s) added unsuccessfully", //addS , addF
+			"Data loaded successfully", "Data loaded unsuccessfully", //loadS, loadF
+			"Data saved successfully", "Data saved unsuccessfully", //saveS, saveF
+			"Product(s) sold successfully", "Product(s) sold unsuccessfully", //sellS, sellF
+			"Product(s) restocked successfully", "Product(s) restocked unsuccessfully", //restockS, restockF
+			"Product(s) deleted successfully", "Product(s) deleted unsuccessfully", //deleteS, deleteF
+			"Price discounted successfully", "Price discounted unsuccessfully", //discountS, discountF
+			"Searched successfully", "Searched unsuccessfully" //searchS, searchF
+	};
+	this->Set_statusBar(text[i], i % 2? /*failure*/System::Drawing::Color::RosyBrown: /*success*/System::Drawing::Color::LightSkyBlue);
+}
+//Function: set statusBus's Text and BackColor
+void mainForm::Set_statusBar(System::String^ s, System::Drawing::Color c){
+	this->toolStripStatusLabel1->Text = s;
+	this->statusStrip1->BackColor = c;
+}
+
+//**********************************************
+//**********OTHER COMPONENTS FUNCTION***********
+//**********************************************
+
+//Function: create a type of msgBox according to a string (typeMB, for type for messageBox)
+System::Windows::Forms::DialogResult mainForm::Create_messageBox(System::String^ typeMB, System::String^ s){
+	if(typeMB == "delete")
+		return (System::Windows::Forms::MessageBox::Show(s, " Delete Product",
+		System::Windows::Forms::MessageBoxButtons::YesNo,
+		System::Windows::Forms::MessageBoxIcon::Warning));
+	//else
+	return System::Windows::Forms::MessageBox::Show(s, " About");
+}
 //Initialize the components & set their properties; run at startup of class mainForm
 void mainForm::InitializeComponent()
 {
-	//************MENU COMPONENTS INITIALIZATION***************
+	System::Windows::Forms::ListViewItem^  listViewItem1 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"Rio de SNEAKER", 
+		L"Shoes", L"000051", L"35", L"Nike", L"5", L"5"}, -1));
+	System::Windows::Forms::ListViewItem^  listViewItem2 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"Superstar2 Snake", 
+		L"Shoes", L"000023", L"31", L"Adidas", L"31", L"3"}, -1));
+	System::Windows::Forms::ListViewItem^  listViewItem3 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"H&M 2013 STU", 
+		L"Bag", L"000021", L"33", L"H&M", L"66", L"5"}, -1));
+	System::Windows::Forms::ListViewItem^  listViewItem4 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"JJ 2013 SS2", 
+		L"Jeans", L"000044", L"5", L"JJ", L"25", L"21"}, -1));
+	System::Windows::Forms::ListViewItem^  listViewItem5 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"JOJO Summer", 
+		L"Jeans", L"000145", L"16", L"JOJO", L"11", L"23"}, -1));
 	this->menu = (gcnew System::Windows::Forms::MenuStrip());
 	this->menu_f = (gcnew System::Windows::Forms::ToolStripMenuItem());
-	this->menu_f_addANewProduct = (gcnew System::Windows::Forms::ToolStripMenuItem());
+	this->menu_f_addNewProducts = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->menu_f_loadProductList = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->menu_f_saveProductList = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->menu_f_quit = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->menu_about = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->openFileDialog = (gcnew System::Windows::Forms::OpenFileDialog());
 	this->saveFileDialog = (gcnew System::Windows::Forms::SaveFileDialog());
-
-	//************SEARCH COMPONENTS INITIALIZATION***************
 	this->s_tB_input = (gcnew System::Windows::Forms::TextBox());
 	this->s_b_submit = (gcnew System::Windows::Forms::Button());
 	this->s_grp = (gcnew System::Windows::Forms::GroupBox());
+	this->s_rB_stockLT = (gcnew System::Windows::Forms::RadioButton());
+	this->s_rB_byManuf = (gcnew System::Windows::Forms::RadioButton());
 	this->s_l_by = (gcnew System::Windows::Forms::Label());
 	this->s_rB_byCategory = (gcnew System::Windows::Forms::RadioButton());
 	this->s_rB_byBarcode = (gcnew System::Windows::Forms::RadioButton());
 	this->s_rB_byName = (gcnew System::Windows::Forms::RadioButton());
-
-	//************PRODUCT DETAILS COMPONENTS INITIALIZATION***************
-	this->pd_grp = (gcnew System::Windows::Forms::GroupBox());
-	this->pd_tB_name = (gcnew System::Windows::Forms::TextBox());
-	this->pd_b_restock = (gcnew System::Windows::Forms::Button());
-	this->pd_tB_category = (gcnew System::Windows::Forms::TextBox());
-	this->pd_b_sell = (gcnew System::Windows::Forms::Button());
-	this->pd_tB_barcode = (gcnew System::Windows::Forms::TextBox());
-	this->pd_tB_price = (gcnew System::Windows::Forms::TextBox());
-	this->pd_b_delete = (gcnew System::Windows::Forms::Button());
-	this->pd_tB_manuf = (gcnew System::Windows::Forms::TextBox());
-	this->pd_tB_stock = (gcnew System::Windows::Forms::TextBox());
-	this->pd_tB_sold = (gcnew System::Windows::Forms::TextBox());
-	this->pd_l_sold = (gcnew System::Windows::Forms::Label());
-	this->pd_l_stock = (gcnew System::Windows::Forms::Label());
-	this->pd_l_price = (gcnew System::Windows::Forms::Label());
-	this->pd_l_manuf = (gcnew System::Windows::Forms::Label());
-	this->pd_l_category = (gcnew System::Windows::Forms::Label());
-	this->pd_l_barcode = (gcnew System::Windows::Forms::Label());
-	this->pd_l_name = (gcnew System::Windows::Forms::Label());
-
-	//************LIST COMPONENTS INITIALIZATION***************
+	this->list_b_restock = (gcnew System::Windows::Forms::Button());
+	this->list_b_sell = (gcnew System::Windows::Forms::Button());
+	this->list_b_delete = (gcnew System::Windows::Forms::Button());
 	this->list_lv = (gcnew System::Windows::Forms::ListView());
 	this->list_col_name = (gcnew System::Windows::Forms::ColumnHeader());
 	this->list_col_category = (gcnew System::Windows::Forms::ColumnHeader());
@@ -142,40 +419,38 @@ void mainForm::InitializeComponent()
 	this->list_col_stock = (gcnew System::Windows::Forms::ColumnHeader());
 	this->list_col_sold = (gcnew System::Windows::Forms::ColumnHeader());
 	this->list_grp = (gcnew System::Windows::Forms::GroupBox());
-
-	//************STATUS COMPONENTS INITIALIZATION***************
+	this->list_b_discount = (gcnew System::Windows::Forms::Button());
 	this->statusStrip1 = (gcnew System::Windows::Forms::StatusStrip());
 	this->toolStripStatusLabel1 = (gcnew System::Windows::Forms::ToolStripStatusLabel());
-
-	
-	//*********************************************
-	//************COMPONENTS SETTING***************
-	//*********************************************
-	//
+	this->menu->SuspendLayout();
+	this->s_grp->SuspendLayout();
+	this->list_grp->SuspendLayout();
+	this->statusStrip1->SuspendLayout();
+	this->SuspendLayout();
+	// 
 	// menu
 	// 
-	this->menu->SuspendLayout();
 	this->menu->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {this->menu_f, this->menu_about});
 	this->menu->Location = System::Drawing::Point(0, 0);
 	this->menu->Name = L"menu";
 	this->menu->Size = System::Drawing::Size(853, 24);
-	this->menu->TabIndex = 0;
+	//this->menu->TabIndex = 0;
 	this->menu->Text = L"menu";
 	// 
 	// menu_f
 	// 
-	this->menu_f->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(4) {this->menu_f_addANewProduct, 
+	this->menu_f->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(4) {this->menu_f_addNewProducts, 
 		this->menu_f_loadProductList, this->menu_f_saveProductList, this->menu_f_quit});
 	this->menu_f->Name = L"menu_f";
 	this->menu_f->Size = System::Drawing::Size(37, 20);
 	this->menu_f->Text = L"File";
 	// 
-	// menu_f_addANewProduct
+	// menu_f_addNewProducts
 	// 
-	this->menu_f_addANewProduct->Name = L"menu_f_addANewProduct";
-	this->menu_f_addANewProduct->Size = System::Drawing::Size(170, 22);
-	this->menu_f_addANewProduct->Text = L"Add a new product";
-	this->menu_f_addANewProduct->Click += gcnew System::EventHandler(this, &mainForm::menu_f_addANewProduct_Click);
+	this->menu_f_addNewProducts->Name = L"menu_f_addNewProducts";
+	this->menu_f_addNewProducts->Size = System::Drawing::Size(170, 22);
+	this->menu_f_addNewProducts->Text = L"Add new products";
+	this->menu_f_addNewProducts->Click += gcnew System::EventHandler(this, &mainForm::menu_f_addNewProducts_Click);
 	// 
 	// menu_f_loadProductList
 	// 
@@ -223,8 +498,9 @@ void mainForm::InitializeComponent()
 	this->s_tB_input->Location = System::Drawing::Point(6, 23);
 	this->s_tB_input->Name = L"s_tB_input";
 	this->s_tB_input->Size = System::Drawing::Size(172, 24);
-	this->s_tB_input->TabIndex = 1;
+	this->s_tB_input->TabIndex = 0;
 	this->s_tB_input->Text = L" input here";
+	this->s_tB_input->SelectAll();
 	// 
 	// s_b_submit
 	// 
@@ -233,13 +509,15 @@ void mainForm::InitializeComponent()
 	this->s_b_submit->Location = System::Drawing::Point(184, 23);
 	this->s_b_submit->Name = L"s_b_submit";
 	this->s_b_submit->Size = System::Drawing::Size(57, 24);
-	this->s_b_submit->TabIndex = 2;
+	this->s_b_submit->TabIndex = 1;
 	this->s_b_submit->Text = L"Go";
 	this->s_b_submit->UseVisualStyleBackColor = true;
+	this->s_b_submit->Click += gcnew System::EventHandler(this, &mainForm::s_b_submit_Click);
 	// 
 	// s_grp
 	// 
-	this->s_grp->SuspendLayout();
+	this->s_grp->Controls->Add(this->s_rB_stockLT);
+	this->s_grp->Controls->Add(this->s_rB_byManuf);
 	this->s_grp->Controls->Add(this->s_l_by);
 	this->s_grp->Controls->Add(this->s_rB_byCategory);
 	this->s_grp->Controls->Add(this->s_rB_byBarcode);
@@ -248,10 +526,32 @@ void mainForm::InitializeComponent()
 	this->s_grp->Controls->Add(this->s_b_submit);
 	this->s_grp->Location = System::Drawing::Point(16, 27);
 	this->s_grp->Name = L"s_grp";
-	this->s_grp->Size = System::Drawing::Size(247, 80);
-	this->s_grp->TabIndex = 3;
+	this->s_grp->Size = System::Drawing::Size(247, 99);
+	//this->s_grp->TabIndex = 3;
 	this->s_grp->TabStop = false;
 	this->s_grp->Text = L"Search";
+	// 
+	// s_rB_stockLT
+	// 
+	this->s_rB_stockLT->AutoSize = true;
+	this->s_rB_stockLT->Location = System::Drawing::Point(31, 72);
+	this->s_rB_stockLT->Name = L"s_rB_stockLT";
+	this->s_rB_stockLT->Size = System::Drawing::Size(50, 17);
+	this->s_rB_stockLT->TabIndex = 5;
+	this->s_rB_stockLT->TabStop = true;
+	this->s_rB_stockLT->Text = L"Stock";
+	this->s_rB_stockLT->UseVisualStyleBackColor = true;
+	// 
+	// s_rB_byManuf
+	// 
+	this->s_rB_byManuf->AutoSize = true;
+	this->s_rB_byManuf->Location = System::Drawing::Point(87, 72);
+	this->s_rB_byManuf->Name = L"s_rB_byManuf";
+	this->s_rB_byManuf->Size = System::Drawing::Size(85, 17);
+	this->s_rB_byManuf->TabIndex = 6;
+	this->s_rB_byManuf->TabStop = true;
+	this->s_rB_byManuf->Text = L"Manufacturer";
+	this->s_rB_byManuf->UseVisualStyleBackColor = true;
 	// 
 	// s_l_by
 	// 
@@ -259,7 +559,7 @@ void mainForm::InitializeComponent()
 	this->s_l_by->Location = System::Drawing::Point(7, 54);
 	this->s_l_by->Name = L"s_l_by";
 	this->s_l_by->Size = System::Drawing::Size(19, 13);
-	this->s_l_by->TabIndex = 6;
+	//this->s_l_by->TabIndex = 6;
 	this->s_l_by->Text = L"By";
 	// 
 	// s_rB_byCategory
@@ -268,7 +568,7 @@ void mainForm::InitializeComponent()
 	this->s_rB_byCategory->Location = System::Drawing::Point(152, 53);
 	this->s_rB_byCategory->Name = L"s_rB_byCategory";
 	this->s_rB_byCategory->Size = System::Drawing::Size(64, 17);
-	this->s_rB_byCategory->TabIndex = 5;
+	this->s_rB_byCategory->TabIndex = 4;
 	this->s_rB_byCategory->TabStop = true;
 	this->s_rB_byCategory->Text = L"Category";
 	this->s_rB_byCategory->UseVisualStyleBackColor = true;
@@ -279,7 +579,7 @@ void mainForm::InitializeComponent()
 	this->s_rB_byBarcode->Location = System::Drawing::Point(87, 53);
 	this->s_rB_byBarcode->Name = L"s_rB_byBarcode";
 	this->s_rB_byBarcode->Size = System::Drawing::Size(62, 17);
-	this->s_rB_byBarcode->TabIndex = 4;
+	this->s_rB_byBarcode->TabIndex = 3;
 	this->s_rB_byBarcode->TabStop = true;
 	this->s_rB_byBarcode->Text = L"Barcode";
 	this->s_rB_byBarcode->UseVisualStyleBackColor = true;
@@ -291,189 +591,43 @@ void mainForm::InitializeComponent()
 	this->s_rB_byName->Location = System::Drawing::Point(31, 53);
 	this->s_rB_byName->Name = L"s_rB_byName";
 	this->s_rB_byName->Size = System::Drawing::Size(50, 17);
-	this->s_rB_byName->TabIndex = 3;
+	this->s_rB_byName->TabIndex = 2;
 	this->s_rB_byName->TabStop = true;
 	this->s_rB_byName->Text = L"Name";
 	this->s_rB_byName->UseVisualStyleBackColor = true;
 	// 
-	// pd_grp
+	// list_b_restock
 	// 
-	this->pd_grp->SuspendLayout();
-	this->pd_grp->Controls->Add(this->pd_tB_name);
-	this->pd_grp->Controls->Add(this->pd_b_restock);
-	this->pd_grp->Controls->Add(this->pd_tB_category);
-	this->pd_grp->Controls->Add(this->pd_b_sell);
-	this->pd_grp->Controls->Add(this->pd_tB_barcode);
-	this->pd_grp->Controls->Add(this->pd_tB_price);
-	this->pd_grp->Controls->Add(this->pd_b_delete);
-	this->pd_grp->Controls->Add(this->pd_tB_manuf);
-	this->pd_grp->Controls->Add(this->pd_tB_stock);
-	this->pd_grp->Controls->Add(this->pd_tB_sold);
-	this->pd_grp->Controls->Add(this->pd_l_sold);
-	this->pd_grp->Controls->Add(this->pd_l_stock);
-	this->pd_grp->Controls->Add(this->pd_l_price);
-	this->pd_grp->Controls->Add(this->pd_l_manuf);
-	this->pd_grp->Controls->Add(this->pd_l_category);
-	this->pd_grp->Controls->Add(this->pd_l_barcode);
-	this->pd_grp->Controls->Add(this->pd_l_name);
-	this->pd_grp->Location = System::Drawing::Point(16, 119);
-	this->pd_grp->Name = L"pd_grp";
-	this->pd_grp->Size = System::Drawing::Size(247, 251);
-	this->pd_grp->TabIndex = 4;
-	this->pd_grp->TabStop = false;
-	this->pd_grp->Text = L"Product details";
+	this->list_b_restock->Enabled = false;
+	this->list_b_restock->Location = System::Drawing::Point(310, 339);
+	this->list_b_restock->Name = L"list_b_restock";
+	this->list_b_restock->Size = System::Drawing::Size(75, 23);
+	this->list_b_restock->TabIndex = 9;
+	this->list_b_restock->Text = L"Restock";
+	this->list_b_restock->UseVisualStyleBackColor = true;
+	this->list_b_restock->Click += gcnew System::EventHandler(this, &mainForm::list_b_restock_Click);
 	// 
-	// pd_tB_name
+	// list_b_sell
 	// 
-	this->pd_tB_name->Location = System::Drawing::Point(88, 24);
-	this->pd_tB_name->Name = L"pd_tB_name";
-	this->pd_tB_name->ReadOnly = true;
-	this->pd_tB_name->Size = System::Drawing::Size(138, 20);
-	this->pd_tB_name->TabIndex = 5;
+	this->list_b_sell->Enabled = false;
+	this->list_b_sell->Location = System::Drawing::Point(227, 339);
+	this->list_b_sell->Name = L"list_b_sell";
+	this->list_b_sell->Size = System::Drawing::Size(75, 23);
+	this->list_b_sell->TabIndex = 8;
+	this->list_b_sell->Text = L"Sell";
+	this->list_b_sell->UseVisualStyleBackColor = true;
+	this->list_b_sell->Click += gcnew System::EventHandler(this, &mainForm::list_b_sell_Click);
 	// 
-	// pd_b_restock
+	// list_b_delete
 	// 
-	this->pd_b_restock->Enabled = false;
-	this->pd_b_restock->Location = System::Drawing::Point(88, 214);
-	this->pd_b_restock->Name = L"pd_b_restock";
-	this->pd_b_restock->Size = System::Drawing::Size(75, 23);
-	this->pd_b_restock->TabIndex = 8;
-	this->pd_b_restock->Text = L"Restock";
-	this->pd_b_restock->UseVisualStyleBackColor = true;
-	this->pd_b_restock->Click += gcnew System::EventHandler(this, &mainForm::pd_b_restock_Click);
-	// 
-	// pd_tB_category
-	// 
-	this->pd_tB_category->Location = System::Drawing::Point(87, 50);
-	this->pd_tB_category->Name = L"pd_tB_category";
-	this->pd_tB_category->ReadOnly = true;
-	this->pd_tB_category->Size = System::Drawing::Size(138, 20);
-	this->pd_tB_category->TabIndex = 6;
-	// 
-	// pd_b_sell
-	// 
-	this->pd_b_sell->Enabled = false;
-	this->pd_b_sell->Location = System::Drawing::Point(10, 214);
-	this->pd_b_sell->Name = L"pd_b_sell";
-	this->pd_b_sell->Size = System::Drawing::Size(75, 23);
-	this->pd_b_sell->TabIndex = 7;
-	this->pd_b_sell->Text = L"Sell";
-	this->pd_b_sell->UseVisualStyleBackColor = true;
-	this->pd_b_sell->Click += gcnew System::EventHandler(this, &mainForm::pd_b_sell_Click);
-	// 
-	// pd_tB_barcode
-	// 
-	this->pd_tB_barcode->Location = System::Drawing::Point(87, 76);
-	this->pd_tB_barcode->Name = L"pd_tB_barcode";
-	this->pd_tB_barcode->ReadOnly = true;
-	this->pd_tB_barcode->Size = System::Drawing::Size(138, 20);
-	this->pd_tB_barcode->TabIndex = 7;
-	// 
-	// pd_tB_price
-	// 
-	this->pd_tB_price->Location = System::Drawing::Point(87, 102);
-	this->pd_tB_price->Name = L"pd_tB_price";
-	this->pd_tB_price->ReadOnly = true;
-	this->pd_tB_price->Size = System::Drawing::Size(138, 20);
-	this->pd_tB_price->TabIndex = 8;
-	// 
-	// pd_b_delete
-	// 
-	this->pd_b_delete->Enabled = false;
-	this->pd_b_delete->Location = System::Drawing::Point(166, 214);
-	this->pd_b_delete->Name = L"pd_b_delete";
-	this->pd_b_delete->Size = System::Drawing::Size(75, 23);
-	this->pd_b_delete->TabIndex = 6;
-	this->pd_b_delete->Text = L"Delete";
-	this->pd_b_delete->UseVisualStyleBackColor = true;
-	this->pd_b_delete->Click += gcnew System::EventHandler(this, &mainForm::pd_b_delete_Click);
-	// 
-	// pd_tB_manuf
-	// 
-	this->pd_tB_manuf->Location = System::Drawing::Point(87, 128);
-	this->pd_tB_manuf->Name = L"pd_tB_manuf";
-	this->pd_tB_manuf->ReadOnly = true;
-	this->pd_tB_manuf->Size = System::Drawing::Size(138, 20);
-	this->pd_tB_manuf->TabIndex = 9;
-	// 
-	// pd_tB_stock
-	// 
-	this->pd_tB_stock->Location = System::Drawing::Point(87, 154);
-	this->pd_tB_stock->Name = L"pd_tB_stock";
-	this->pd_tB_stock->ReadOnly = true;
-	this->pd_tB_stock->Size = System::Drawing::Size(138, 20);
-	this->pd_tB_stock->TabIndex = 10;
-	// 
-	// pd_tB_sold
-	// 
-	this->pd_tB_sold->Location = System::Drawing::Point(87, 180);
-	this->pd_tB_sold->Name = L"pd_tB_sold";
-	this->pd_tB_sold->ReadOnly = true;
-	this->pd_tB_sold->Size = System::Drawing::Size(138, 20);
-	this->pd_tB_sold->TabIndex = 11;
-	// 
-	// pd_l_sold
-	// 
-	this->pd_l_sold->AutoSize = true;
-	this->pd_l_sold->Location = System::Drawing::Point(11, 183);
-	this->pd_l_sold->Name = L"pd_l_sold";
-	this->pd_l_sold->Size = System::Drawing::Size(28, 13);
-	this->pd_l_sold->TabIndex = 6;
-	this->pd_l_sold->Text = L"Sold";
-	// 
-	// pd_l_stock
-	// 
-	this->pd_l_stock->AutoSize = true;
-	this->pd_l_stock->Location = System::Drawing::Point(11, 157);
-	this->pd_l_stock->Name = L"pd_l_stock";
-	this->pd_l_stock->Size = System::Drawing::Size(35, 13);
-	this->pd_l_stock->TabIndex = 5;
-	this->pd_l_stock->Text = L"Stock";
-	// 
-	// pd_l_price
-	// 
-	this->pd_l_price->AutoSize = true;
-	this->pd_l_price->Location = System::Drawing::Point(11, 105);
-	this->pd_l_price->Name = L"pd_l_price";
-	this->pd_l_price->Size = System::Drawing::Size(31, 13);
-	this->pd_l_price->TabIndex = 4;
-	this->pd_l_price->Text = L"Price";
-	// 
-	// pd_l_manuf
-	// 
-	this->pd_l_manuf->AutoSize = true;
-	this->pd_l_manuf->Location = System::Drawing::Point(11, 131);
-	this->pd_l_manuf->Name = L"pd_l_manuf";
-	this->pd_l_manuf->Size = System::Drawing::Size(70, 13);
-	this->pd_l_manuf->TabIndex = 3;
-	this->pd_l_manuf->Text = L"Manufacturer";
-	// 
-	// pd_l_category
-	// 
-	this->pd_l_category->AutoSize = true;
-	this->pd_l_category->Location = System::Drawing::Point(11, 53);
-	this->pd_l_category->Name = L"pd_l_category";
-	this->pd_l_category->Size = System::Drawing::Size(49, 13);
-	this->pd_l_category->TabIndex = 2;
-	this->pd_l_category->Text = L"Category";
-	// 
-	// pd_l_barcode
-	// 
-	this->pd_l_barcode->AutoSize = true;
-	this->pd_l_barcode->Location = System::Drawing::Point(11, 79);
-	this->pd_l_barcode->Name = L"pd_l_barcode";
-	this->pd_l_barcode->Size = System::Drawing::Size(47, 13);
-	this->pd_l_barcode->TabIndex = 1;
-	this->pd_l_barcode->Text = L"Barcode";
-	// 
-	// pd_l_name
-	// 
-	this->pd_l_name->AutoSize = true;
-	this->pd_l_name->Location = System::Drawing::Point(11, 27);
-	this->pd_l_name->Name = L"pd_l_name";
-	this->pd_l_name->Size = System::Drawing::Size(35, 13);
-	this->pd_l_name->TabIndex = 0;
-	this->pd_l_name->Text = L"Name";
+	this->list_b_delete->Enabled = false;
+	this->list_b_delete->Location = System::Drawing::Point(476, 339);
+	this->list_b_delete->Name = L"list_b_delete";
+	this->list_b_delete->Size = System::Drawing::Size(75, 23);
+	this->list_b_delete->TabIndex = 11;
+	this->list_b_delete->Text = L"Delete";
+	this->list_b_delete->UseVisualStyleBackColor = true;
+	this->list_b_delete->Click += gcnew System::EventHandler(this, &mainForm::list_b_delete_Click);
 	// 
 	// list_lv
 	// 
@@ -481,17 +635,12 @@ void mainForm::InitializeComponent()
 		this->list_col_barcode, this->list_col_price, this->list_col_manuf, this->list_col_stock, this->list_col_sold});
 	this->list_lv->FullRowSelect = true;
 	this->list_lv->HeaderStyle = System::Windows::Forms::ColumnHeaderStyle::Nonclickable;
-	System::Windows::Forms::ListViewItem^  listViewItem1 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"hm_name", 
-		L"bag", L"000021", L"31", L"H&M", L"31", L"5"}, -1));
-	System::Windows::Forms::ListViewItem^  listViewItem2 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"jj_test", 
-		L"jeans", L"00044", L"5", L"jj", L"25", L"21"}, -1));
-	this->list_lv->Items->AddRange(gcnew cli::array< System::Windows::Forms::ListViewItem^  >(2) {listViewItem1, listViewItem2});
+	this->list_lv->Items->AddRange(gcnew cli::array< System::Windows::Forms::ListViewItem^  >(5) {listViewItem1, listViewItem2, listViewItem3, listViewItem4, listViewItem5});
 	this->list_lv->Location = System::Drawing::Point(11, 23);
-	this->list_lv->MultiSelect = false;
 	this->list_lv->Name = L"list_lv";
 	this->list_lv->ShowGroups = false;
 	this->list_lv->Size = System::Drawing::Size(539, 306);
-	this->list_lv->TabIndex = 9;
+	this->list_lv->TabIndex = 7;
 	this->list_lv->UseCompatibleStateImageBehavior = false;
 	this->list_lv->View = System::Windows::Forms::View::Details;
 	this->list_lv->SelectedIndexChanged += gcnew System::EventHandler(this, &mainForm::list_lv_SelectedIndexChanged);
@@ -531,21 +680,34 @@ void mainForm::InitializeComponent()
 	// 
 	// list_grp
 	// 
-	this->list_grp->SuspendLayout();
+	this->list_grp->Controls->Add(this->list_b_discount);
 	this->list_grp->Controls->Add(this->list_lv);
+	this->list_grp->Controls->Add(this->list_b_restock);
+	this->list_grp->Controls->Add(this->list_b_delete);
+	this->list_grp->Controls->Add(this->list_b_sell);
 	this->list_grp->Location = System::Drawing::Point(277, 27);
 	this->list_grp->Name = L"list_grp";
-	this->list_grp->Size = System::Drawing::Size(561, 343);
-	this->list_grp->TabIndex = 11;
+	this->list_grp->Size = System::Drawing::Size(561, 373);
+	//this->list_grp->TabIndex = 12;
 	this->list_grp->TabStop = false;
 	this->list_grp->Text = L"Result list";
 	// 
+	// list_b_discount
+	// 
+	this->list_b_discount->Enabled = false;
+	this->list_b_discount->Location = System::Drawing::Point(393, 339);
+	this->list_b_discount->Name = L"list_b_discount";
+	this->list_b_discount->Size = System::Drawing::Size(75, 23);
+	this->list_b_discount->TabIndex = 10;
+	this->list_b_discount->Text = L"Discount";
+	this->list_b_discount->UseVisualStyleBackColor = true;
+	this->list_b_discount->Click += gcnew System::EventHandler(this, &mainForm::list_b_discount_Click);
+	// 
 	// statusStrip1
 	// 
-	this->statusStrip1->SuspendLayout();
 	this->statusStrip1->BackColor = System::Drawing::Color::LightSkyBlue;
 	this->statusStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) {this->toolStripStatusLabel1});
-	this->statusStrip1->Location = System::Drawing::Point(0, 378);
+	this->statusStrip1->Location = System::Drawing::Point(0, 409);
 	this->statusStrip1->Name = L"statusStrip1";
 	this->statusStrip1->Size = System::Drawing::Size(853, 22);
 	this->statusStrip1->SizingGrip = false;
@@ -560,13 +722,12 @@ void mainForm::InitializeComponent()
 	// 
 	// mainForm
 	// 
-	this->SuspendLayout();
+	this->AcceptButton = this->s_b_submit;
 	this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 	this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-	this->ClientSize = System::Drawing::Size(853, 400);
+	this->ClientSize = System::Drawing::Size(853, 431);
 	this->Controls->Add(this->statusStrip1);
 	this->Controls->Add(this->list_grp);
-	this->Controls->Add(this->pd_grp);
 	this->Controls->Add(this->s_grp);
 	this->Controls->Add(this->menu);
 	this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
@@ -578,233 +739,10 @@ void mainForm::InitializeComponent()
 	this->menu->PerformLayout();
 	this->s_grp->ResumeLayout(false);
 	this->s_grp->PerformLayout();
-	this->pd_grp->ResumeLayout(false);
-	this->pd_grp->PerformLayout();
 	this->list_grp->ResumeLayout(false);
 	this->statusStrip1->ResumeLayout(false);
 	this->statusStrip1->PerformLayout();
 	this->ResumeLayout(false);
 	this->PerformLayout();
-}
 
-//*********************************************
-//**********MENU COMPONENTS FUNCTION***********
-//*********************************************
-
-//Event: when click menu_f_quit item, close the mainForm window
-void mainForm::menu_f_quit_Click(System::Object^  sender, System::EventArgs^  e) {
-	this->Close();
-}
-//Event: when click menu_f_addANewProduct item, open the addPdForm window to add a new product
-void mainForm::menu_f_addANewProduct_Click(System::Object^  sender, System::EventArgs^  e) {
-	this->Create_addPdForm();
-}
-//Event: when click menu_f_loadProductList item, open the openFileDialog window to load data
-void mainForm::menu_f_loadProductList_Click(System::Object^  sender, System::EventArgs^  e) {
-	this->openFileDialog->ShowDialog();//test only
-	if( false /*(stream = openFileDialog->ShowDialog()) != nullptr*/){
-		//handle stream here
-		this->Update_statusBar("loadS");
-	}
-	else
-		this->Update_statusBar("loadF");
-	//handle the stream
-}
-//Event: when click menu_f_saveProductList item, open the saveFileDialog window to save data
-void mainForm::menu_f_saveProductList_Click(System::Object^  sender, System::EventArgs^  e) {
-	this->saveFileDialog->ShowDialog();//test only
-	if( false /*(stream = saveFileDialog->ShowDialog()) != nullptr*/){
-		//handle stream here
-		this->Update_statusBar("saveS");
-	}
-	else
-		this->Update_statusBar("saveF");
-}
-//Event: when click menu_about item, open a messageBox that contains our team's description
-void mainForm::menu_about_Click(System::Object^  sender, System::EventArgs^  e) {
-	this->Create_messageBox("about");
-}
-//Fuction: create a addPdForm window, and let logic/handler part handle the input
-void mainForm::Create_addPdForm(){
-	addPdForm^ dlg = gcnew addPdForm();
-	dlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
-	if (dlg->ShowDialog() == System::Windows::Forms::DialogResult::OK){
-		if( false /*handler.DB_add(dlg->get_product_details());*/ ){
-			this->list_lv->Items->Add(dlg->get_product_details());
-			this->Update_statusBar("addS");
-		}
-		else
-			this->Update_statusBar("addF");
-		//no need to add an item into the list; 'cause the list will only show the result of search
-	}
-}
-
-//********************************************************
-//**********PRODUCT DETAILS COMPONENTS FUNCTION***********
-//********************************************************
-
-//Event: when click pd_b_sell button, open an inputForm window for input sale data
-void mainForm::pd_b_sell_Click(System::Object^  sender, System::EventArgs^  e) {
-	this->Create_inputForm(" Sell a product", "Sell:");
-}
-//Event: when click pd_b_restock button, open an inputForm window for input restock data
-void mainForm::pd_b_restock_Click(System::Object^  sender, System::EventArgs^  e) {
-	this->Create_inputForm(" Restock a product", "Restock:");
-}
-//Event: when click pd_b_delete button, open a msgBox to check whether delete the selectedItem or not
-void mainForm::pd_b_delete_Click(System::Object^  sender, System::EventArgs^  e) {
-	if(this->Create_messageBox("delete") == System::Windows::Forms::DialogResult::Yes){
-		if( false /*Handler.DB_update(pd_tB_barcode->Text, "delete")*/){
-			this->Clear_pd_tB();
-			this->Clear_selectedList();
-			this->Update_statusBar("deleteS");
-			this->Toggle_pd_b(false);
-		}
-		else
-			this->Update_statusBar("deleteF");
-	}
-}
-//Function: create an inputForm for input; used by pd_b_sell_Click & pd_b_restock_Click events.
-void mainForm::Create_inputForm(System::String^ formTitle, System::String^ inputDescrip){
-	inputForm^ dlg = gcnew inputForm(formTitle, inputDescrip);
-	dlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
-	if (dlg->ShowDialog() == System::Windows::Forms::DialogResult::OK){
-		if(formTitle->Contains("Sell")){
-			if( false /*int stock = handler.DB_sell(pd_tB_barcode->Text, dlg->getInput())*/){
-				//Update_pd_tB_Sell(stock);
-				//Update_selectedList_Sell(stock);
-				this->Update_statusBar("sellS");
-			}
-			else{
-				this->Update_statusBar("sellF");
-			}
-		}
-		else if(formTitle->Contains("Restock")){
-			if( false /*int stock = handler.DB_restock(pd_tB_barcode->Text, dlg->getInput())*/){
-				//Update_pd_tB_Restock(stock);
-				//Update_selectedList_Restock(stock);
-				this->Update_statusBar("restockS");
-			}
-			else{
-				this->Update_statusBar("restockF");
-			}
-		}
-	}
-}
-//Function: update all pd_tb textBoxes by using a listViewItem
-void mainForm::Update_pd_tB(System::Windows::Forms::ListViewItem^ item){
-	for(int i = 0, j = 0; i < this->pd_grp->Controls->Count && j < item->SubItems->Count; i++)
-		if( this->pd_grp->Controls[i]->GetType()->ToString() == "System.Windows.Forms.TextBox")
-			this->pd_grp->Controls[i]->Text = item->SubItems[j++]->Text;
-}
-//Function: clear all pd_tb textBoxes
-void mainForm::Clear_pd_tB(){
-	for(int i = 0; i < this->pd_grp->Controls->Count; i++)
-		if( this->pd_grp->Controls[i]->GetType()->ToString() == "System.Windows.Forms.TextBox")
-			this->pd_grp->Controls[i]->Text = "";
-}
-//Function: update pd_tB_sold & pd_tB_stock textBoxes, after sell certain number of products
-void mainForm::Update_pd_tB_Sell(int stock){
-	int sold = System::Int32::Parse(this->pd_tB_stock->Text) - stock + System::Int32::Parse(this->pd_tB_sold->Text);
-	this->pd_tB_sold->Text = System::Convert::ToString(sold);
-	this->pd_tB_stock->Text = System::Convert::ToString(stock);
-}
-//Function: update pd_tB_sold & pd_tB_stock textBoxes, after restock certain number of products
-void mainForm::Update_pd_tB_Restock(int stock){
-	this->pd_tB_stock->Text = System::Convert::ToString(stock);
-}
-//Function: toggle 'enabled' properties for pd_b_delete, pd_b_sell, pd_b_restock buttons
-void mainForm::Toggle_pd_b(bool tof){
-	this->pd_b_delete->Enabled = tof;
-	this->pd_b_sell->Enabled = tof;
-	this->pd_b_restock->Enabled = tof;
-}
-
-//*****************************************************
-//**********LIST DETAILS COMPONENTS FUNCTION***********
-//*****************************************************
-
-//Event: when select an item in the list, update all pd_tB textBoxes by using this item's properties.
-void mainForm::list_lv_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
-	if(this->list_lv->SelectedItems->Count != 0){// must ensure there is at least one selectedItem 
-		this->Toggle_pd_b(true);
-		this->Update_pd_tB(this->list_lv->SelectedItems[0]);
-	}
-}
-//Function: clear the selected item in the list
-void mainForm::Clear_selectedList(){
-	if( this->list_lv->SelectedItems->Count != 0)
-		this->list_lv->SelectedItems[0]->Remove();
-}
-//Function: update selected item in the list, after sell certain number of products
-void mainForm::Update_selectedList_Sell(int stock){
-	if( this->list_lv->SelectedItems->Count != 0 ){
-		int sold = 
-			System::Int32::Parse(this->list_lv->SelectedItems[0]->SubItems[5]->Text)/*old restock*/ - stock + System::Int32::Parse(this->list_lv->SelectedItems[0]->SubItems[6]->Text)/*old sold*/;
-		this->list_lv->SelectedItems[0]->SubItems[5]->Text/*restock*/ = System::Convert::ToString(stock);
-		this->list_lv->SelectedItems[0]->SubItems[6]->Text/*sold*/ = System::Convert::ToString(sold);
-	}
-}
-//Function: update selected item in the list, after restock certain number of products
-void mainForm::Update_selectedList_Restock(int stock){
-	if( this->list_lv->SelectedItems->Count != 0 )
-		this->list_lv->SelectedItems[0]->SubItems[5]->Text = System::Convert::ToString(stock);
-}
-
-//**************************************************
-//**********STATUSBAR COMPONENTS FUNCTION***********
-//**************************************************
-
-//Function: update statusBar's Text and BackColor
-void mainForm::Update_statusBar(System::String^ s){
-	//can improve
-	if( s == "addS" )
-		this->Set_statusBar("Product added successfully", System::Drawing::Color::LightSkyBlue);
-	else if( s == "addF" )
-		this->Set_statusBar("Product added unsuccessfully", System::Drawing::Color::RosyBrown);
-
-	else if( s == "sellS" )
-		this->Set_statusBar("Product sold successfully", System::Drawing::Color::LightSkyBlue);
-	else if( s == "sellF" )
-		this->Set_statusBar("Product sold unsuccessfully", System::Drawing::Color::RosyBrown);
-
-	else if( s == "restockS" )
-		this->Set_statusBar("Product restocked successfully", System::Drawing::Color::LightSkyBlue);
-	else if( s == "restockF" )
-		this->Set_statusBar("Product restocked unsuccessfully", System::Drawing::Color::RosyBrown);
-
-	else if( s == "deleteS" )
-		this->Set_statusBar("Product deleted successfully", System::Drawing::Color::LightSkyBlue);
-	else if( s == "deleteF" )
-		this->Set_statusBar("Product deleted unsuccessfully", System::Drawing::Color::RosyBrown)
-		;
-	else if( s == "loadS" )
-		this->Set_statusBar("Loaded successfully", System::Drawing::Color::LightSkyBlue);
-	else if( s == "loadF" )
-		this->Set_statusBar("Loaded unsuccessfully", System::Drawing::Color::RosyBrown);
-
-	else if( s == "saveS" )
-		this->Set_statusBar("Saved successfully", System::Drawing::Color::LightSkyBlue);
-	else if( s == "saveF" )
-		this->Set_statusBar("Saved unsuccessfully", System::Drawing::Color::RosyBrown);
-}
-//Function: set statusBus's Text and BackColor
-void mainForm::Set_statusBar(System::String^ s, System::Drawing::Color c){
-	this->toolStripStatusLabel1->Text = s;
-	this->statusStrip1->BackColor = c;
-}
-
-//**********************************************
-//**********OTHER COMPONENTS FUNCTION***********
-//**********************************************
-
-//Function: create a type of msgBox according to a string (typeMB, for type for messageBox)
-System::Windows::Forms::DialogResult mainForm::Create_messageBox(System::String^ typeMB){
-	if(typeMB == "delete")
-		return (System::Windows::Forms::MessageBox::Show("Are you sure that you would like \nto delete this product?", 
-		" Delete Product",
-		System::Windows::Forms::MessageBoxButtons::YesNo,
-		System::Windows::Forms::MessageBoxIcon::Warning));
-	//else
-	return System::Windows::Forms::MessageBox::Show("Hello! Our team: Ashray, Bob, Hui and Kai!", " About");
 }
