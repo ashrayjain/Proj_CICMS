@@ -66,7 +66,7 @@ namespace CICMS_UI {
 				 // input_tB_input
 				 // 
 				 this->input_tB_input->Location = System::Drawing::Point(82, 39);
-				 this->input_tB_input->MaxLength = 10;
+				 this->input_tB_input->MaxLength = 7;
 				 this->input_tB_input->Name = L"input_tB_input";
 				 this->input_tB_input->Size = System::Drawing::Size(85, 20);
 				 this->input_tB_input->TabIndex = 1;

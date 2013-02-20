@@ -79,8 +79,9 @@
 #include "mainForm.h"
 #include "inputForm.h"
 #include "addPdForm.h"
-#include <vector>
-#include <string>
+#include "ListViewItemComparer.h"
+//#include <vector>
+//#include <string>
 
 using namespace CICMS_UI;
 
@@ -97,6 +98,8 @@ enum STATUSBAR {
 };
 
 enum BYMETHOD { byName, byBarcode, byCategory, byStock, byManuf };
+
+enum SORT_ORDER{Descending = false, Ascending = true};
 
 //********************************************************
 //*************                            ***************
@@ -201,15 +204,15 @@ void mainForm::Search_product(System::String^ s, int m){
 	if(false /*!r.empty()*/){
 		/*this->list_lv->Clear();
 		for(int i = 0; i < r.size(); i++){
-			this->list_lv->Items->Add(gcnew System::Windows::Forms::ListViewItem(gcnew cli::array<System::String^>(7) {
-					gcnew System::String(r[i].getName().c_str()), 
-					gcnew System::String(r[i].getCategory().c_str()), 
-					gcnew System::String(r[i].getBarcode().c_str()), 
-					gcnew System::String(r[i].getPrice().c_str()), 
-					gcnew System::String(r[i].getManuf().c_str()), 
-					gcnew System::String(r[i].getStock().c_str()), 
-					gcnew System::String(r[i].getSold().c_str())
-				}));
+		this->list_lv->Items->Add(gcnew System::Windows::Forms::ListViewItem(gcnew cli::array<System::String^>(7) {
+		gcnew System::String(r[i].getName().c_str()), 
+		gcnew System::String(r[i].getCategory().c_str()), 
+		gcnew System::String(r[i].getBarcode().c_str()), 
+		gcnew System::String(r[i].getPrice().c_str()), 
+		gcnew System::String(r[i].getManuf().c_str()), 
+		gcnew System::String(r[i].getStock().c_str()), 
+		gcnew System::String(r[i].getSold().c_str())
+		}));
 		}*/
 		this->Update_statusBar(searchS);
 	}
@@ -248,15 +251,11 @@ double mainForm::Create_inputForm(System::String^ formTitle, System::String^ pdD
 }
 void mainForm::Create_sellForm(){
 	for(int i = 0; i < this->list_lv->SelectedItems->Count; i++){
-		int num = (int) this->Create_inputForm(" Sell a product",
-			this->list_lv->SelectedItems[i]->SubItems[0]->Text + " - " + 
-			this->list_lv->SelectedItems[i]->SubItems[2]->Text//Product name - barcode
-			, "Sell:", "1"),
-			barcode = System::Convert::ToInt32(this->list_lv->SelectedItems[i]->SubItems[2]->Text);
-
+		int num = (int) this->Create_inputForm(" Sell a product", this->Get_sName(i) + " - " + this->Get_sBarcode(i), "Sell:", "1"),
+			barcode = this->Get_sBarcode(i);
 		//int sold = handler.DB_sell(barcode, num),
 		//stock = handler.DB_restock(barcode, -num);
-		if(false/*sold != -1 && stock != -1*/){
+		if(false/*sold != -1 || stock != -1*/){
 			//Update_selectedList_Sell(i,sold);
 			//Update_selectedList_Restock(i,stock);
 			this->Update_statusBar(sellS);
@@ -267,52 +266,48 @@ void mainForm::Create_sellForm(){
 }
 void mainForm::Create_restockForm(){
 	for(int i = 0; i < this->list_lv->SelectedItems->Count; i++){
-		int num = (int) this->Create_inputForm(" Restock a product",
-			this->list_lv->SelectedItems[i]->SubItems[0]->Text + " - " + 
-			this->list_lv->SelectedItems[i]->SubItems[2]->Text//Product name - barcode
-			, "Restock:", "1"),
-			barcode = System::Convert::ToInt32(this->list_lv->SelectedItems[i]->SubItems[2]->Text);
+		int num = (int) this->Create_inputForm(" Restock a product", this->Get_sName(i) + " - " + this->Get_sBarcode(i), "Restock:", "1"),
+			barcode = this->Get_sBarcode(i);
 		//int stock = handler.DB_restock(barcode, num));
-		if(false/*stock != -1*/){
-			//Update_selectedList_Restock(i,stock);
-			this->Update_statusBar(restockS);
-		}
-		else
-			this->Update_statusBar(restockF);
+		//Update_selectedList_Restock(i,stock);
+		//this->Update_statusBar(restockS);
+		this->Update_statusBar(restockF);
 	}
 }
 void mainForm::Create_discountForm(){
 	for(int i = 0; i < this->list_lv->SelectedItems->Count; i++){
-		double num = this->Create_inputForm(" Discount a price",
-			this->list_lv->SelectedItems[i]->SubItems[0]->Text + " - " + 
-			this->list_lv->SelectedItems[i]->SubItems[2]->Text//Product name - barcode
-			,"Discount:", "0.9"),
-			barcode = System::Convert::ToInt32(this->list_lv->SelectedItems[i]->SubItems[2]->Text);
+		double num = this->Create_inputForm(" Discount a price", this->Get_sName(i) + " - " + this->Get_sBarcode(i),"Discount:", "0.9");
+		num = num <= 0? 1: num;//filter inappropriate discount
+
+		int	barcode = this->Get_sBarcode(i);
 		//double price = handler.DB_discount(barcode, num);
-		if(false/*price != -1*/)
-			this->Update_statusBar(discountS);
-		else
-			this->Update_statusBar(discountF);
+		//this->Update_statusBar(discountS);
+		this->Update_statusBar(discountF);
 	}
 }
 void mainForm::Create_deleteForm(){
+	enum { No_plsDont, Yes_deleteThem, tooMany = 3};
+	int deteleAllSelectedItem = No_plsDont;
+
+	if(this->list_lv->SelectedItems->Count > tooMany &&
+		this->Create_messageBox("delete", "Are you sure that you would like \nto delete all the selected products?"
+		) == System::Windows::Forms::DialogResult::Yes)
+		deteleAllSelectedItem = Yes_deleteThem;
 	for(int i = 0; i < this->list_lv->SelectedItems->Count; i++){
-		int barcode = System::Convert::ToInt32(this->list_lv->SelectedItems[i]->SubItems[2]->Text);
-		if(this->Create_messageBox("delete", 
+		if(deteleAllSelectedItem || this->Create_messageBox("delete", 
 			"Are you sure that you would like \nto delete this product, " +
-			this->list_lv->SelectedItems[i]->SubItems[0]->Text + " - " + 
-			this->list_lv->SelectedItems[i]->SubItems[2]->Text +//Product name - barcode
+			this->Get_sName(i) + " - " + 
+			this->Get_sBarcode(i) +
 			"?"
 			) == System::Windows::Forms::DialogResult::Yes){
-				if( false/*Handler.DB_delete(barcode)*/){
-					this->Clear_selectedList();
-					this->Update_statusBar(deleteS);
-					this->Toggle_list_b(false);
-				}
-				else
-					this->Update_statusBar(deleteF);
+				int barcode = this->Get_sBarcode(i);
+				/*Handler.DB_delete(barcode)*/
+				this->Clear_selectedList(i--);//if delete an item, selectedItems->Count will decrease, index will change as well
 		}
 	}
+	this->Toggle_list_b(false);
+	//this->Update_statusBar(deleteS);
+	this->Update_statusBar(deleteF);
 }
 //Function: toggle 'enabled' properties for pd_b_delete, pd_b_sell, pd_b_restock buttons
 void mainForm::Toggle_list_b(bool tof){
@@ -325,10 +320,29 @@ void mainForm::Toggle_list_b(bool tof){
 void mainForm::list_lv_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
 	this->list_lv->SelectedItems->Count != 0 ? this->Toggle_list_b(true): this->Toggle_list_b(false);
 }
+//Event: when click the column in the list, sort it
+void mainForm::list_lv_ColumnClick(System::Object^, System::Windows::Forms::ColumnClickEventArgs^ e){
+	if(e->Column != this->list_sortColumn){// check whether it clicks the same column
+		this->list_sortColumn = e->Column;
+		this->Sort_list_lv(e, Ascending);
+	}
+	else{
+		if(this->list_sort == Ascending){
+			this->Sort_list_lv(e, Descending);
+		}
+		else{
+			this->Sort_list_lv(e, Ascending);
+		}
+	}
+}
+//Function: set the sort status, and then sort the list
+void mainForm::Sort_list_lv(System::Windows::Forms::ColumnClickEventArgs^ e, bool t){
+	this->list_sort = t;// sort status: Ascending or Descending
+	this->list_lv->ListViewItemSorter = gcnew ListViewItemComparer(e->Column, t);// sort it
+}
 //Function: clear the selected item in the list
-void mainForm::Clear_selectedList(){
-	for(int i = 0; i < this->list_lv->SelectedItems->Count; i++)
-		this->list_lv->SelectedItems[i]->Remove();
+void mainForm::Clear_selectedList(int index){
+	this->list_lv->SelectedItems[index]->Remove();
 }
 //Function: update selected item in the list, after sell certain number of products
 void mainForm::Update_selectedList_Sell(int index,int num_sold){
@@ -337,6 +351,14 @@ void mainForm::Update_selectedList_Sell(int index,int num_sold){
 //Function: update selected item in the list, after restock certain number of products
 void mainForm::Update_selectedList_Restock(int index,int num_stock){
 	this->list_lv->SelectedItems[index]->SubItems[5]->Text/*stock*/ = System::Convert::ToString(num_stock);
+}
+//Function: get selected item's barcode number
+int mainForm::Get_sBarcode(int index){
+	return System::Convert::ToInt32(this->list_lv->SelectedItems[index]->SubItems[2]->Text);
+}
+//Function: get selected item's name
+System::String^ mainForm::Get_sName(int index){
+	return this->list_lv->SelectedItems[index]->SubItems[0]->Text;
 }
 
 //**************************************************
@@ -634,7 +656,7 @@ void mainForm::InitializeComponent()
 	this->list_lv->Columns->AddRange(gcnew cli::array< System::Windows::Forms::ColumnHeader^  >(7) {this->list_col_name, this->list_col_category, 
 		this->list_col_barcode, this->list_col_price, this->list_col_manuf, this->list_col_stock, this->list_col_sold});
 	this->list_lv->FullRowSelect = true;
-	this->list_lv->HeaderStyle = System::Windows::Forms::ColumnHeaderStyle::Nonclickable;
+	this->list_lv->HeaderStyle = System::Windows::Forms::ColumnHeaderStyle::Clickable;
 	this->list_lv->Items->AddRange(gcnew cli::array< System::Windows::Forms::ListViewItem^  >(5) {listViewItem1, listViewItem2, listViewItem3, listViewItem4, listViewItem5});
 	this->list_lv->Location = System::Drawing::Point(11, 23);
 	this->list_lv->Name = L"list_lv";
@@ -644,6 +666,8 @@ void mainForm::InitializeComponent()
 	this->list_lv->UseCompatibleStateImageBehavior = false;
 	this->list_lv->View = System::Windows::Forms::View::Details;
 	this->list_lv->SelectedIndexChanged += gcnew System::EventHandler(this, &mainForm::list_lv_SelectedIndexChanged);
+	this->list_lv->ColumnClick += gcnew System::Windows::Forms::ColumnClickEventHandler(this, &mainForm::list_lv_ColumnClick);
+	this->list_sortColumn = -1;
 	// 
 	// list_col_name
 	// 
@@ -744,5 +768,4 @@ void mainForm::InitializeComponent()
 	this->statusStrip1->PerformLayout();
 	this->ResumeLayout(false);
 	this->PerformLayout();
-
 }

@@ -87,6 +87,7 @@
     <ClInclude Include="addPdForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="ListViewItemComparer.h" />
     <ClInclude Include="mainForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
@@ -102,6 +103,7 @@
   <ItemGroup>
     <ClCompile Include="addPdForm.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="ListViewItemComparer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainForm.cpp" />
     <ClCompile Include="inputForm.cpp" />
