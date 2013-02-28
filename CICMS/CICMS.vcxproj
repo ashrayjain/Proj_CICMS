@@ -88,9 +88,11 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="ListViewItemComparer.h" />
+    <ClInclude Include="logic.h" />
     <ClInclude Include="mainForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="Product.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="inputForm.h">
       <FileType>CppForm</FileType>
@@ -104,9 +106,11 @@
     <ClCompile Include="addPdForm.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="ListViewItemComparer.cpp" />
+    <ClCompile Include="logic.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainForm.cpp" />
     <ClCompile Include="inputForm.cpp" />
+    <ClCompile Include="Product.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

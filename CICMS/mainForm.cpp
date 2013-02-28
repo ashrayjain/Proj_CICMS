@@ -138,7 +138,7 @@ void mainForm::Create_addPdForms(){
 		addPdForm^ dlg = gcnew addPdForm();
 		dlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 		if (dlg->ShowDialog() == System::Windows::Forms::DialogResult::OK){
-			if( false /*handler.DB_add(dlg->get_product_details());*/ )
+			if( handler->DB_add(dlg->get_product_details()))
 				this->Update_statusBar(addS);
 			else
 				this->Update_statusBar(addF);

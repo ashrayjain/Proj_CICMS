@@ -80,6 +80,7 @@
 //  "menu_about_Click" means the event - when user clicks the about item in the menu.
 //
 /*************************************************************************************************/
+#include "logic.h"
 
 namespace CICMS_UI {
 
@@ -89,8 +90,13 @@ namespace CICMS_UI {
 		mainForm(void)
 		{
 			InitializeComponent();
+			handler = new logic;
 		}
 
+		~mainForm()
+		{
+			delete handler;
+		}
 		//********************************************************
 		//*************MEMBER FUNCTION DECLEARATION***************
 		//********************************************************
@@ -184,6 +190,8 @@ namespace CICMS_UI {
 			 //**********STATUS COMPONENTS DECLEARATION***********
 	private: System::Windows::Forms::StatusStrip^  statusStrip1;
 	private: System::Windows::Forms::ToolStripStatusLabel^  toolStripStatusLabel1;
+			 //**********LOGIC HANDLER DECLEARATION***********
+	private: logic* handler;
 	};
 }
 #endif

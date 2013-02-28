@@ -242,13 +242,13 @@ namespace CICMS_UI {
 	public: System::Windows::Forms::ListViewItem^ get_product_details(){
 				//need to check whether they are blank/number/...
 				return gcnew System::Windows::Forms::ListViewItem(gcnew cli::array<System::String^>(7) {
-					this->npd_tB_name->Text, 
-					this->npd_tB_category->Text, 
-					this->npd_tB_barcode->Text, 
-					this->npd_tB_price->Text, 
-					this->npd_tB_manuf->Text, 
-					this->npd_tB_stock->Text, 
-					this->npd_tB_sold->Text
+					this->npd_tB_name->Text,
+					this->npd_tB_category->Text,
+					this->npd_tB_manuf->Text,
+					this->npd_tB_barcode->Text,
+					this->npd_tB_stock->Text,
+					this->npd_tB_sold->Text,
+					this->npd_tB_price->Text
 				});
 			}
 	};
