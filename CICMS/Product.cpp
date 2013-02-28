@@ -1,3 +1,25 @@
+/***************************************************************************************
+//
+//  class logic: Product.cpp
+//
+//  Description: Product.cpp containg the implementation of the class Product. class Product
+//  defines a Product in CICMS, with all its attributes. It also provides the API for
+//  accessing various attributes of a given Product for further processing.
+//  
+//  API:
+//  Product(std::string, std::string, std::string, unsigned, unsigned, unsigned, double);
+//	std::string getName();
+//  std::string getCategory();
+//  std::string getManufacturer();
+//  unsigned getBarcode();
+//  unsigned getNoInStock();
+//  unsigned getNoSold();
+//  double getPrice();
+//
+//  Main authors: ASHRAY JAIN(A0105199B)
+//
+****************************************************************************************/
+
 #include "stdafx.h"
 #include "Product.h"
 #include <string>
