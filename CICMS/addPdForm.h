@@ -38,8 +38,6 @@ namespace CICMS_UI {
 	void InitializeComponent(void); //Creates the GUI
 	
 	void npd_b_ok_Click(System::Object^  sender, System::EventArgs^  e); //Stuff that happens when OK button is clicked
-	
-	System::Void addPdForm_Load(System::Object^  sender, System::EventArgs^  e); //Stuff that happens when form is loaded
 };
 }
 #endif
