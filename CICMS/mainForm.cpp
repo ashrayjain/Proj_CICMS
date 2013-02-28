@@ -138,7 +138,7 @@ void mainForm::Create_addPdForms(){
 		addPdForm^ dlg = gcnew addPdForm();
 		dlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 		if (dlg->ShowDialog() == System::Windows::Forms::DialogResult::OK){
-			if( handler->DB_add(dlg->get_product_details()))
+			if(handler->DB_add(dlg->get_product_details()))
 				this->Update_statusBar(addS);
 			else
 				this->Update_statusBar(addF);
@@ -180,8 +180,7 @@ void mainForm::Create_saveFileDlg(){
 
 //Event: when s_b_submit button is clicked
 void mainForm::s_b_submit_Click(System::Object^  sender, System::EventArgs^  e){
-	int by_method = this->Get_byMethod();
-	this->Search_product(this->s_tB_input->Text, by_method);
+	this->Search_product(this->s_tB_input->Text, this->Get_byMethod());
 }
 //Function: get the result of checked radioButton (by which method to search)
 int mainForm::Get_byMethod(){
@@ -200,20 +199,20 @@ int mainForm::Get_byMethod(){
 }
 //Function: search the products according to a text and a method; if the result is non-empty, it will add an item onto the listView component
 void mainForm::Search_product(System::String^ s, int m){
-	//std::vector<Product> r = handler.DB_search(s, m);// may need System::String to std::string
-	if(false /*!r.empty()*/){
-		/*this->list_lv->Clear();
-		for(int i = 0; i < r.size(); i++){
+	std::vector<Product> r = handler->DB_search(msclr::interop::marshal_as<std::string>(s), m);
+	if(!r.empty()){
+		this->list_lv->Clear();
+		for(unsigned i = 0; i < r.size(); i++){
 		this->list_lv->Items->Add(gcnew System::Windows::Forms::ListViewItem(gcnew cli::array<System::String^>(7) {
 		gcnew System::String(r[i].getName().c_str()), 
 		gcnew System::String(r[i].getCategory().c_str()), 
-		gcnew System::String(r[i].getBarcode().c_str()), 
-		gcnew System::String(r[i].getPrice().c_str()), 
-		gcnew System::String(r[i].getManuf().c_str()), 
-		gcnew System::String(r[i].getStock().c_str()), 
-		gcnew System::String(r[i].getSold().c_str())
+		gcnew System::String(r[i].getBarcode().ToString()), 
+		gcnew System::String(r[i].getPrice().ToString()), 
+		gcnew System::String(r[i].getManufacturer().c_str()), 
+		gcnew System::String(r[i].getNoInStock().ToString()), 
+		gcnew System::String(r[i].getNoSold().ToString())
 		}));
-		}*/
+		}
 		this->Update_statusBar(searchS);
 	}
 	else
@@ -251,27 +250,20 @@ double mainForm::Create_inputForm(System::String^ formTitle, System::String^ pdD
 }
 void mainForm::Create_sellForm(){
 	for(int i = 0; i < this->list_lv->SelectedItems->Count; i++){
-		int num = (int) this->Create_inputForm(" Sell a product", this->Get_sName(i) + " - " + this->Get_sBarcode(i), "Sell:", "1"),
-			barcode = this->Get_sBarcode(i);
-		//int sold = handler.DB_sell(barcode, num),
-		//stock = handler.DB_restock(barcode, -num);
-		if(false/*sold != -1 || stock != -1*/){
-			//Update_selectedList_Sell(i,sold);
-			//Update_selectedList_Restock(i,stock);
+		unsigned num = (unsigned) this->Create_inputForm(" Sell a product", this->Get_sName(i) + " - " + this->Get_sBarcode(i), "Sell:", "1");
+		if(handler->DB_sell(this->list_lv->SelectedItems[i], num))
 			this->Update_statusBar(sellS);
-		}
 		else
 			this->Update_statusBar(sellF);
 	}
 }
 void mainForm::Create_restockForm(){
 	for(int i = 0; i < this->list_lv->SelectedItems->Count; i++){
-		int num = (int) this->Create_inputForm(" Restock a product", this->Get_sName(i) + " - " + this->Get_sBarcode(i), "Restock:", "1"),
-			barcode = this->Get_sBarcode(i);
-		//int stock = handler.DB_restock(barcode, num));
-		//Update_selectedList_Restock(i,stock);
-		//this->Update_statusBar(restockS);
-		this->Update_statusBar(restockF);
+		unsigned num = (unsigned) this->Create_inputForm(" Restock a product", this->Get_sName(i) + " - " + this->Get_sBarcode(i), "Restock:", "1");
+		if(handler->DB_restock(this->list_lv->SelectedItems[i], num))
+			this->Update_statusBar(restockS);
+		else
+			this->Update_statusBar(restockF);
 	}
 }
 void mainForm::Create_discountForm(){
@@ -286,7 +278,7 @@ void mainForm::Create_discountForm(){
 	}
 }
 void mainForm::Create_deleteForm(){
-	enum { No_plsDont, Yes_deleteThem, tooMany = 3};
+	enum { No_plsDont, Yes_deleteThem, tooMany = 2};
 	int deteleAllSelectedItem = No_plsDont;
 
 	if(this->list_lv->SelectedItems->Count > tooMany &&
@@ -300,8 +292,7 @@ void mainForm::Create_deleteForm(){
 			this->Get_sBarcode(i) +
 			"?"
 			) == System::Windows::Forms::DialogResult::Yes){
-				int barcode = this->Get_sBarcode(i);
-				/*Handler.DB_delete(barcode)*/
+				handler->DB_del(this->list_lv->SelectedItems[i]);
 				this->Clear_selectedList(i--);//if delete an item, selectedItems->Count will decrease, index will change as well
 		}
 	}
@@ -343,14 +334,6 @@ void mainForm::Sort_list_lv(System::Windows::Forms::ColumnClickEventArgs^ e, boo
 //Function: clear the selected item in the list
 void mainForm::Clear_selectedList(int index){
 	this->list_lv->SelectedItems[index]->Remove();
-}
-//Function: update selected item in the list, after sell certain number of products
-void mainForm::Update_selectedList_Sell(int index,int num_sold){
-	this->list_lv->SelectedItems[index]->SubItems[6]->Text/*sold*/ = System::Convert::ToString(num_sold);
-}
-//Function: update selected item in the list, after restock certain number of products
-void mainForm::Update_selectedList_Restock(int index,int num_stock){
-	this->list_lv->SelectedItems[index]->SubItems[5]->Text/*stock*/ = System::Convert::ToString(num_stock);
 }
 //Function: get selected item's barcode number
 int mainForm::Get_sBarcode(int index){

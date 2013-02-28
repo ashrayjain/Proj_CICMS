@@ -1,3 +1,17 @@
+/*************************************************************************************************/
+//
+//  ListViewItemComparer.cpp
+//
+//  Description: [for MainForm's ListView components] A simple class that implements the manual sorting of items by columns. 
+//
+//  API:
+//  CICMS_UI::ListViewItemComparer::ListViewItemComparer(int column, bool sortOrder);
+//	CICMS_UI::ListViewItemComparer::Compare(Object^ x, Object^ y);
+//
+//  Main authors: XIE KAI(A0102016E)
+//
+/*************************************************************************************************/
+
 #include "stdafx.h"
 #include "ListViewItemComparer.h"
 
