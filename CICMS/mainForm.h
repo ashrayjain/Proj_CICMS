@@ -97,11 +97,11 @@ namespace CICMS_UI {
 		{
 			delete handler;
 		}
-		//********************************************************
-		//*************MEMBER FUNCTION DECLEARATION***************
-		//********************************************************
+	//********************************************************
+	//*************MEMBER FUNCTION DECLEARATION***************
+	//********************************************************
 
-		//**********MENU COMPONENTS FUNCTION***********
+	//**********MENU COMPONENTS FUNCTION***********
 	private: void menu_f_addNewProducts_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void menu_f_loadProductList_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void menu_f_saveProductList_Click(System::Object^  sender, System::EventArgs^  e);
@@ -111,12 +111,12 @@ namespace CICMS_UI {
 	private: void Create_openFileDlg();
 	private: void Create_saveFileDlg();
 
-			 //**********SEARCH COMPONENTS FUNCTION***********
+	//**********SEARCH COMPONENTS FUNCTION***********
 	private: void s_b_submit_Click(System::Object^  sender, System::EventArgs^  e);
 	private: int Get_byMethod();
 	private: void Search_product(System::String^ s, int m);
 
-			 //**********LIST DETAILS COMPONENTS FUNCTION***********
+	//**********LIST DETAILS COMPONENTS FUNCTION***********
 	private: void list_b_delete_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void list_b_sell_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void list_b_restock_Click(System::Object^  sender, System::EventArgs^  e);
@@ -127,28 +127,26 @@ namespace CICMS_UI {
 	private: void Create_restockForm();
 	private: void Create_discountForm();
 	private: void Create_deleteForm();
-	private: void Update_selectedList_Sell(int index, int num_sold);
-	private: void Update_selectedList_Restock(int index, int num_stock);
 	private: void Clear_selectedList(int index);
-	private: void mainForm::list_lv_ColumnClick(System::Object^, System::Windows::Forms::ColumnClickEventArgs^ e);
+	private: void list_lv_ColumnClick(System::Object^, System::Windows::Forms::ColumnClickEventArgs^ e);
 	private: void Toggle_list_b(bool tof);
 	private: void Sort_list_lv(System::Windows::Forms::ColumnClickEventArgs^ e, bool t);
 	private: int Get_sBarcode(int index);
 	private: System::String^ Get_sName(int index);
 
-			 //**********STATUSBAR COMPONENTS FUNCTION***********
-			 void Update_statusBar(int i);
-			 void Set_statusBar(System::String^ s, System::Drawing::Color c);
+	//**********STATUSBAR COMPONENTS FUNCTION***********
+	void Update_statusBar(int i);
+	void Set_statusBar(System::String^ s, System::Drawing::Color c);
 
-			 //**********OTHER COMPONENTS FUNCTION***********
+	//**********OTHER COMPONENTS FUNCTION***********
 	private: System::Windows::Forms::DialogResult Create_messageBox(System::String^ typeMB, System::String^ s);
 	private: void InitializeComponent();
 
-			 //********************************************************
-			 //*****************PROPERTIES DECLEARATION****************
-			 //********************************************************
+	//********************************************************
+	//*****************PROPERTIES DECLEARATION****************
+	//********************************************************
 
-			 //**********MENU COMPONENTS DECLEARATION***********
+	//**********MENU COMPONENTS DECLEARATION***********
 	private: System::Windows::Forms::MenuStrip^  menu;
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_f;
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_f_saveProductList;
@@ -159,7 +157,7 @@ namespace CICMS_UI {
 	private: System::Windows::Forms::OpenFileDialog^  openFileDialog;
 	private: System::Windows::Forms::SaveFileDialog^  saveFileDialog;
 
-			 //**********SEARCH COMPONENTS DECLEARATION***********
+	//**********SEARCH COMPONENTS DECLEARATION***********
 	private: System::Windows::Forms::TextBox^  s_tB_input;
 	private: System::Windows::Forms::Button^  s_b_submit;
 	private: System::Windows::Forms::GroupBox^  s_grp;
@@ -170,7 +168,7 @@ namespace CICMS_UI {
 	private: System::Windows::Forms::RadioButton^  s_rB_stockLT;
 	private: System::Windows::Forms::RadioButton^  s_rB_byManuf;
 
-			 //**********LIST COMPONENTS DECLEARATION***********
+	//**********LIST COMPONENTS DECLEARATION***********
 	private: System::Windows::Forms::ListView^  list_lv;
 	private: System::Windows::Forms::ColumnHeader^  list_col_name;
 	private: System::Windows::Forms::ColumnHeader^  list_col_category;
@@ -187,10 +185,10 @@ namespace CICMS_UI {
 	private: System::Int32 list_sortColumn;
 	private: bool list_sort;
 
-			 //**********STATUS COMPONENTS DECLEARATION***********
+	//**********STATUS COMPONENTS DECLEARATION***********
 	private: System::Windows::Forms::StatusStrip^  statusStrip1;
 	private: System::Windows::Forms::ToolStripStatusLabel^  toolStripStatusLabel1;
-			 //**********LOGIC HANDLER DECLEARATION***********
+	//**********LOGIC HANDLER DECLEARATION***********
 	private: logic* handler;
 	};
 }
