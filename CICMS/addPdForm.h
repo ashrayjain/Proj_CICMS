@@ -36,10 +36,10 @@ namespace CICMS_UI {
 	 System::Windows::Forms::TextBox^  npd_tB_barcode;
 	 System::Windows::Forms::TextBox^  npd_tB_price;
 	 System::Windows::Forms::TextBox^  npd_tB_manuf;
-	 System::Windows::Forms::TextBox^  npd_tB_stock;
-	 System::Windows::Forms::TextBox^  npd_tB_sold;
-	 System::Windows::Forms::Label^  npd_l_sold;
-	 System::Windows::Forms::Label^  npd_l_stock;
+
+
+
+
 	 System::Windows::Forms::Label^  npd_l_price;
 	 System::Windows::Forms::Label^  npd_l_manuf;
 	 System::Windows::Forms::Label^  npd_l_category;
