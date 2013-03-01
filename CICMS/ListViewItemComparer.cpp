@@ -17,9 +17,10 @@
 
 using namespace CICMS_UI;
 
-ListViewItemComparer::ListViewItemComparer(int column, bool sortOrder){
+ListViewItemComparer::ListViewItemComparer(int column, bool sortOrder, bool is_num){
 	_col = column;
 	_sort = sortOrder;
+	_is_num = is_num;
 }
 //Function: compare two objects
 int ListViewItemComparer::Compare(Object^ x, Object^ y)
@@ -31,18 +32,10 @@ int ListViewItemComparer::Compare(Object^ x, Object^ y)
 	else/*Descending*/
 		return Compare_s(y_t, x_t);
 }
-//need to be in logic
-bool ListViewItemComparer::is_number(System::String^ s){
-	try{
-		System::Convert::ToDouble(s);
-	} catch(System::FormatException^){
-		return false;
-	}
-	return true;
-}
+
 //Function: compare two string; there are two cases - (can be converted into) number and string
 int ListViewItemComparer::Compare_s(System::String^ s1, System::String^ s2){
-	if(is_number(s1))
+	if(_is_num)
 		return System::Convert::ToDouble(s1) > System::Convert::ToDouble(s2);
 	return System::String::Compare(s1, s2);
 }

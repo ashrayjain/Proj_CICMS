@@ -199,20 +199,13 @@ int mainForm::Get_byMethod(){
 }
 //Function: search the products according to a text and a method; if the result is non-empty, it will add an item onto the listView component
 void mainForm::Search_product(System::String^ s, int m){
-	std::vector<Product> r = handler->DB_search(msclr::interop::marshal_as<std::string>(s), m);
+	std::vector<Product> r = handler->DB_search(s, m);
 	if(!r.empty()){
+		/*
 		this->list_lv->Clear();
-		for(unsigned i = 0; i < r.size(); i++){
-		this->list_lv->Items->Add(gcnew System::Windows::Forms::ListViewItem(gcnew cli::array<System::String^>(7) {
-		gcnew System::String(r[i].getName().c_str()), 
-		gcnew System::String(r[i].getCategory().c_str()), 
-		gcnew System::String(r[i].getBarcode().ToString()), 
-		gcnew System::String(r[i].getPrice().ToString()), 
-		gcnew System::String(r[i].getManufacturer().c_str()), 
-		gcnew System::String(r[i].getNoInStock().ToString()), 
-		gcnew System::String(r[i].getNoSold().ToString())
-		}));
-		}
+		for(unsigned i = 0; i < r.size(); i++)
+			this->list_lv->Items->Add(gcnew System::Windows::Forms);
+		*/
 		this->Update_statusBar(searchS);
 	}
 	else
@@ -313,23 +306,28 @@ void mainForm::list_lv_SelectedIndexChanged(System::Object^  sender, System::Eve
 }
 //Event: when click the column in the list, sort it
 void mainForm::list_lv_ColumnClick(System::Object^, System::Windows::Forms::ColumnClickEventArgs^ e){
-	if(e->Column != this->list_sortColumn){// check whether it clicks the same column
-		this->list_sortColumn = e->Column;
-		this->Sort_list_lv(e, Ascending);
-	}
-	else{
-		if(this->list_sort == Ascending){
-			this->Sort_list_lv(e, Descending);
+	if(this->list_lv->Items->Count > 0)
+	{
+		bool is_num = handler->is_number(this->list_lv->Items[0]->SubItems[e->Column]->Text);
+		if(e->Column != this->list_sortColumn){// check whether it clicks the same column
+			this->list_sortColumn = e->Column;
+			this->Sort_list_lv(e, Ascending, is_num);
 		}
 		else{
-			this->Sort_list_lv(e, Ascending);
+			if(this->list_sort == Ascending){
+				this->Sort_list_lv(e, Descending, is_num);
+			}
+			else{
+				this->Sort_list_lv(e, Ascending, is_num);
+			}
 		}
 	}
+
 }
 //Function: set the sort status, and then sort the list
-void mainForm::Sort_list_lv(System::Windows::Forms::ColumnClickEventArgs^ e, bool t){
+void mainForm::Sort_list_lv(System::Windows::Forms::ColumnClickEventArgs^ e, bool t, bool is_num){
 	this->list_sort = t;// sort status: Ascending or Descending
-	this->list_lv->ListViewItemSorter = gcnew ListViewItemComparer(e->Column, t);// sort it
+	this->list_lv->ListViewItemSorter = gcnew ListViewItemComparer(e->Column, t, is_num);// sort it
 }
 //Function: clear the selected item in the list
 void mainForm::Clear_selectedList(int index){

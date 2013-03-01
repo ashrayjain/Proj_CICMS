@@ -130,7 +130,7 @@ namespace CICMS_UI {
 	private: void Clear_selectedList(int index);
 	private: void list_lv_ColumnClick(System::Object^, System::Windows::Forms::ColumnClickEventArgs^ e);
 	private: void Toggle_list_b(bool tof);
-	private: void Sort_list_lv(System::Windows::Forms::ColumnClickEventArgs^ e, bool t);
+	private: void Sort_list_lv(System::Windows::Forms::ColumnClickEventArgs^ e, bool t, bool is_num);
 	private: int Get_sBarcode(int index);
 	private: System::String^ Get_sName(int index);
 

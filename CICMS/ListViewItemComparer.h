@@ -18,15 +18,14 @@
 namespace CICMS_UI {
 	ref class ListViewItemComparer: public System::Collections::IComparer
 	{
-	public: ListViewItemComparer(int column, bool sortOrder);
+	public: ListViewItemComparer(int column, bool sortOrder, bool is_num);
 
 	private: int _col;
 	private: bool _sort;
+	private: bool _is_num;
 
 	public: virtual int Compare(Object^ x, Object^ y);
 	private: int Compare_s(System::String^ s1, System::String^ s2);
-	private: bool is_number(System::String^ s);//this function should be in the handler/logic part
-
 	};
 }
 #endif

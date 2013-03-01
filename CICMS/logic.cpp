@@ -10,7 +10,7 @@
 //
 //  API:
 //  logic::logic()
-//  logic::DB_search(string, int)
+//  vector<System::Windows::Forms::ListViewItem^> logic::DB_search(string, int)
 //  bool logic::DB_add(System::Windows::Forms::ListViewItem^);
 //  bool logic::DB_del(System::Windows::Forms::ListViewItem^);
 //  bool logic::DB_sell(System::Windows::Forms::ListViewItem^, unsigned^);
@@ -27,6 +27,7 @@
 #include <msclr\marshal_cppstd.h>
 
 using namespace System;
+using namespace cli;
 
 logic::logic(){}
 
@@ -62,8 +63,15 @@ Product logic::ListToProduct(System::Windows::Forms::ListViewItem^ t)
 		msclr::interop::marshal_as<std::string>(t->SubItems[1]->Text),
 		msclr::interop::marshal_as<std::string>(t->SubItems[2]->Text),
 		atoi(msclr::interop::marshal_as<std::string>(t->SubItems[3]->Text).c_str()),
-		atoi(msclr::interop::marshal_as<std::string>(t->SubItems[4]->Text).c_str()),
-		atoi(msclr::interop::marshal_as<std::string>(t->SubItems[5]->Text).c_str()),
-		atof(msclr::interop::marshal_as<std::string>(t->SubItems[6]->Text).c_str())
+		atof(msclr::interop::marshal_as<std::string>(t->SubItems[4]->Text).c_str())
 		);
+}
+
+bool logic::is_number(System::String^ s){
+	try{
+		System::Convert::ToDouble(s);
+	} catch(System::FormatException^){
+		return false;
+	}
+	return true;
 }
