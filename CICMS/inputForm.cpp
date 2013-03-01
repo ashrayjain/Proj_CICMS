@@ -106,14 +106,6 @@ void inputForm::input_b_yes_Click(System::Object^  sender, System::EventArgs^  e
 		input_tB_input->Text = "0";
 }
 
-bool inputForm:: is_number(System::String^ s){
-	try{
-		System::Convert::ToDouble(s);
-	} catch(System::FormatException^){
-		return false;
-	}
-	return true;
-}
 
 bool inputForm::is_valid(System::String^ s){
 	if(s->Contains("%")){

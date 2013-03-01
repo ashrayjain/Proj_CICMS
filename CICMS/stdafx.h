@@ -9,3 +9,5 @@
 
 #include <string>
 #include <vector>
+
+bool is_number(System::String^ s);

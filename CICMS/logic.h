@@ -43,11 +43,11 @@ public:
 	// Delete a product
 	bool DB_del(System::Windows::Forms::ListViewItem^);
 	// Process sale of a product
-	bool DB_sell(System::Windows::Forms::ListViewItem^, unsigned^);
+	bool DB_sell(System::Windows::Forms::ListViewItem^% t, unsigned^);
 	// Process restocking of a product
-	bool DB_restock(System::Windows::Forms::ListViewItem^, unsigned^);
+	bool DB_restock(System::Windows::Forms::ListViewItem^% t, unsigned^);
 	// Checkes if string is a number
-	bool is_number(System::String^ s);
+	static bool is_number(System::String^ s);
 
 private:
 	// Store all the products currently in the store

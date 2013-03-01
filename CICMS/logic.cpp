@@ -46,12 +46,12 @@ bool logic::DB_del(System::Windows::Forms::ListViewItem^ t)
 	return false;
 }
 
-bool logic::DB_restock(System::Windows::Forms::ListViewItem^ t, unsigned^ amt)
+bool logic::DB_restock(System::Windows::Forms::ListViewItem^% t, unsigned^ amt)
 {
 	return false;
 }
 
-bool logic::DB_sell(System::Windows::Forms::ListViewItem^ t, unsigned^ sale)
+bool logic::DB_sell(System::Windows::Forms::ListViewItem^% t, unsigned^ sale)
 {
 	return false;
 }
@@ -67,11 +67,3 @@ Product logic::ListToProduct(System::Windows::Forms::ListViewItem^ t)
 		);
 }
 
-bool logic::is_number(System::String^ s){
-	try{
-		System::Convert::ToDouble(s);
-	} catch(System::FormatException^){
-		return false;
-	}
-	return true;
-}

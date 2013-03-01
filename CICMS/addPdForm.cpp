@@ -195,7 +195,5 @@ System::Windows::Forms::ListViewItem^ addPdForm::get_product_details(){
 		this->npd_tB_manuf->Text, 
 		this->npd_tB_barcode->Text, 
 		this->npd_tB_price->Text, 
-		
-			
 	});
 }
