@@ -1,3 +1,16 @@
+/*************************************************************************************************/
+//
+//  class addPdForm: addPdForm.cpp
+//
+//  Description: addPdForm.cpp contains the implementation part of class addPdForm.
+//
+//  API:
+//  CICMS_UI::addPdForm::addPdForm(); //create a addPdForm object
+//  CICMS_UI::addPdForm::System::Windows::Forms::get_product_details() //Allows other objects to pull the data gathered in this object to them
+//
+//  Main authors: XIE KAI(A0102016E),  
+//
+/*************************************************************************************************/
 #include "stdafx.h"
 #include "addPdForm.h"
 
@@ -29,7 +42,7 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	this->npd_grp->SuspendLayout();
 	this->SuspendLayout();
 	// 
-	// Primary groupbox
+	// npd_grp
 	// 
 	this->npd_grp->Controls->Add(this->npd_tB_name);
 	this->npd_grp->Controls->Add(this->npd_tB_category);
@@ -45,63 +58,64 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	this->npd_grp->Controls->Add(this->npd_l_category);
 	this->npd_grp->Controls->Add(this->npd_l_barcode);
 	this->npd_grp->Controls->Add(this->npd_l_name);
-	this->npd_grp->Location = System::Drawing::Point(14, 10); 
+	this->npd_grp->Location = System::Drawing::Point(14, 10);
 	this->npd_grp->Name = L"npd_grp";
-	this->npd_grp->Size = System::Drawing::Size(247, 213); 
+	this->npd_grp->Size = System::Drawing::Size(247, 213);
 	this->npd_grp->TabIndex = 5;
 	this->npd_grp->TabStop = false;
 	this->npd_grp->Text = L"New product details";
+	this->npd_grp->Enter += gcnew System::EventHandler(this, &addPdForm::npd_grp_Enter);
 	// 
-	// Name textbox
+	// npd_tB_name
 	// 
 	this->npd_tB_name->Location = System::Drawing::Point(88, 24);
 	this->npd_tB_name->Name = L"npd_tB_name";
 	this->npd_tB_name->Size = System::Drawing::Size(138, 20);
 	this->npd_tB_name->TabIndex = 5;
 	// 
-	// Category textbox
+	// npd_tB_category
 	// 
 	this->npd_tB_category->Location = System::Drawing::Point(87, 50);
 	this->npd_tB_category->Name = L"npd_tB_category";
 	this->npd_tB_category->Size = System::Drawing::Size(138, 20);
 	this->npd_tB_category->TabIndex = 6;
 	// 
-	// Barcode textbox
+	// npd_tB_barcode
 	// 
 	this->npd_tB_barcode->Location = System::Drawing::Point(87, 76);
 	this->npd_tB_barcode->Name = L"npd_tB_barcode";
 	this->npd_tB_barcode->Size = System::Drawing::Size(138, 20);
 	this->npd_tB_barcode->TabIndex = 7;
 	// 
-	// Price textbox
+	// npd_tB_price
 	// 
 	this->npd_tB_price->Location = System::Drawing::Point(87, 102);
 	this->npd_tB_price->Name = L"npd_tB_price";
 	this->npd_tB_price->Size = System::Drawing::Size(138, 20);
 	this->npd_tB_price->TabIndex = 8;
 	// 
-	// Manufacturer textbox
+	// npd_tB_manuf
 	// 
 	this->npd_tB_manuf->Location = System::Drawing::Point(87, 128);
 	this->npd_tB_manuf->Name = L"npd_tB_manuf";
 	this->npd_tB_manuf->Size = System::Drawing::Size(138, 20);
 	this->npd_tB_manuf->TabIndex = 9;
 	// 
-	// Stock textbox
+	// npd_tB_stock
 	// 
 	this->npd_tB_stock->Location = System::Drawing::Point(87, 154);
 	this->npd_tB_stock->Name = L"npd_tB_stock";
 	this->npd_tB_stock->Size = System::Drawing::Size(138, 20);
 	this->npd_tB_stock->TabIndex = 10;
 	// 
-	// Sold textbox
+	// npd_tB_sold
 	// 
 	this->npd_tB_sold->Location = System::Drawing::Point(87, 180);
 	this->npd_tB_sold->Name = L"npd_tB_sold";
 	this->npd_tB_sold->Size = System::Drawing::Size(138, 20);
 	this->npd_tB_sold->TabIndex = 11;
 	// 
-	// Sold label
+	// npd_l_sold
 	// 
 	this->npd_l_sold->AutoSize = true;
 	this->npd_l_sold->Location = System::Drawing::Point(11, 183);
@@ -110,7 +124,7 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	this->npd_l_sold->TabIndex = 6;
 	this->npd_l_sold->Text = L"Sold";
 	// 
-	// Stock label
+	// npd_l_stock
 	// 
 	this->npd_l_stock->AutoSize = true;
 	this->npd_l_stock->Location = System::Drawing::Point(11, 157);
@@ -119,7 +133,7 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	this->npd_l_stock->TabIndex = 5;
 	this->npd_l_stock->Text = L"Stock";
 	// 
-	// Price label
+	// npd_l_price
 	// 
 	this->npd_l_price->AutoSize = true;
 	this->npd_l_price->Location = System::Drawing::Point(11, 105);
@@ -128,7 +142,7 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	this->npd_l_price->TabIndex = 4;
 	this->npd_l_price->Text = L"Price";
 	// 
-	// Manufacturer label
+	// npd_l_manuf
 	// 
 	this->npd_l_manuf->AutoSize = true;
 	this->npd_l_manuf->Location = System::Drawing::Point(11, 131);
@@ -137,7 +151,7 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	this->npd_l_manuf->TabIndex = 3;
 	this->npd_l_manuf->Text = L"Manufacturer";
 	// 
-	// Category label
+	// npd_l_category
 	// 
 	this->npd_l_category->AutoSize = true;
 	this->npd_l_category->Location = System::Drawing::Point(11, 53);
@@ -146,7 +160,7 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	this->npd_l_category->TabIndex = 2;
 	this->npd_l_category->Text = L"Category";
 	// 
-	// Barcode label
+	// npd_l_barcode
 	// 
 	this->npd_l_barcode->AutoSize = true;
 	this->npd_l_barcode->Location = System::Drawing::Point(11, 79);
@@ -155,7 +169,7 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	this->npd_l_barcode->TabIndex = 1;
 	this->npd_l_barcode->Text = L"Barcode";
 	// 
-	// Name label
+	// npd_l_name
 	// 
 	this->npd_l_name->AutoSize = true;
 	this->npd_l_name->Location = System::Drawing::Point(11, 27);
@@ -164,7 +178,7 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	this->npd_l_name->TabIndex = 0;
 	this->npd_l_name->Text = L"Name";
 	// 
-	// Cancel button
+	// npd_b_cancel
 	// 
 	this->npd_b_cancel->DialogResult = System::Windows::Forms::DialogResult::Cancel;
 	this->npd_b_cancel->Location = System::Drawing::Point(155, 231);
@@ -174,7 +188,7 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	this->npd_b_cancel->Text = L"Cancel";
 	this->npd_b_cancel->UseVisualStyleBackColor = true;
 	// 
-	// OK button
+	// npd_b_ok
 	// 
 	this->npd_b_ok->DialogResult = System::Windows::Forms::DialogResult::OK;
 	this->npd_b_ok->Location = System::Drawing::Point(39, 232);
@@ -185,11 +199,10 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	this->npd_b_ok->UseVisualStyleBackColor = true;
 	this->npd_b_ok->Click += gcnew System::EventHandler(this, &addPdForm::npd_b_ok_Click);
 	// 
-	// Misc. 
-	// Creation of data entry form
+	// addPdForm
 	// 
 	this->AcceptButton = this->npd_b_ok;
-	this->AutoScaleDimensions = System::Drawing::SizeF(6, 13); //Size of elements
+	this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 	this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 	this->CancelButton = this->npd_b_cancel;
 	this->ClientSize = System::Drawing::Size(275, 265);

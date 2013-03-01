@@ -1,5 +1,4 @@
-#ifndef _GUARD_UI_ListViewItemComparer
-#define _GUARD_UI_ListViewItemComparer
+
 /*************************************************************************************************/
 //
 //  ListViewItemComparer.h
@@ -14,6 +13,8 @@
 //
 /*************************************************************************************************/
 //
+#ifndef _GUARD_UI_ListViewItemComparer
+#define _GUARD_UI_ListViewItemComparer
 
 namespace CICMS_UI {
 	ref class ListViewItemComparer: public System::Collections::IComparer

@@ -1,3 +1,22 @@
+/*************************************************************************************************/
+//
+//  class addPdForm: addPdForm.h
+//
+//  Description: addPdForm.h contains the specification part of class addPdForm. class addPdForm is 
+//  the window which opens to add products to the database for CICMS. In our top-down design, addPdForm 
+//  is directly below the top. It contains 7 textboxes for data entry when adding a new product,
+//  as well as a public function, get_product_details(), which will be called by mainForm's function,
+//  Create_addPdForms(), in order to pass this data to the logic object. 
+//  to 
+//
+//  API:
+//  CICMS_UI::addPdForm::addPdForm(); //create a mainForm object
+//  CICMS_UI::addPdForm::System::Windows::Forms::get_product_details() //Allows other objects to retrieve the data gathered by this object
+//
+//  Main authors: XIE KAI(A0102016E), 
+//
+/*************************************************************************************************/
+
 #ifndef _GUARD_UI_addPdForm
 #define _GUARD_UI_addPdForm
 
@@ -5,10 +24,7 @@ namespace CICMS_UI {
 
 	public ref class addPdForm : public System::Windows::Forms::Form
 	{
-	public:
-		addPdForm(void);  //Constructor: Calls InitializeComponent to create GUI
-		
-		System::Windows::Forms::ListViewItem^ get_product_details(); //Is called by logic object to obtain product details from the form
+	
 	
 	//********************************************************
 	//*****************PROPERTIES DECLARATION****************
@@ -38,6 +54,13 @@ namespace CICMS_UI {
 	void InitializeComponent(void); //Creates the GUI
 	
 	void npd_b_ok_Click(System::Object^  sender, System::EventArgs^  e); //Stuff that happens when OK button is clicked
-};
+	
+	System::Void npd_grp_Enter(System::Object^  sender, System::EventArgs^  e) {}
+
+	public:
+		addPdForm(void);  //Constructor: Calls InitializeComponent to create GUI
+		
+		System::Windows::Forms::ListViewItem^ get_product_details(); //Is called by mainForm object to obtain product details from the form
+	};
 }
 #endif

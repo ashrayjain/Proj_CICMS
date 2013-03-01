@@ -1,3 +1,19 @@
+/*************************************************************************************************/
+//
+//  class inputForm: inputForm.cpp
+//
+//  Description: inputForm.h contains the implementation part of class inputForm.
+//
+//  API:
+//  CICMS_UI::inputForm::inputForm();     //create a inputForm object
+//  CICMS_UI::inputForm::get_input();     //Called to return double datatype of value entered in this object
+//  CICMS_UI::inputForm::set_inputForm(); //Called to set the default starting value and name/content of this object
+//
+//  Main authors: XIE KAI(A0102016E),  
+//
+/*************************************************************************************************/
+
+
 #include "stdafx.h"
 #include "inputForm.h"
 

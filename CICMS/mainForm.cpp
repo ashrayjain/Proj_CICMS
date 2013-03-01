@@ -5,7 +5,7 @@
 //  Description: mainForm.h contains the implementation part of class mainForm.
 //
 //  API:
-//  CICMS_UI::mainForm::mainForm(); //create a mainForm class
+//  CICMS_UI::mainForm::mainForm(); //create a mainForm object
 //
 //  Main authors: XIE KAI(A0102016E), 
 //
@@ -51,7 +51,7 @@
 //
 //  Naming Rule for functions
 //
-//  for functions, we name them as follow:
+//  for functions, we name them as follows:
 //  [Verb]_[abbreviation for grp]_[abbreviation for kind of components/its parent in menu]_[name of component]_[Objective]
 //  or
 //  [Verb]_[name of component/name of class]_[Objective]
@@ -64,7 +64,7 @@
 //
 //  Naming Rule for events
 //
-//  for event, we name them as follow:
+//  for event, we name them as follows:
 //  [abbreviation for grp]_[abbreviation for kind of components/its parent in menu]_[name of component]_[Verb]
 //  or
 //  [name of component/name of class]_[Verb]

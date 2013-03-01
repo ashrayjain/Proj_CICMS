@@ -1,5 +1,4 @@
-#ifndef _GUARD_UI_mainForm
-#define _GUARD_UI_mainForm
+
 /*************************************************************************************************/
 //
 //  class mainForm: mainForm.h
@@ -11,7 +10,7 @@
 //  with other classes.
 //
 //  API:
-//  CICMS_UI::mainForm::mainForm(); //create a mainForm class
+//  CICMS_UI::mainForm::mainForm(); //create a mainForm object
 //
 //  Main authors: XIE KAI(A0102016E), 
 //
@@ -80,6 +79,8 @@
 //  "menu_about_Click" means the event - when user clicks the about item in the menu.
 //
 /*************************************************************************************************/
+#ifndef _GUARD_UI_mainForm
+#define _GUARD_UI_mainForm
 #include "logic.h"
 
 namespace CICMS_UI {

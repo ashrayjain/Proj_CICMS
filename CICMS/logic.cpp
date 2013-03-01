@@ -30,7 +30,7 @@ using namespace System;
 
 logic::logic(){}
 
-vector<Product> logic::DB_search(System::String^ search_string, int method)
+vector<Product> logic::DB_search(string search_string, int method)
 {
 	return vector<Product>();
 }
