@@ -5,7 +5,7 @@
 //  Description: mainForm.h contains the implementation part of class mainForm.
 //
 //  API:
-//  CICMS_UI::mainForm::mainForm(); //create a mainForm class
+//  CICMS_UI::mainForm::mainForm(); //create a mainForm object
 //
 //  Main authors: XIE KAI(A0102016E), 
 //
@@ -51,7 +51,7 @@
 //
 //  Naming Rule for functions
 //
-//  for functions, we name them as follow:
+//  for functions, we name them as follows:
 //  [Verb]_[abbreviation for grp]_[abbreviation for kind of components/its parent in menu]_[name of component]_[Objective]
 //  or
 //  [Verb]_[name of component/name of class]_[Objective]
@@ -64,7 +64,7 @@
 //
 //  Naming Rule for events
 //
-//  for event, we name them as follow:
+//  for event, we name them as follows:
 //  [abbreviation for grp]_[abbreviation for kind of components/its parent in menu]_[name of component]_[Verb]
 //  or
 //  [name of component/name of class]_[Verb]
@@ -223,10 +223,7 @@ void mainForm::list_b_sell_Click(System::Object^  sender, System::EventArgs^  e)
 void mainForm::list_b_restock_Click(System::Object^  sender, System::EventArgs^  e) {
 	Create_restockForm();
 }
-//Event: when click pd_b_discount button, open an inputForm window for input discount data
-void mainForm::list_b_discount_Click(System::Object^  sender, System::EventArgs^  e) {
-	Create_discountForm();
-}
+
 //Event: when click pd_b_delete button, open a msgBox to check whether delete the selectedItem or not
 void mainForm::list_b_delete_Click(System::Object^  sender, System::EventArgs^  e) {
 	Create_deleteForm();
@@ -259,17 +256,7 @@ void mainForm::Create_restockForm(){
 			this->Update_statusBar(restockF);
 	}
 }
-void mainForm::Create_discountForm(){
-	for(int i = 0; i < this->list_lv->SelectedItems->Count; i++){
-		double num = this->Create_inputForm(" Discount a price", this->Get_sName(i) + " - " + this->Get_sBarcode(i),"Discount:", "0.9");
-		num = num <= 0? 1: num;//filter inappropriate discount
 
-		int	barcode = this->Get_sBarcode(i);
-		//double price = handler.DB_discount(barcode, num);
-		//this->Update_statusBar(discountS);
-		this->Update_statusBar(discountF);
-	}
-}
 void mainForm::Create_deleteForm(){
 	enum { No_plsDont, Yes_deleteThem, tooMany = 2};
 	int deteleAllSelectedItem = No_plsDont;
@@ -298,7 +285,7 @@ void mainForm::Toggle_list_b(bool tof){
 	this->list_b_delete->Enabled = tof;
 	this->list_b_sell->Enabled = tof;
 	this->list_b_restock->Enabled = tof;
-	this->list_b_discount->Enabled = tof;
+	
 }
 //Event: when select an item in the list, update all pd_tB textBoxes by using this item's properties.
 void mainForm::list_lv_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
@@ -422,7 +409,6 @@ void mainForm::InitializeComponent()
 	this->list_col_stock = (gcnew System::Windows::Forms::ColumnHeader());
 	this->list_col_sold = (gcnew System::Windows::Forms::ColumnHeader());
 	this->list_grp = (gcnew System::Windows::Forms::GroupBox());
-	this->list_b_discount = (gcnew System::Windows::Forms::Button());
 	this->statusStrip1 = (gcnew System::Windows::Forms::StatusStrip());
 	this->toolStripStatusLabel1 = (gcnew System::Windows::Forms::ToolStripStatusLabel());
 	this->menu->SuspendLayout();
@@ -437,7 +423,7 @@ void mainForm::InitializeComponent()
 	this->menu->Location = System::Drawing::Point(0, 0);
 	this->menu->Name = L"menu";
 	this->menu->Size = System::Drawing::Size(853, 24);
-	//this->menu->TabIndex = 0;
+	this->menu->TabIndex = 15;
 	this->menu->Text = L"menu";
 	// 
 	// menu_f
@@ -451,35 +437,35 @@ void mainForm::InitializeComponent()
 	// menu_f_addNewProducts
 	// 
 	this->menu_f_addNewProducts->Name = L"menu_f_addNewProducts";
-	this->menu_f_addNewProducts->Size = System::Drawing::Size(170, 22);
+	this->menu_f_addNewProducts->Size = System::Drawing::Size(171, 22);
 	this->menu_f_addNewProducts->Text = L"Add new products";
 	this->menu_f_addNewProducts->Click += gcnew System::EventHandler(this, &mainForm::menu_f_addNewProducts_Click);
 	// 
 	// menu_f_loadProductList
 	// 
 	this->menu_f_loadProductList->Name = L"menu_f_loadProductList";
-	this->menu_f_loadProductList->Size = System::Drawing::Size(170, 22);
+	this->menu_f_loadProductList->Size = System::Drawing::Size(171, 22);
 	this->menu_f_loadProductList->Text = L"Load product list";
 	this->menu_f_loadProductList->Click += gcnew System::EventHandler(this, &mainForm::menu_f_loadProductList_Click);
 	// 
 	// menu_f_saveProductList
 	// 
 	this->menu_f_saveProductList->Name = L"menu_f_saveProductList";
-	this->menu_f_saveProductList->Size = System::Drawing::Size(170, 22);
+	this->menu_f_saveProductList->Size = System::Drawing::Size(171, 22);
 	this->menu_f_saveProductList->Text = L"Save product list";
 	this->menu_f_saveProductList->Click += gcnew System::EventHandler(this, &mainForm::menu_f_saveProductList_Click);
 	// 
 	// menu_f_quit
 	// 
 	this->menu_f_quit->Name = L"menu_f_quit";
-	this->menu_f_quit->Size = System::Drawing::Size(170, 22);
+	this->menu_f_quit->Size = System::Drawing::Size(171, 22);
 	this->menu_f_quit->Text = L"Quit";
 	this->menu_f_quit->Click += gcnew System::EventHandler(this, &mainForm::menu_f_quit_Click);
 	// 
 	// menu_about
 	// 
 	this->menu_about->Name = L"menu_about";
-	this->menu_about->Size = System::Drawing::Size(50, 20);
+	this->menu_about->Size = System::Drawing::Size(52, 20);
 	this->menu_about->Text = L"About";
 	this->menu_about->Click += gcnew System::EventHandler(this, &mainForm::menu_about_Click);
 	// 
@@ -503,7 +489,6 @@ void mainForm::InitializeComponent()
 	this->s_tB_input->Size = System::Drawing::Size(172, 24);
 	this->s_tB_input->TabIndex = 0;
 	this->s_tB_input->Text = L" input here";
-	this->s_tB_input->SelectAll();
 	// 
 	// s_b_submit
 	// 
@@ -530,7 +515,7 @@ void mainForm::InitializeComponent()
 	this->s_grp->Location = System::Drawing::Point(16, 27);
 	this->s_grp->Name = L"s_grp";
 	this->s_grp->Size = System::Drawing::Size(247, 99);
-	//this->s_grp->TabIndex = 3;
+	this->s_grp->TabIndex = 14;
 	this->s_grp->TabStop = false;
 	this->s_grp->Text = L"Search";
 	// 
@@ -539,7 +524,7 @@ void mainForm::InitializeComponent()
 	this->s_rB_stockLT->AutoSize = true;
 	this->s_rB_stockLT->Location = System::Drawing::Point(31, 72);
 	this->s_rB_stockLT->Name = L"s_rB_stockLT";
-	this->s_rB_stockLT->Size = System::Drawing::Size(50, 17);
+	this->s_rB_stockLT->Size = System::Drawing::Size(53, 17);
 	this->s_rB_stockLT->TabIndex = 5;
 	this->s_rB_stockLT->TabStop = true;
 	this->s_rB_stockLT->Text = L"Stock";
@@ -550,7 +535,7 @@ void mainForm::InitializeComponent()
 	this->s_rB_byManuf->AutoSize = true;
 	this->s_rB_byManuf->Location = System::Drawing::Point(87, 72);
 	this->s_rB_byManuf->Name = L"s_rB_byManuf";
-	this->s_rB_byManuf->Size = System::Drawing::Size(85, 17);
+	this->s_rB_byManuf->Size = System::Drawing::Size(88, 17);
 	this->s_rB_byManuf->TabIndex = 6;
 	this->s_rB_byManuf->TabStop = true;
 	this->s_rB_byManuf->Text = L"Manufacturer";
@@ -562,7 +547,7 @@ void mainForm::InitializeComponent()
 	this->s_l_by->Location = System::Drawing::Point(7, 54);
 	this->s_l_by->Name = L"s_l_by";
 	this->s_l_by->Size = System::Drawing::Size(19, 13);
-	//this->s_l_by->TabIndex = 6;
+	this->s_l_by->TabIndex = 7;
 	this->s_l_by->Text = L"By";
 	// 
 	// s_rB_byCategory
@@ -570,7 +555,7 @@ void mainForm::InitializeComponent()
 	this->s_rB_byCategory->AutoSize = true;
 	this->s_rB_byCategory->Location = System::Drawing::Point(152, 53);
 	this->s_rB_byCategory->Name = L"s_rB_byCategory";
-	this->s_rB_byCategory->Size = System::Drawing::Size(64, 17);
+	this->s_rB_byCategory->Size = System::Drawing::Size(67, 17);
 	this->s_rB_byCategory->TabIndex = 4;
 	this->s_rB_byCategory->TabStop = true;
 	this->s_rB_byCategory->Text = L"Category";
@@ -581,7 +566,7 @@ void mainForm::InitializeComponent()
 	this->s_rB_byBarcode->AutoSize = true;
 	this->s_rB_byBarcode->Location = System::Drawing::Point(87, 53);
 	this->s_rB_byBarcode->Name = L"s_rB_byBarcode";
-	this->s_rB_byBarcode->Size = System::Drawing::Size(62, 17);
+	this->s_rB_byBarcode->Size = System::Drawing::Size(65, 17);
 	this->s_rB_byBarcode->TabIndex = 3;
 	this->s_rB_byBarcode->TabStop = true;
 	this->s_rB_byBarcode->Text = L"Barcode";
@@ -593,7 +578,7 @@ void mainForm::InitializeComponent()
 	this->s_rB_byName->Checked = true;
 	this->s_rB_byName->Location = System::Drawing::Point(31, 53);
 	this->s_rB_byName->Name = L"s_rB_byName";
-	this->s_rB_byName->Size = System::Drawing::Size(50, 17);
+	this->s_rB_byName->Size = System::Drawing::Size(53, 17);
 	this->s_rB_byName->TabIndex = 2;
 	this->s_rB_byName->TabStop = true;
 	this->s_rB_byName->Text = L"Name";
@@ -602,7 +587,7 @@ void mainForm::InitializeComponent()
 	// list_b_restock
 	// 
 	this->list_b_restock->Enabled = false;
-	this->list_b_restock->Location = System::Drawing::Point(310, 339);
+	this->list_b_restock->Location = System::Drawing::Point(395, 339);
 	this->list_b_restock->Name = L"list_b_restock";
 	this->list_b_restock->Size = System::Drawing::Size(75, 23);
 	this->list_b_restock->TabIndex = 9;
@@ -613,7 +598,7 @@ void mainForm::InitializeComponent()
 	// list_b_sell
 	// 
 	this->list_b_sell->Enabled = false;
-	this->list_b_sell->Location = System::Drawing::Point(227, 339);
+	this->list_b_sell->Location = System::Drawing::Point(314, 339);
 	this->list_b_sell->Name = L"list_b_sell";
 	this->list_b_sell->Size = System::Drawing::Size(75, 23);
 	this->list_b_sell->TabIndex = 8;
@@ -637,8 +622,8 @@ void mainForm::InitializeComponent()
 	this->list_lv->Columns->AddRange(gcnew cli::array< System::Windows::Forms::ColumnHeader^  >(7) {this->list_col_name, this->list_col_category, 
 		this->list_col_barcode, this->list_col_price, this->list_col_manuf, this->list_col_stock, this->list_col_sold});
 	this->list_lv->FullRowSelect = true;
-	this->list_lv->HeaderStyle = System::Windows::Forms::ColumnHeaderStyle::Clickable;
-	this->list_lv->Items->AddRange(gcnew cli::array< System::Windows::Forms::ListViewItem^  >(5) {listViewItem1, listViewItem2, listViewItem3, listViewItem4, listViewItem5});
+	this->list_lv->Items->AddRange(gcnew cli::array< System::Windows::Forms::ListViewItem^  >(5) {listViewItem1, listViewItem2, 
+		listViewItem3, listViewItem4, listViewItem5});
 	this->list_lv->Location = System::Drawing::Point(11, 23);
 	this->list_lv->Name = L"list_lv";
 	this->list_lv->ShowGroups = false;
@@ -646,9 +631,8 @@ void mainForm::InitializeComponent()
 	this->list_lv->TabIndex = 7;
 	this->list_lv->UseCompatibleStateImageBehavior = false;
 	this->list_lv->View = System::Windows::Forms::View::Details;
-	this->list_lv->SelectedIndexChanged += gcnew System::EventHandler(this, &mainForm::list_lv_SelectedIndexChanged);
 	this->list_lv->ColumnClick += gcnew System::Windows::Forms::ColumnClickEventHandler(this, &mainForm::list_lv_ColumnClick);
-	this->list_sortColumn = -1;
+	this->list_lv->SelectedIndexChanged += gcnew System::EventHandler(this, &mainForm::list_lv_SelectedIndexChanged);
 	// 
 	// list_col_name
 	// 
@@ -685,7 +669,6 @@ void mainForm::InitializeComponent()
 	// 
 	// list_grp
 	// 
-	this->list_grp->Controls->Add(this->list_b_discount);
 	this->list_grp->Controls->Add(this->list_lv);
 	this->list_grp->Controls->Add(this->list_b_restock);
 	this->list_grp->Controls->Add(this->list_b_delete);
@@ -693,20 +676,9 @@ void mainForm::InitializeComponent()
 	this->list_grp->Location = System::Drawing::Point(277, 27);
 	this->list_grp->Name = L"list_grp";
 	this->list_grp->Size = System::Drawing::Size(561, 373);
-	//this->list_grp->TabIndex = 12;
+	this->list_grp->TabIndex = 13;
 	this->list_grp->TabStop = false;
 	this->list_grp->Text = L"Result list";
-	// 
-	// list_b_discount
-	// 
-	this->list_b_discount->Enabled = false;
-	this->list_b_discount->Location = System::Drawing::Point(393, 339);
-	this->list_b_discount->Name = L"list_b_discount";
-	this->list_b_discount->Size = System::Drawing::Size(75, 23);
-	this->list_b_discount->TabIndex = 10;
-	this->list_b_discount->Text = L"Discount";
-	this->list_b_discount->UseVisualStyleBackColor = true;
-	this->list_b_discount->Click += gcnew System::EventHandler(this, &mainForm::list_b_discount_Click);
 	// 
 	// statusStrip1
 	// 
@@ -749,4 +721,5 @@ void mainForm::InitializeComponent()
 	this->statusStrip1->PerformLayout();
 	this->ResumeLayout(false);
 	this->PerformLayout();
+
 }

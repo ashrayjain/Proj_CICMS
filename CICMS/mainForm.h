@@ -1,5 +1,4 @@
-#ifndef _GUARD_UI_mainForm
-#define _GUARD_UI_mainForm
+
 /*************************************************************************************************/
 //
 //  class mainForm: mainForm.h
@@ -11,7 +10,7 @@
 //  with other classes.
 //
 //  API:
-//  CICMS_UI::mainForm::mainForm(); //create a mainForm class
+//  CICMS_UI::mainForm::mainForm(); //create a mainForm object
 //
 //  Main authors: XIE KAI(A0102016E), 
 //
@@ -80,6 +79,8 @@
 //  "menu_about_Click" means the event - when user clicks the about item in the menu.
 //
 /*************************************************************************************************/
+#ifndef _GUARD_UI_mainForm
+#define _GUARD_UI_mainForm
 #include "logic.h"
 
 namespace CICMS_UI {
@@ -120,12 +121,10 @@ namespace CICMS_UI {
 	private: void list_b_delete_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void list_b_sell_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void list_b_restock_Click(System::Object^  sender, System::EventArgs^  e);
-	private: void list_b_discount_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void list_lv_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e);
 	private: double Create_inputForm(System::String^ formTitle, System::String^ pdDescript, System::String^ inputDescript, System::String^ stringInTB);
 	private: void Create_sellForm();
 	private: void Create_restockForm();
-	private: void Create_discountForm();
 	private: void Create_deleteForm();
 	private: void Clear_selectedList(int index);
 	private: void list_lv_ColumnClick(System::Object^, System::Windows::Forms::ColumnClickEventArgs^ e);
@@ -181,7 +180,7 @@ namespace CICMS_UI {
 	private: System::Windows::Forms::Button^  list_b_delete;
 	private: System::Windows::Forms::Button^  list_b_sell;
 	private: System::Windows::Forms::Button^  list_b_restock;
-	private: System::Windows::Forms::Button^  list_b_discount;
+
 	private: System::Int32 list_sortColumn;
 	private: bool list_sort;
 
