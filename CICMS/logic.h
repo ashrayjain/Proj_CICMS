@@ -10,7 +10,7 @@
 //
 //  API:
 //  logic::logic()
-//  logic::DB_search(string, int)
+//  vector<Product> logic::DB_search(string, int)
 //  bool logic::DB_add(System::Windows::Forms::ListViewItem^);
 //  bool logic::DB_del(System::Windows::Forms::ListViewItem^);
 //  bool logic::DB_sell(System::Windows::Forms::ListViewItem^, unsigned^);
@@ -36,8 +36,8 @@ class logic
 public:
 	// Constructor
 	logic();
-	// Search
-	vector<Product> DB_search(string, int);
+	// Search and return a vector of Products
+	vector<Product> DB_search(System::String^, int);
 	// Add new product
 	bool DB_add(System::Windows::Forms::ListViewItem^);
 	// Delete a product
