@@ -2,6 +2,8 @@
     APPLICATION : CICMS Project Overview
 ========================================================================
 
+Group members: XIE KAI, ASHRAY JAIN, BOB WONG, HUI HUI
+
 addPdForm.cpp: Contains the class implementation of addPdForm, which creates a window that receives new product details. It contains get_product_details(), which when called, returns the details of the product.
 
 addPdForm.h: Contains the class specification of addPdForm.

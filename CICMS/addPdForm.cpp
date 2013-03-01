@@ -8,7 +8,7 @@
 //  CICMS_UI::addPdForm::addPdForm(); //create a addPdForm object
 //  CICMS_UI::addPdForm::System::Windows::Forms::get_product_details() //Allows other objects to pull the data gathered in this object to them
 //
-//  Main authors: XIE KAI(A0102016E),  
+//  Main authors: XIE KAI(A0102016E), BOB WONG (A0094718U)
 //
 /*************************************************************************************************/
 #include "stdafx.h"

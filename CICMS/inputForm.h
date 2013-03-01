@@ -13,7 +13,7 @@
 //  CICMS_UI::inputForm::get_input(); // Called to return double datatype of value entered in this object
 //  CICMS_UI::inputForm::set_inputForm(); //Called to set the default starting value and name/content of this object
 //
-//  Main authors: XIE KAI(A0102016E),  
+//  Main authors: XIE KAI(A0102016E), HUI HUI(A0105566E)
 //
 /*************************************************************************************************/
 

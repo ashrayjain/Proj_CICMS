@@ -13,7 +13,7 @@
 //  CICMS_UI::addPdForm::addPdForm(); //create a mainForm object
 //  CICMS_UI::addPdForm::System::Windows::Forms::get_product_details() //Allows other objects to retrieve the data gathered by this object
 //
-//  Main authors: XIE KAI(A0102016E), 
+//  Main authors: XIE KAI(A0102016E), BOB WONG(A0094718U)
 //
 /*************************************************************************************************/
 
