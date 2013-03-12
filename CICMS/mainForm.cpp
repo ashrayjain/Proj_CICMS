@@ -119,14 +119,6 @@ void mainForm::menu_f_quit_Click(System::Object^  sender, System::EventArgs^  e)
 void mainForm::menu_f_addNewProducts_Click(System::Object^  sender, System::EventArgs^  e) {
 	this->Create_addPdForms();
 }
-//Event: when click menu_f_loadProductList item, open the openFileDialog window to load data
-void mainForm::menu_f_loadProductList_Click(System::Object^  sender, System::EventArgs^  e) {
-	this->Create_openFileDlg();
-}
-//Event: when click menu_f_saveProductList item, open the saveFileDialog window to save data
-void mainForm::menu_f_saveProductList_Click(System::Object^  sender, System::EventArgs^  e) {
-	this->Create_saveFileDlg();
-}
 //Event: when click menu_about item, open a messageBox that contains our team's description
 void mainForm::menu_about_Click(System::Object^  sender, System::EventArgs^  e) {
 	this->Create_messageBox("about", "Hello! Our team: Ashray, Bob, Hui and Kai!");
@@ -143,34 +135,6 @@ void mainForm::Create_addPdForms(){
 			else
 				this->Update_statusBar(addF);
 		}
-	}
-}
-//Function: create an openfiledialog to handle loading data
-void mainForm::Create_openFileDlg(){
-	System::IO::Stream^ stm;
-	if(this->openFileDialog->ShowDialog() == System::Windows::Forms::DialogResult::OK){
-		if((stm = this->openFileDialog->OpenFile()) != nullptr){
-			//handle stream here
-			stm->Close();
-			//this->Update_statusBar(loadS); /*under construction*/
-			this->Update_statusBar(loadF);
-		}
-		else
-			this->Update_statusBar(loadF);
-	}
-}
-//Function: create an savefiledialog to handle saving data
-void mainForm::Create_saveFileDlg(){
-	System::IO::Stream^ stm;
-	if(this->saveFileDialog->ShowDialog() == System::Windows::Forms::DialogResult::OK){
-		if((stm = this->saveFileDialog->OpenFile()) != nullptr){
-			//handle stream here
-			stm->Close();
-			//this->Update_statusBar(saveS); /*under construction*/
-			this->Update_statusBar(saveF);
-		}
-		else
-			this->Update_statusBar(saveF);
 	}
 }
 
@@ -190,10 +154,6 @@ int mainForm::Get_byMethod(){
 		return byBarcode;
 	else if(this->s_rB_byCategory->Checked == true)
 		return byCategory;
-	else if(this->s_rB_stockLT->Checked == true)
-		return byStock;
-	else if(this->s_rB_byManuf->Checked == true)
-		return byManuf;
 	else
 		return byName;
 }
@@ -369,30 +329,31 @@ System::Windows::Forms::DialogResult mainForm::Create_messageBox(System::String^
 //Initialize the components & set their properties; run at startup of class mainForm
 void mainForm::InitializeComponent()
 {
-	System::Windows::Forms::ListViewItem^  listViewItem1 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"Rio de SNEAKER", 
+	System::Windows::Forms::ListViewItem^  listViewItem6 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"Rio de SNEAKER", 
 		L"Shoes", L"000051", L"35", L"Nike", L"5", L"5"}, -1));
-	System::Windows::Forms::ListViewItem^  listViewItem2 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"Superstar2 Snake", 
+	System::Windows::Forms::ListViewItem^  listViewItem7 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"Superstar2 Snake", 
 		L"Shoes", L"000023", L"31", L"Adidas", L"31", L"3"}, -1));
-	System::Windows::Forms::ListViewItem^  listViewItem3 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"H&M 2013 STU", 
+	System::Windows::Forms::ListViewItem^  listViewItem8 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"H&M 2013 STU", 
 		L"Bag", L"000021", L"33", L"H&M", L"66", L"5"}, -1));
-	System::Windows::Forms::ListViewItem^  listViewItem4 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"JJ 2013 SS2", 
+	System::Windows::Forms::ListViewItem^  listViewItem9 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"JJ 2013 SS2", 
 		L"Jeans", L"000044", L"5", L"JJ", L"25", L"21"}, -1));
-	System::Windows::Forms::ListViewItem^  listViewItem5 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"JOJO Summer", 
+	System::Windows::Forms::ListViewItem^  listViewItem10 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"JOJO Summer", 
 		L"Jeans", L"000145", L"16", L"JOJO", L"11", L"23"}, -1));
 	this->menu = (gcnew System::Windows::Forms::MenuStrip());
 	this->menu_f = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->menu_f_addNewProducts = (gcnew System::Windows::Forms::ToolStripMenuItem());
-	this->menu_f_loadProductList = (gcnew System::Windows::Forms::ToolStripMenuItem());
-	this->menu_f_saveProductList = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->menu_f_quit = (gcnew System::Windows::Forms::ToolStripMenuItem());
+	this->statisticsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+	this->generateStatToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+	this->reportTheBSProductToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+	this->reportTheBSManufacturerToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+	this->reportTheTop10BSProductsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->menu_about = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->openFileDialog = (gcnew System::Windows::Forms::OpenFileDialog());
 	this->saveFileDialog = (gcnew System::Windows::Forms::SaveFileDialog());
 	this->s_tB_input = (gcnew System::Windows::Forms::TextBox());
 	this->s_b_submit = (gcnew System::Windows::Forms::Button());
 	this->s_grp = (gcnew System::Windows::Forms::GroupBox());
-	this->s_rB_stockLT = (gcnew System::Windows::Forms::RadioButton());
-	this->s_rB_byManuf = (gcnew System::Windows::Forms::RadioButton());
 	this->s_l_by = (gcnew System::Windows::Forms::Label());
 	this->s_rB_byCategory = (gcnew System::Windows::Forms::RadioButton());
 	this->s_rB_byBarcode = (gcnew System::Windows::Forms::RadioButton());
@@ -411,6 +372,8 @@ void mainForm::InitializeComponent()
 	this->list_grp = (gcnew System::Windows::Forms::GroupBox());
 	this->statusStrip1 = (gcnew System::Windows::Forms::StatusStrip());
 	this->toolStripStatusLabel1 = (gcnew System::Windows::Forms::ToolStripStatusLabel());
+	this->toolStripSeparator1 = (gcnew System::Windows::Forms::ToolStripSeparator());
+	this->toolStripSeparator2 = (gcnew System::Windows::Forms::ToolStripSeparator());
 	this->menu->SuspendLayout();
 	this->s_grp->SuspendLayout();
 	this->list_grp->SuspendLayout();
@@ -419,7 +382,8 @@ void mainForm::InitializeComponent()
 	// 
 	// menu
 	// 
-	this->menu->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {this->menu_f, this->menu_about});
+	this->menu->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {this->menu_f, this->statisticsToolStripMenuItem, 
+		this->menu_about});
 	this->menu->Location = System::Drawing::Point(0, 0);
 	this->menu->Name = L"menu";
 	this->menu->Size = System::Drawing::Size(853, 24);
@@ -428,8 +392,8 @@ void mainForm::InitializeComponent()
 	// 
 	// menu_f
 	// 
-	this->menu_f->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(4) {this->menu_f_addNewProducts, 
-		this->menu_f_loadProductList, this->menu_f_saveProductList, this->menu_f_quit});
+	this->menu_f->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {this->menu_f_addNewProducts, 
+		this->toolStripSeparator1, this->menu_f_quit});
 	this->menu_f->Name = L"menu_f";
 	this->menu_f->Size = System::Drawing::Size(37, 20);
 	this->menu_f->Text = L"File";
@@ -437,35 +401,53 @@ void mainForm::InitializeComponent()
 	// menu_f_addNewProducts
 	// 
 	this->menu_f_addNewProducts->Name = L"menu_f_addNewProducts";
-	this->menu_f_addNewProducts->Size = System::Drawing::Size(171, 22);
+	this->menu_f_addNewProducts->Size = System::Drawing::Size(166, 22);
 	this->menu_f_addNewProducts->Text = L"Add new products";
 	this->menu_f_addNewProducts->Click += gcnew System::EventHandler(this, &mainForm::menu_f_addNewProducts_Click);
-	// 
-	// menu_f_loadProductList
-	// 
-	this->menu_f_loadProductList->Name = L"menu_f_loadProductList";
-	this->menu_f_loadProductList->Size = System::Drawing::Size(171, 22);
-	this->menu_f_loadProductList->Text = L"Load product list";
-	this->menu_f_loadProductList->Click += gcnew System::EventHandler(this, &mainForm::menu_f_loadProductList_Click);
-	// 
-	// menu_f_saveProductList
-	// 
-	this->menu_f_saveProductList->Name = L"menu_f_saveProductList";
-	this->menu_f_saveProductList->Size = System::Drawing::Size(171, 22);
-	this->menu_f_saveProductList->Text = L"Save product list";
-	this->menu_f_saveProductList->Click += gcnew System::EventHandler(this, &mainForm::menu_f_saveProductList_Click);
 	// 
 	// menu_f_quit
 	// 
 	this->menu_f_quit->Name = L"menu_f_quit";
-	this->menu_f_quit->Size = System::Drawing::Size(171, 22);
+	this->menu_f_quit->Size = System::Drawing::Size(166, 22);
 	this->menu_f_quit->Text = L"Quit";
 	this->menu_f_quit->Click += gcnew System::EventHandler(this, &mainForm::menu_f_quit_Click);
+	// 
+	// statisticsToolStripMenuItem
+	// 
+	this->statisticsToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(5) {this->generateStatToolStripMenuItem, 
+		this->toolStripSeparator2, this->reportTheBSProductToolStripMenuItem, this->reportTheBSManufacturerToolStripMenuItem, this->reportTheTop10BSProductsToolStripMenuItem});
+	this->statisticsToolStripMenuItem->Name = L"statisticsToolStripMenuItem";
+	this->statisticsToolStripMenuItem->Size = System::Drawing::Size(64, 20);
+	this->statisticsToolStripMenuItem->Text = L"Statistics";
+	// 
+	// generateStatToolStripMenuItem
+	// 
+	this->generateStatToolStripMenuItem->Name = L"generateStatToolStripMenuItem";
+	this->generateStatToolStripMenuItem->Size = System::Drawing::Size(260, 22);
+	this->generateStatToolStripMenuItem->Text = L"Generate stat";
+	// 
+	// reportTheBSProductToolStripMenuItem
+	// 
+	this->reportTheBSProductToolStripMenuItem->Name = L"reportTheBSProductToolStripMenuItem";
+	this->reportTheBSProductToolStripMenuItem->Size = System::Drawing::Size(260, 22);
+	this->reportTheBSProductToolStripMenuItem->Text = L"Report the best-selling product";
+	// 
+	// reportTheBSManufacturerToolStripMenuItem
+	// 
+	this->reportTheBSManufacturerToolStripMenuItem->Name = L"reportTheBSManufacturerToolStripMenuItem";
+	this->reportTheBSManufacturerToolStripMenuItem->Size = System::Drawing::Size(260, 22);
+	this->reportTheBSManufacturerToolStripMenuItem->Text = L"Report the best-selling manufacturer";
+	// 
+	// reportTheTop10BSProductsToolStripMenuItem
+	// 
+	this->reportTheTop10BSProductsToolStripMenuItem->Name = L"reportTheTop10BSProductsToolStripMenuItem";
+	this->reportTheTop10BSProductsToolStripMenuItem->Size = System::Drawing::Size(260, 22);
+	this->reportTheTop10BSProductsToolStripMenuItem->Text = L"Report the top 10 selling products";
 	// 
 	// menu_about
 	// 
 	this->menu_about->Name = L"menu_about";
-	this->menu_about->Size = System::Drawing::Size(52, 20);
+	this->menu_about->Size = System::Drawing::Size(50, 20);
 	this->menu_about->Text = L"About";
 	this->menu_about->Click += gcnew System::EventHandler(this, &mainForm::menu_about_Click);
 	// 
@@ -504,8 +486,6 @@ void mainForm::InitializeComponent()
 	// 
 	// s_grp
 	// 
-	this->s_grp->Controls->Add(this->s_rB_stockLT);
-	this->s_grp->Controls->Add(this->s_rB_byManuf);
 	this->s_grp->Controls->Add(this->s_l_by);
 	this->s_grp->Controls->Add(this->s_rB_byCategory);
 	this->s_grp->Controls->Add(this->s_rB_byBarcode);
@@ -514,32 +494,10 @@ void mainForm::InitializeComponent()
 	this->s_grp->Controls->Add(this->s_b_submit);
 	this->s_grp->Location = System::Drawing::Point(16, 27);
 	this->s_grp->Name = L"s_grp";
-	this->s_grp->Size = System::Drawing::Size(247, 99);
+	this->s_grp->Size = System::Drawing::Size(247, 81);
 	this->s_grp->TabIndex = 14;
 	this->s_grp->TabStop = false;
 	this->s_grp->Text = L"Search";
-	// 
-	// s_rB_stockLT
-	// 
-	this->s_rB_stockLT->AutoSize = true;
-	this->s_rB_stockLT->Location = System::Drawing::Point(31, 72);
-	this->s_rB_stockLT->Name = L"s_rB_stockLT";
-	this->s_rB_stockLT->Size = System::Drawing::Size(53, 17);
-	this->s_rB_stockLT->TabIndex = 5;
-	this->s_rB_stockLT->TabStop = true;
-	this->s_rB_stockLT->Text = L"Stock";
-	this->s_rB_stockLT->UseVisualStyleBackColor = true;
-	// 
-	// s_rB_byManuf
-	// 
-	this->s_rB_byManuf->AutoSize = true;
-	this->s_rB_byManuf->Location = System::Drawing::Point(87, 72);
-	this->s_rB_byManuf->Name = L"s_rB_byManuf";
-	this->s_rB_byManuf->Size = System::Drawing::Size(88, 17);
-	this->s_rB_byManuf->TabIndex = 6;
-	this->s_rB_byManuf->TabStop = true;
-	this->s_rB_byManuf->Text = L"Manufacturer";
-	this->s_rB_byManuf->UseVisualStyleBackColor = true;
 	// 
 	// s_l_by
 	// 
@@ -555,7 +513,7 @@ void mainForm::InitializeComponent()
 	this->s_rB_byCategory->AutoSize = true;
 	this->s_rB_byCategory->Location = System::Drawing::Point(152, 53);
 	this->s_rB_byCategory->Name = L"s_rB_byCategory";
-	this->s_rB_byCategory->Size = System::Drawing::Size(67, 17);
+	this->s_rB_byCategory->Size = System::Drawing::Size(64, 17);
 	this->s_rB_byCategory->TabIndex = 4;
 	this->s_rB_byCategory->TabStop = true;
 	this->s_rB_byCategory->Text = L"Category";
@@ -566,7 +524,7 @@ void mainForm::InitializeComponent()
 	this->s_rB_byBarcode->AutoSize = true;
 	this->s_rB_byBarcode->Location = System::Drawing::Point(87, 53);
 	this->s_rB_byBarcode->Name = L"s_rB_byBarcode";
-	this->s_rB_byBarcode->Size = System::Drawing::Size(65, 17);
+	this->s_rB_byBarcode->Size = System::Drawing::Size(62, 17);
 	this->s_rB_byBarcode->TabIndex = 3;
 	this->s_rB_byBarcode->TabStop = true;
 	this->s_rB_byBarcode->Text = L"Barcode";
@@ -578,7 +536,7 @@ void mainForm::InitializeComponent()
 	this->s_rB_byName->Checked = true;
 	this->s_rB_byName->Location = System::Drawing::Point(31, 53);
 	this->s_rB_byName->Name = L"s_rB_byName";
-	this->s_rB_byName->Size = System::Drawing::Size(53, 17);
+	this->s_rB_byName->Size = System::Drawing::Size(50, 17);
 	this->s_rB_byName->TabIndex = 2;
 	this->s_rB_byName->TabStop = true;
 	this->s_rB_byName->Text = L"Name";
@@ -622,8 +580,8 @@ void mainForm::InitializeComponent()
 	this->list_lv->Columns->AddRange(gcnew cli::array< System::Windows::Forms::ColumnHeader^  >(7) {this->list_col_name, this->list_col_category, 
 		this->list_col_barcode, this->list_col_price, this->list_col_manuf, this->list_col_stock, this->list_col_sold});
 	this->list_lv->FullRowSelect = true;
-	this->list_lv->Items->AddRange(gcnew cli::array< System::Windows::Forms::ListViewItem^  >(5) {listViewItem1, listViewItem2, 
-		listViewItem3, listViewItem4, listViewItem5});
+	this->list_lv->Items->AddRange(gcnew cli::array< System::Windows::Forms::ListViewItem^  >(5) {listViewItem6, listViewItem7, 
+		listViewItem8, listViewItem9, listViewItem10});
 	this->list_lv->Location = System::Drawing::Point(11, 23);
 	this->list_lv->Name = L"list_lv";
 	this->list_lv->ShowGroups = false;
@@ -696,6 +654,16 @@ void mainForm::InitializeComponent()
 	this->toolStripStatusLabel1->Name = L"toolStripStatusLabel1";
 	this->toolStripStatusLabel1->Size = System::Drawing::Size(39, 17);
 	this->toolStripStatusLabel1->Text = L"Ready";
+	// 
+	// toolStripSeparator1
+	// 
+	this->toolStripSeparator1->Name = L"toolStripSeparator1";
+	this->toolStripSeparator1->Size = System::Drawing::Size(163, 6);
+	// 
+	// toolStripSeparator2
+	// 
+	this->toolStripSeparator2->Name = L"toolStripSeparator2";
+	this->toolStripSeparator2->Size = System::Drawing::Size(257, 6);
 	// 
 	// mainForm
 	// 

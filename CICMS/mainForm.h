@@ -104,13 +104,9 @@ namespace CICMS_UI {
 
 	//**********MENU COMPONENTS FUNCTION***********
 	private: void menu_f_addNewProducts_Click(System::Object^  sender, System::EventArgs^  e);
-	private: void menu_f_loadProductList_Click(System::Object^  sender, System::EventArgs^  e);
-	private: void menu_f_saveProductList_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void menu_f_quit_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void menu_about_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void Create_addPdForms();
-	private: void Create_openFileDlg();
-	private: void Create_saveFileDlg();
 
 	//**********SEARCH COMPONENTS FUNCTION***********
 	private: void s_b_submit_Click(System::Object^  sender, System::EventArgs^  e);
@@ -148,8 +144,8 @@ namespace CICMS_UI {
 	//**********MENU COMPONENTS DECLEARATION***********
 	private: System::Windows::Forms::MenuStrip^  menu;
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_f;
-	private: System::Windows::Forms::ToolStripMenuItem^  menu_f_saveProductList;
-	private: System::Windows::Forms::ToolStripMenuItem^  menu_f_loadProductList;
+
+
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_f_quit;
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_about;
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_f_addNewProducts;
@@ -164,8 +160,8 @@ namespace CICMS_UI {
 	private: System::Windows::Forms::RadioButton^  s_rB_byCategory;
 	private: System::Windows::Forms::RadioButton^  s_rB_byBarcode;
 	private: System::Windows::Forms::RadioButton^  s_rB_byName;
-	private: System::Windows::Forms::RadioButton^  s_rB_stockLT;
-	private: System::Windows::Forms::RadioButton^  s_rB_byManuf;
+
+
 
 	//**********LIST COMPONENTS DECLEARATION***********
 	private: System::Windows::Forms::ListView^  list_lv;
@@ -187,7 +183,14 @@ namespace CICMS_UI {
 	//**********STATUS COMPONENTS DECLEARATION***********
 	private: System::Windows::Forms::StatusStrip^  statusStrip1;
 	private: System::Windows::Forms::ToolStripStatusLabel^  toolStripStatusLabel1;
-	//**********LOGIC HANDLER DECLEARATION***********
+private: System::Windows::Forms::ToolStripMenuItem^  statisticsToolStripMenuItem;
+private: System::Windows::Forms::ToolStripMenuItem^  generateStatToolStripMenuItem;
+private: System::Windows::Forms::ToolStripMenuItem^  reportTheBSProductToolStripMenuItem;
+private: System::Windows::Forms::ToolStripMenuItem^  reportTheBSManufacturerToolStripMenuItem;
+private: System::Windows::Forms::ToolStripMenuItem^  reportTheTop10BSProductsToolStripMenuItem;
+private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
+private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator2;
+		 //**********LOGIC HANDLER DECLEARATION***********
 	private: logic* handler;
 	};
 }
