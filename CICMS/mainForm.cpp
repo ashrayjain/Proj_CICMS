@@ -130,7 +130,7 @@ void mainForm::Create_addPdForms(){
 		addPdForm^ dlg = gcnew addPdForm();
 		dlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 		if (dlg->ShowDialog() == System::Windows::Forms::DialogResult::OK){
-			if(handler->DB_add(dlg->get_product_details()))
+			if(Bridging->Add(dlg->get_product_details()))
 				this->Update_statusBar(addS);
 			else
 				this->Update_statusBar(addF);
@@ -144,7 +144,16 @@ void mainForm::Create_addPdForms(){
 
 //Event: when s_b_submit button is clicked
 void mainForm::s_b_submit_Click(System::Object^  sender, System::EventArgs^  e){
-	this->Search_product(this->s_tB_input->Text, this->Get_byMethod());
+	if(Bridge::is_empty(this->s_tB_input->Text))
+		System::Windows::Forms::MessageBox::Show("Please fill in the search field.");
+	else if(this->Get_byMethod() == byBarcode){
+		if(!Bridge::is_number(this->s_tB_input->Text))
+			System::Windows::Forms::MessageBox::Show("Please input a number in the search field.");
+		else if(Bridge::lessThan_zero(this->s_tB_input->Text))
+			System::Windows::Forms::MessageBox::Show("Please input a number larger than zero in the search field.");
+	}
+	else
+		this->Search_product(this->s_tB_input->Text, this->Get_byMethod());
 }
 //Function: get the result of checked radioButton (by which method to search)
 int mainForm::Get_byMethod(){
@@ -159,7 +168,7 @@ int mainForm::Get_byMethod(){
 }
 //Function: search the products according to a text and a method; if the result is non-empty, it will add an item onto the listView component
 void mainForm::Search_product(System::String^ s, int m){
-	std::vector<Product> r = handler->DB_search(s, m);
+	std::list<Product> r = Bridging->Search(s, m);
 	if(!r.empty()){
 		/*
 		this->list_lv->Clear();
@@ -201,7 +210,7 @@ double mainForm::Create_inputForm(System::String^ formTitle, System::String^ pdD
 void mainForm::Create_sellForm(){
 	for(int i = 0; i < this->list_lv->SelectedItems->Count; i++){
 		unsigned num = (unsigned) this->Create_inputForm(" Sell a product", this->Get_sName(i) + " - " + this->Get_sBarcode(i), "Sell:", "1");
-		if(handler->DB_sell(this->list_lv->SelectedItems[i], num))
+		if(Bridging->Sell(this->list_lv->SelectedItems[i], num))
 			this->Update_statusBar(sellS);
 		else
 			this->Update_statusBar(sellF);
@@ -210,7 +219,7 @@ void mainForm::Create_sellForm(){
 void mainForm::Create_restockForm(){
 	for(int i = 0; i < this->list_lv->SelectedItems->Count; i++){
 		unsigned num = (unsigned) this->Create_inputForm(" Restock a product", this->Get_sName(i) + " - " + this->Get_sBarcode(i), "Restock:", "1");
-		if(handler->DB_restock(this->list_lv->SelectedItems[i], num))
+		if(Bridging->Restock(this->list_lv->SelectedItems[i], num))
 			this->Update_statusBar(restockS);
 		else
 			this->Update_statusBar(restockF);
@@ -232,7 +241,7 @@ void mainForm::Create_deleteForm(){
 			this->Get_sBarcode(i) +
 			"?"
 			) == System::Windows::Forms::DialogResult::Yes){
-				handler->DB_del(this->list_lv->SelectedItems[i]);
+				Bridging->Del(this->list_lv->SelectedItems[i]);
 				this->Clear_selectedList(i--);//if delete an item, selectedItems->Count will decrease, index will change as well
 		}
 	}
@@ -303,7 +312,7 @@ void mainForm::Update_statusBar(int i){
 			"Product(s) restocked successfully", "Product(s) restocked unsuccessfully", //restockS, restockF
 			"Product(s) deleted successfully", "Product(s) deleted unsuccessfully", //deleteS, deleteF
 			"Price discounted successfully", "Price discounted unsuccessfully", //discountS, discountF
-			"Searched successfully", "Searched unsuccessfully" //searchS, searchF
+			"Searched successfully", "No results found" //searchS, searchF
 	};
 	this->Set_statusBar(text[i], i % 2? /*failure*/System::Drawing::Color::RosyBrown: /*success*/System::Drawing::Color::LightSkyBlue);
 }
@@ -329,25 +338,27 @@ System::Windows::Forms::DialogResult mainForm::Create_messageBox(System::String^
 //Initialize the components & set their properties; run at startup of class mainForm
 void mainForm::InitializeComponent()
 {
-	System::Windows::Forms::ListViewItem^  listViewItem6 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"Rio de SNEAKER", 
+	System::Windows::Forms::ListViewItem^  listViewItem1 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"Rio de SNEAKER", 
 		L"Shoes", L"000051", L"35", L"Nike", L"5", L"5"}, -1));
-	System::Windows::Forms::ListViewItem^  listViewItem7 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"Superstar2 Snake", 
+	System::Windows::Forms::ListViewItem^  listViewItem2 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"Superstar2 Snake", 
 		L"Shoes", L"000023", L"31", L"Adidas", L"31", L"3"}, -1));
-	System::Windows::Forms::ListViewItem^  listViewItem8 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"H&M 2013 STU", 
+	System::Windows::Forms::ListViewItem^  listViewItem3 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"H&M 2013 STU", 
 		L"Bag", L"000021", L"33", L"H&M", L"66", L"5"}, -1));
-	System::Windows::Forms::ListViewItem^  listViewItem9 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"JJ 2013 SS2", 
+	System::Windows::Forms::ListViewItem^  listViewItem4 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"JJ 2013 SS2", 
 		L"Jeans", L"000044", L"5", L"JJ", L"25", L"21"}, -1));
-	System::Windows::Forms::ListViewItem^  listViewItem10 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"JOJO Summer", 
+	System::Windows::Forms::ListViewItem^  listViewItem5 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"JOJO Summer", 
 		L"Jeans", L"000145", L"16", L"JOJO", L"11", L"23"}, -1));
 	this->menu = (gcnew System::Windows::Forms::MenuStrip());
 	this->menu_f = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->menu_f_addNewProducts = (gcnew System::Windows::Forms::ToolStripMenuItem());
+	this->toolStripSeparator1 = (gcnew System::Windows::Forms::ToolStripSeparator());
 	this->menu_f_quit = (gcnew System::Windows::Forms::ToolStripMenuItem());
-	this->statisticsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-	this->generateStatToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-	this->reportTheBSProductToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-	this->reportTheBSManufacturerToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-	this->reportTheTop10BSProductsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+	this->menu_stat = (gcnew System::Windows::Forms::ToolStripMenuItem());
+	this->menu_stat_genStat = (gcnew System::Windows::Forms::ToolStripMenuItem());
+	this->toolStripSeparator2 = (gcnew System::Windows::Forms::ToolStripSeparator());
+	this->menu_stat_BSpd = (gcnew System::Windows::Forms::ToolStripMenuItem());
+	this->menu_stat_BSmanu = (gcnew System::Windows::Forms::ToolStripMenuItem());
+	this->menu_stat_top10pd = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->menu_about = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->openFileDialog = (gcnew System::Windows::Forms::OpenFileDialog());
 	this->saveFileDialog = (gcnew System::Windows::Forms::SaveFileDialog());
@@ -372,8 +383,6 @@ void mainForm::InitializeComponent()
 	this->list_grp = (gcnew System::Windows::Forms::GroupBox());
 	this->statusStrip1 = (gcnew System::Windows::Forms::StatusStrip());
 	this->toolStripStatusLabel1 = (gcnew System::Windows::Forms::ToolStripStatusLabel());
-	this->toolStripSeparator1 = (gcnew System::Windows::Forms::ToolStripSeparator());
-	this->toolStripSeparator2 = (gcnew System::Windows::Forms::ToolStripSeparator());
 	this->menu->SuspendLayout();
 	this->s_grp->SuspendLayout();
 	this->list_grp->SuspendLayout();
@@ -382,7 +391,7 @@ void mainForm::InitializeComponent()
 	// 
 	// menu
 	// 
-	this->menu->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {this->menu_f, this->statisticsToolStripMenuItem, 
+	this->menu->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {this->menu_f, this->menu_stat, 
 		this->menu_about});
 	this->menu->Location = System::Drawing::Point(0, 0);
 	this->menu->Name = L"menu";
@@ -405,6 +414,11 @@ void mainForm::InitializeComponent()
 	this->menu_f_addNewProducts->Text = L"Add new products";
 	this->menu_f_addNewProducts->Click += gcnew System::EventHandler(this, &mainForm::menu_f_addNewProducts_Click);
 	// 
+	// toolStripSeparator1
+	// 
+	this->toolStripSeparator1->Name = L"toolStripSeparator1";
+	this->toolStripSeparator1->Size = System::Drawing::Size(163, 6);
+	// 
 	// menu_f_quit
 	// 
 	this->menu_f_quit->Name = L"menu_f_quit";
@@ -412,37 +426,42 @@ void mainForm::InitializeComponent()
 	this->menu_f_quit->Text = L"Quit";
 	this->menu_f_quit->Click += gcnew System::EventHandler(this, &mainForm::menu_f_quit_Click);
 	// 
-	// statisticsToolStripMenuItem
+	// menu_stat
 	// 
-	this->statisticsToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(5) {this->generateStatToolStripMenuItem, 
-		this->toolStripSeparator2, this->reportTheBSProductToolStripMenuItem, this->reportTheBSManufacturerToolStripMenuItem, this->reportTheTop10BSProductsToolStripMenuItem});
-	this->statisticsToolStripMenuItem->Name = L"statisticsToolStripMenuItem";
-	this->statisticsToolStripMenuItem->Size = System::Drawing::Size(64, 20);
-	this->statisticsToolStripMenuItem->Text = L"Statistics";
+	this->menu_stat->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(5) {this->menu_stat_genStat, 
+		this->toolStripSeparator2, this->menu_stat_BSpd, this->menu_stat_BSmanu, this->menu_stat_top10pd});
+	this->menu_stat->Name = L"menu_stat";
+	this->menu_stat->Size = System::Drawing::Size(64, 20);
+	this->menu_stat->Text = L"Statistics";
 	// 
-	// generateStatToolStripMenuItem
+	// menu_stat_genStat
 	// 
-	this->generateStatToolStripMenuItem->Name = L"generateStatToolStripMenuItem";
-	this->generateStatToolStripMenuItem->Size = System::Drawing::Size(260, 22);
-	this->generateStatToolStripMenuItem->Text = L"Generate stat";
+	this->menu_stat_genStat->Name = L"menu_stat_genStat";
+	this->menu_stat_genStat->Size = System::Drawing::Size(260, 22);
+	this->menu_stat_genStat->Text = L"Generate stat";
 	// 
-	// reportTheBSProductToolStripMenuItem
+	// toolStripSeparator2
 	// 
-	this->reportTheBSProductToolStripMenuItem->Name = L"reportTheBSProductToolStripMenuItem";
-	this->reportTheBSProductToolStripMenuItem->Size = System::Drawing::Size(260, 22);
-	this->reportTheBSProductToolStripMenuItem->Text = L"Report the best-selling product";
+	this->toolStripSeparator2->Name = L"toolStripSeparator2";
+	this->toolStripSeparator2->Size = System::Drawing::Size(257, 6);
 	// 
-	// reportTheBSManufacturerToolStripMenuItem
+	// menu_stat_BSpd
 	// 
-	this->reportTheBSManufacturerToolStripMenuItem->Name = L"reportTheBSManufacturerToolStripMenuItem";
-	this->reportTheBSManufacturerToolStripMenuItem->Size = System::Drawing::Size(260, 22);
-	this->reportTheBSManufacturerToolStripMenuItem->Text = L"Report the best-selling manufacturer";
+	this->menu_stat_BSpd->Name = L"menu_stat_BSpd";
+	this->menu_stat_BSpd->Size = System::Drawing::Size(260, 22);
+	this->menu_stat_BSpd->Text = L"Report the best-selling product";
 	// 
-	// reportTheTop10BSProductsToolStripMenuItem
+	// menu_stat_BSmanu
 	// 
-	this->reportTheTop10BSProductsToolStripMenuItem->Name = L"reportTheTop10BSProductsToolStripMenuItem";
-	this->reportTheTop10BSProductsToolStripMenuItem->Size = System::Drawing::Size(260, 22);
-	this->reportTheTop10BSProductsToolStripMenuItem->Text = L"Report the top 10 selling products";
+	this->menu_stat_BSmanu->Name = L"menu_stat_BSmanu";
+	this->menu_stat_BSmanu->Size = System::Drawing::Size(260, 22);
+	this->menu_stat_BSmanu->Text = L"Report the best-selling manufacturer";
+	// 
+	// menu_stat_top10pd
+	// 
+	this->menu_stat_top10pd->Name = L"menu_stat_top10pd";
+	this->menu_stat_top10pd->Size = System::Drawing::Size(260, 22);
+	this->menu_stat_top10pd->Text = L"Report the top 10 selling products";
 	// 
 	// menu_about
 	// 
@@ -580,8 +599,8 @@ void mainForm::InitializeComponent()
 	this->list_lv->Columns->AddRange(gcnew cli::array< System::Windows::Forms::ColumnHeader^  >(7) {this->list_col_name, this->list_col_category, 
 		this->list_col_barcode, this->list_col_price, this->list_col_manuf, this->list_col_stock, this->list_col_sold});
 	this->list_lv->FullRowSelect = true;
-	this->list_lv->Items->AddRange(gcnew cli::array< System::Windows::Forms::ListViewItem^  >(5) {listViewItem6, listViewItem7, 
-		listViewItem8, listViewItem9, listViewItem10});
+	this->list_lv->Items->AddRange(gcnew cli::array< System::Windows::Forms::ListViewItem^  >(5) {listViewItem1, listViewItem2, 
+		listViewItem3, listViewItem4, listViewItem5});
 	this->list_lv->Location = System::Drawing::Point(11, 23);
 	this->list_lv->Name = L"list_lv";
 	this->list_lv->ShowGroups = false;
@@ -654,16 +673,6 @@ void mainForm::InitializeComponent()
 	this->toolStripStatusLabel1->Name = L"toolStripStatusLabel1";
 	this->toolStripStatusLabel1->Size = System::Drawing::Size(39, 17);
 	this->toolStripStatusLabel1->Text = L"Ready";
-	// 
-	// toolStripSeparator1
-	// 
-	this->toolStripSeparator1->Name = L"toolStripSeparator1";
-	this->toolStripSeparator1->Size = System::Drawing::Size(163, 6);
-	// 
-	// toolStripSeparator2
-	// 
-	this->toolStripSeparator2->Name = L"toolStripSeparator2";
-	this->toolStripSeparator2->Size = System::Drawing::Size(257, 6);
 	// 
 	// mainForm
 	// 

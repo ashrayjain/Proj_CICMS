@@ -81,22 +81,22 @@
 /*************************************************************************************************/
 #ifndef _GUARD_UI_mainForm
 #define _GUARD_UI_mainForm
-#include "logic.h"
+
+#include "Bridge.h"
 
 namespace CICMS_UI {
 
 	public ref class mainForm : public System::Windows::Forms::Form
 	{
 	public:
-		mainForm(void)
+		mainForm()
 		{
 			InitializeComponent();
-			handler = new logic;
+			Bridging = new Bridge;
 		}
 
-		~mainForm()
-		{
-			delete handler;
+		~mainForm(){
+			delete Bridging;
 		}
 	//********************************************************
 	//*************MEMBER FUNCTION DECLEARATION***************
@@ -144,8 +144,6 @@ namespace CICMS_UI {
 	//**********MENU COMPONENTS DECLEARATION***********
 	private: System::Windows::Forms::MenuStrip^  menu;
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_f;
-
-
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_f_quit;
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_about;
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_f_addNewProducts;
@@ -161,8 +159,6 @@ namespace CICMS_UI {
 	private: System::Windows::Forms::RadioButton^  s_rB_byBarcode;
 	private: System::Windows::Forms::RadioButton^  s_rB_byName;
 
-
-
 	//**********LIST COMPONENTS DECLEARATION***********
 	private: System::Windows::Forms::ListView^  list_lv;
 	private: System::Windows::Forms::ColumnHeader^  list_col_name;
@@ -176,22 +172,21 @@ namespace CICMS_UI {
 	private: System::Windows::Forms::Button^  list_b_delete;
 	private: System::Windows::Forms::Button^  list_b_sell;
 	private: System::Windows::Forms::Button^  list_b_restock;
-
 	private: System::Int32 list_sortColumn;
 	private: bool list_sort;
 
 	//**********STATUS COMPONENTS DECLEARATION***********
 	private: System::Windows::Forms::StatusStrip^  statusStrip1;
 	private: System::Windows::Forms::ToolStripStatusLabel^  toolStripStatusLabel1;
-private: System::Windows::Forms::ToolStripMenuItem^  statisticsToolStripMenuItem;
-private: System::Windows::Forms::ToolStripMenuItem^  generateStatToolStripMenuItem;
-private: System::Windows::Forms::ToolStripMenuItem^  reportTheBSProductToolStripMenuItem;
-private: System::Windows::Forms::ToolStripMenuItem^  reportTheBSManufacturerToolStripMenuItem;
-private: System::Windows::Forms::ToolStripMenuItem^  reportTheTop10BSProductsToolStripMenuItem;
-private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
-private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator2;
-		 //**********LOGIC HANDLER DECLEARATION***********
-	private: logic* handler;
+	private: System::Windows::Forms::ToolStripMenuItem^  menu_stat;
+	private: System::Windows::Forms::ToolStripMenuItem^  menu_stat_genStat;
+	private: System::Windows::Forms::ToolStripMenuItem^  menu_stat_BSpd;
+	private: System::Windows::Forms::ToolStripMenuItem^  menu_stat_BSmanu;
+	private: System::Windows::Forms::ToolStripMenuItem^  menu_stat_top10pd;
+	private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
+	private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator2;
+	//**********BRIDGE HANDLER DECLEARATION***********
+	private: Bridge *Bridging;
 	};
 }
 #endif

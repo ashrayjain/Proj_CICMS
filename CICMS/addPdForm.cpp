@@ -13,6 +13,7 @@
 /*************************************************************************************************/
 #include "stdafx.h"
 #include "addPdForm.h"
+#include "Bridge.h"
 
 using namespace CICMS_UI;
 addPdForm::addPdForm(void)
@@ -141,7 +142,7 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	// npd_b_cancel
 	// 
 	this->npd_b_cancel->DialogResult = System::Windows::Forms::DialogResult::Cancel;
-	this->npd_b_cancel->Location = System::Drawing::Point(155, 194);
+	this->npd_b_cancel->Location = System::Drawing::Point(155, 184);
 	this->npd_b_cancel->Name = L"npd_b_cancel";
 	this->npd_b_cancel->Size = System::Drawing::Size(75, 23);
 	this->npd_b_cancel->TabIndex = 7;
@@ -150,8 +151,7 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	// 
 	// npd_b_ok
 	// 
-	this->npd_b_ok->DialogResult = System::Windows::Forms::DialogResult::OK;
-	this->npd_b_ok->Location = System::Drawing::Point(39, 194);
+	this->npd_b_ok->Location = System::Drawing::Point(39, 184);
 	this->npd_b_ok->Name = L"npd_b_ok";
 	this->npd_b_ok->Size = System::Drawing::Size(75, 23);
 	this->npd_b_ok->TabIndex = 6;
@@ -165,7 +165,7 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 	this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 	this->CancelButton = this->npd_b_cancel;
-	this->ClientSize = System::Drawing::Size(275, 233);
+	this->ClientSize = System::Drawing::Size(275, 218);
 	this->Controls->Add(this->npd_b_cancel);
 	this->Controls->Add(this->npd_b_ok);
 	this->Controls->Add(this->npd_grp);
@@ -183,12 +183,28 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 // Upon clicking the OK button, stuff happens here
 // possibly notifying the logic classes to call get_product_details()
 void addPdForm::npd_b_ok_Click(System::Object^  sender, System::EventArgs^  e) {
-	this->Close(); //Closing the form
+	if(Bridge::is_empty(this->npd_tB_name->Text) ||
+		Bridge::is_empty(this->npd_tB_category->Text) ||
+		Bridge::is_empty(this->npd_tB_manuf->Text) ||
+		Bridge::is_empty(this->npd_tB_barcode->Text) ||
+		Bridge::is_empty(this->npd_tB_price->Text))
+		System::Windows::Forms::MessageBox::Show("Please fill in all the fields.");
+	else if(!Bridge::is_number(this->npd_tB_barcode->Text))
+		System::Windows::Forms::MessageBox::Show("Please input a number in the barcode field.");
+	else if(!Bridge::is_number(this->npd_tB_price->Text))
+		System::Windows::Forms::MessageBox::Show("Please input a number in the price field.");
+	else if(Bridge::lessThan_zero(this->npd_tB_barcode->Text))
+		System::Windows::Forms::MessageBox::Show("Please input a number larger than zero in the barcode field.");
+	else if(Bridge::lessThan_zero(this->npd_tB_price->Text))
+		System::Windows::Forms::MessageBox::Show("Please input a number larger than zero in the price field.");
+	else{
+		this->DialogResult = System::Windows::Forms::DialogResult::OK;
+		this->Close();
+	}
 }
 
 //Data return in the form of strings
 System::Windows::Forms::ListViewItem^ addPdForm::get_product_details(){
-	//need to check whether they are blank/number/...
 	return gcnew System::Windows::Forms::ListViewItem(gcnew cli::array<System::String^>(7) {
 		this->npd_tB_name->Text, 
 		this->npd_tB_category->Text,

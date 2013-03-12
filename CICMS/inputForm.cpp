@@ -16,6 +16,7 @@
 
 #include "stdafx.h"
 #include "inputForm.h"
+#include "Bridge.h"
 
 using namespace CICMS_UI;
 
@@ -41,7 +42,6 @@ void inputForm::InitializeComponent()
 	// 
 	// input_b_yes
 	// 
-	this->input_b_yes->DialogResult = System::Windows::Forms::DialogResult::OK;
 	this->input_b_yes->Location = System::Drawing::Point(13, 73);
 	this->input_b_yes->Name = L"input_b_yes";
 	this->input_b_yes->Size = System::Drawing::Size(75, 23);
@@ -101,22 +101,16 @@ void inputForm::InitializeComponent()
 }
 
 void inputForm::input_b_yes_Click(System::Object^  sender, System::EventArgs^  e) {
-	//submit check here
-	if(!is_valid(input_tB_input->Text))
-		input_tB_input->Text = "0";
-}
-
-
-bool inputForm::is_valid(System::String^ s){
-	if(s->Contains("%")){
-		System::Windows::Forms::MessageBox::Show("Please input something like 0.9, instead of 90%.");
-		return false;
-	}
-	else if(!is_number(s)){
+	if(Bridge::is_empty(this->input_tB_input->Text))
+		System::Windows::Forms::MessageBox::Show("Please fill in the field.");
+	else if(!Bridge::is_number(this->input_tB_input->Text))
 		System::Windows::Forms::MessageBox::Show("Please input a number.");
-		return false;
+	else if(Bridge::lessThan_zero(this->input_tB_input->Text))
+		System::Windows::Forms::MessageBox::Show("Please input a number larger than zero.");
+	else{
+		this->DialogResult = System::Windows::Forms::DialogResult::OK;
+		this->Close();
 	}
-	else return true;
 }
 
 void inputForm::set_inputForm(System::String^ title, System::String^ pdDescript, System::String^ descript, System::String^ stringInTB){

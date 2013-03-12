@@ -87,6 +87,7 @@
     <ClInclude Include="addPdForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="Bridge.h" />
     <ClInclude Include="ListViewItemComparer.h" />
     <ClInclude Include="logic.h" />
     <ClInclude Include="mainForm.h">
@@ -105,6 +106,7 @@
   <ItemGroup>
     <ClCompile Include="addPdForm.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="Bridge.cpp" />
     <ClCompile Include="ListViewItemComparer.cpp" />
     <ClCompile Include="logic.cpp" />
     <ClCompile Include="main.cpp" />

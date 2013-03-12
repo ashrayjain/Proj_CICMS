@@ -38,13 +38,9 @@ namespace CICMS_UI {
 	//********************************************************
 	//*************MEMBER FUNCTION DECLEARATION***************
 	//********************************************************
-	 void InitializeComponent();
+	void InitializeComponent();
 
-	 void input_b_yes_Click(System::Object^  sender, System::EventArgs^  e) ;
-
-	//this function should be in the handler/logic part
-	 bool is_valid(System::String^ s);
-
+	void input_b_yes_Click(System::Object^  sender, System::EventArgs^  e) ;
 	
 	public:
 		inputForm()
