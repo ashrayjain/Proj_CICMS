@@ -63,7 +63,7 @@ void inputForm::InitializeComponent()
 	// input_tB_input
 	// 
 	this->input_tB_input->Location = System::Drawing::Point(82, 39);
-	this->input_tB_input->MaxLength = 10;
+	this->input_tB_input->MaxLength = 7;
 	this->input_tB_input->Name = L"input_tB_input";
 	this->input_tB_input->Size = System::Drawing::Size(85, 20);
 	this->input_tB_input->TabIndex = 1;
@@ -98,15 +98,16 @@ void inputForm::InitializeComponent()
 	this->Text = L"formTitle";
 	this->ResumeLayout(false);
 	this->PerformLayout();
+
 }
 
 void inputForm::input_b_yes_Click(System::Object^  sender, System::EventArgs^  e) {
 	if(InputCheck::is_empty(this->input_tB_input->Text))
 		System::Windows::Forms::MessageBox::Show("Please fill in the field.");
-	else if(!InputCheck::is_number(this->input_tB_input->Text))
-		System::Windows::Forms::MessageBox::Show("Please input a number.");
+	else if(!InputCheck::is_int(this->input_tB_input->Text))
+		System::Windows::Forms::MessageBox::Show("Please input an integer");
 	else if(InputCheck::lessThan_zero(this->input_tB_input->Text))
-		System::Windows::Forms::MessageBox::Show("Please input a number larger than zero.");
+		System::Windows::Forms::MessageBox::Show("Please input an integer larger than zero.");
 	else if(InputCheck::is_large(this->input_tB_input->Text)){
 		if(System::Windows::Forms::MessageBox::Show("The number you input is large, are you sure?", " Input Checking",
 		System::Windows::Forms::MessageBoxButtons::YesNo,

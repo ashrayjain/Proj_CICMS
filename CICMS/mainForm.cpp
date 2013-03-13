@@ -144,14 +144,35 @@ void mainForm::Create_addPdForms(){
 //**********SEARCH COMPONENTS FUNCTION***********
 //***********************************************
 
+//Event: when s_rB_byName is selected
+void mainForm::s_rB_byName_CheckedChanged(System::Object^  sender, System::EventArgs^  e){
+	if(this->Get_byMethod() == byName)
+		this->s_tB_input->Text = "";
+}
+//Event: when s_rB_byCategory is selected
+void mainForm::s_rB_byCategory_CheckedChanged(System::Object^  sender, System::EventArgs^  e){
+	if(this->Get_byMethod() == byCategory)
+		this->s_tB_input->Text = "";
+}
+
+//Event: when s_rB_byBarcode is selected
+void mainForm::s_rB_byBarcode_CheckedChanged(System::Object^  sender, System::EventArgs^  e){
+	if(this->Get_byMethod() == byBarcode){
+		this->s_tB_input->Text = "";
+		this->s_tB_input->MaxLength = 9;
+	}
+	else{
+		this->s_tB_input->MaxLength = 21;
+	}
+}
 //Event: when s_b_submit button is clicked
 void mainForm::s_b_submit_Click(System::Object^  sender, System::EventArgs^  e){
 	if(InputCheck::is_empty(this->s_tB_input->Text))
 		System::Windows::Forms::MessageBox::Show("Please fill in the search field.");
-	else if(this->Get_byMethod() == byBarcode && !InputCheck::is_number(this->s_tB_input->Text))
-		System::Windows::Forms::MessageBox::Show("Please input a number in the search field.");
+	else if(this->Get_byMethod() == byBarcode && !InputCheck::is_int(this->s_tB_input->Text))
+		System::Windows::Forms::MessageBox::Show("Please input an integer in the search field.");
 	else if(this->Get_byMethod() == byBarcode && InputCheck::lessThan_zero(this->s_tB_input->Text))
-		System::Windows::Forms::MessageBox::Show("Please input a number larger than zero in the search field.");
+		System::Windows::Forms::MessageBox::Show("Please input an integer larger than zero in the search field.");
 	else
 		this->Search_product(this->s_tB_input->Text, this->Get_byMethod());
 }
@@ -337,15 +358,15 @@ System::Windows::Forms::DialogResult mainForm::Create_messageBox(System::String^
 //Initialize the components & set their properties; run at startup of class mainForm
 void mainForm::InitializeComponent()
 {
-	System::Windows::Forms::ListViewItem^  listViewItem1 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"Rio de SNEAKER", 
+	System::Windows::Forms::ListViewItem^  listViewItem6 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"Rio de SNEAKER", 
 		L"Shoes", L"000051", L"35", L"Nike", L"5", L"5"}, -1));
-	System::Windows::Forms::ListViewItem^  listViewItem2 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"Superstar2 Snake", 
+	System::Windows::Forms::ListViewItem^  listViewItem7 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"Superstar2 Snake", 
 		L"Shoes", L"000023", L"31", L"Adidas", L"31", L"3"}, -1));
-	System::Windows::Forms::ListViewItem^  listViewItem3 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"H&M 2013 STU", 
+	System::Windows::Forms::ListViewItem^  listViewItem8 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"H&M 2013 STU", 
 		L"Bag", L"000021", L"33", L"H&M", L"66", L"5"}, -1));
-	System::Windows::Forms::ListViewItem^  listViewItem4 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"JJ 2013 SS2", 
+	System::Windows::Forms::ListViewItem^  listViewItem9 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"JJ 2013 SS2", 
 		L"Jeans", L"000044", L"5", L"JJ", L"25", L"21"}, -1));
-	System::Windows::Forms::ListViewItem^  listViewItem5 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"JOJO Summer", 
+	System::Windows::Forms::ListViewItem^  listViewItem10 = (gcnew System::Windows::Forms::ListViewItem(gcnew cli::array< System::String^  >(7) {L"JOJO Summer", 
 		L"Jeans", L"000145", L"16", L"JOJO", L"11", L"23"}, -1));
 	this->menu = (gcnew System::Windows::Forms::MenuStrip());
 	this->menu_f = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -485,6 +506,7 @@ void mainForm::InitializeComponent()
 	this->s_tB_input->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 11, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 		static_cast<System::Byte>(134)));
 	this->s_tB_input->Location = System::Drawing::Point(6, 23);
+	this->s_tB_input->MaxLength = 21;
 	this->s_tB_input->Name = L"s_tB_input";
 	this->s_tB_input->Size = System::Drawing::Size(172, 24);
 	this->s_tB_input->TabIndex = 0;
@@ -536,6 +558,7 @@ void mainForm::InitializeComponent()
 	this->s_rB_byCategory->TabStop = true;
 	this->s_rB_byCategory->Text = L"Category";
 	this->s_rB_byCategory->UseVisualStyleBackColor = true;
+	this->s_rB_byCategory->CheckedChanged += gcnew System::EventHandler(this, &mainForm::s_rB_byCategory_CheckedChanged);
 	// 
 	// s_rB_byBarcode
 	// 
@@ -547,6 +570,7 @@ void mainForm::InitializeComponent()
 	this->s_rB_byBarcode->TabStop = true;
 	this->s_rB_byBarcode->Text = L"Barcode";
 	this->s_rB_byBarcode->UseVisualStyleBackColor = true;
+	this->s_rB_byBarcode->CheckedChanged += gcnew System::EventHandler(this, &mainForm::s_rB_byBarcode_CheckedChanged);
 	// 
 	// s_rB_byName
 	// 
@@ -559,6 +583,7 @@ void mainForm::InitializeComponent()
 	this->s_rB_byName->TabStop = true;
 	this->s_rB_byName->Text = L"Name";
 	this->s_rB_byName->UseVisualStyleBackColor = true;
+	this->s_rB_byName->CheckedChanged += gcnew System::EventHandler(this, &mainForm::s_rB_byName_CheckedChanged);
 	// 
 	// list_b_restock
 	// 
@@ -598,8 +623,8 @@ void mainForm::InitializeComponent()
 	this->list_lv->Columns->AddRange(gcnew cli::array< System::Windows::Forms::ColumnHeader^  >(7) {this->list_col_name, this->list_col_category, 
 		this->list_col_barcode, this->list_col_price, this->list_col_manuf, this->list_col_stock, this->list_col_sold});
 	this->list_lv->FullRowSelect = true;
-	this->list_lv->Items->AddRange(gcnew cli::array< System::Windows::Forms::ListViewItem^  >(5) {listViewItem1, listViewItem2, 
-		listViewItem3, listViewItem4, listViewItem5});
+	this->list_lv->Items->AddRange(gcnew cli::array< System::Windows::Forms::ListViewItem^  >(5) {listViewItem6, listViewItem7, 
+		listViewItem8, listViewItem9, listViewItem10});
 	this->list_lv->Location = System::Drawing::Point(11, 23);
 	this->list_lv->Name = L"list_lv";
 	this->list_lv->ShowGroups = false;

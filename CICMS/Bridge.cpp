@@ -13,7 +13,7 @@ cliext::vector<System::Windows::Forms::ListViewItem^>^ Bridge::Search(System::St
 	std::list<Product> *r = new std::list<Product>;//no need new ... here
 	//return a list of product, but here i shall convert them into listViewItem
 	//if(i == byBarcode)
-	//	r = Handler.Search(toInt(s), i);
+	//	r = Handler.Search(toUInt(s), i);
 	//else
 	//	r = Handler.Search(toStdString(s), i);
 	cliext::vector<System::Windows::Forms::ListViewItem^>^ items = gcnew cliext::vector<System::Windows::Forms::ListViewItem^>;
@@ -57,7 +57,7 @@ Product Bridge::toProduct(System::Windows::Forms::ListViewItem^ item)
 		toStdString(item->SubItems[0]->Text),
 		toStdString(item->SubItems[1]->Text),
 		toStdString(item->SubItems[2]->Text),
-		toInt(item->SubItems[3]->Text),
+		toUInt(item->SubItems[3]->Text),
 		toDouble(item->SubItems[4]->Text)
 		);
 }
@@ -80,9 +80,9 @@ double Bridge::toDouble(System::String^ s)
 	return System::Convert::ToDouble(s);
 }
 //Conversion from System::String to int
-int Bridge::toInt(System::String^ s)
+int Bridge::toUInt(System::String^ s)
 {
-	return System::Convert::ToInt32(s);
+	return System::Convert::ToUInt32(s);
 }
 //Conversion from System::String to std::string
 std::string Bridge::toStdString(System::String^ s)

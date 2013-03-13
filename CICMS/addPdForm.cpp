@@ -62,6 +62,7 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	// npd_tB_name
 	// 
 	this->npd_tB_name->Location = System::Drawing::Point(88, 24);
+	this->npd_tB_name->MaxLength = 21;
 	this->npd_tB_name->Name = L"npd_tB_name";
 	this->npd_tB_name->Size = System::Drawing::Size(138, 20);
 	this->npd_tB_name->TabIndex = 5;
@@ -69,6 +70,7 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	// npd_tB_category
 	// 
 	this->npd_tB_category->Location = System::Drawing::Point(87, 50);
+	this->npd_tB_category->MaxLength = 21;
 	this->npd_tB_category->Name = L"npd_tB_category";
 	this->npd_tB_category->Size = System::Drawing::Size(138, 20);
 	this->npd_tB_category->TabIndex = 6;
@@ -76,6 +78,7 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	// npd_tB_barcode
 	// 
 	this->npd_tB_barcode->Location = System::Drawing::Point(87, 76);
+	this->npd_tB_barcode->MaxLength = 9;
 	this->npd_tB_barcode->Name = L"npd_tB_barcode";
 	this->npd_tB_barcode->Size = System::Drawing::Size(138, 20);
 	this->npd_tB_barcode->TabIndex = 7;
@@ -83,6 +86,7 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	// npd_tB_price
 	// 
 	this->npd_tB_price->Location = System::Drawing::Point(87, 102);
+	this->npd_tB_price->MaxLength = 9;
 	this->npd_tB_price->Name = L"npd_tB_price";
 	this->npd_tB_price->Size = System::Drawing::Size(138, 20);
 	this->npd_tB_price->TabIndex = 8;
@@ -90,6 +94,7 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	// npd_tB_manuf
 	// 
 	this->npd_tB_manuf->Location = System::Drawing::Point(87, 128);
+	this->npd_tB_manuf->MaxLength = 21;
 	this->npd_tB_manuf->Name = L"npd_tB_manuf";
 	this->npd_tB_manuf->Size = System::Drawing::Size(138, 20);
 	this->npd_tB_manuf->TabIndex = 9;
@@ -189,12 +194,12 @@ void addPdForm::npd_b_ok_Click(System::Object^  sender, System::EventArgs^  e) {
 		InputCheck::is_empty(this->npd_tB_barcode->Text) ||
 		InputCheck::is_empty(this->npd_tB_price->Text))
 		System::Windows::Forms::MessageBox::Show("Please fill in all the fields.");
-	else if(!InputCheck::is_number(this->npd_tB_barcode->Text))
-		System::Windows::Forms::MessageBox::Show("Please input a number in the barcode field.");
+	else if(!InputCheck::is_int(this->npd_tB_barcode->Text))
+		System::Windows::Forms::MessageBox::Show("Please input an integer in the barcode field.");
+	else if(InputCheck::lessThan_zero(this->npd_tB_barcode->Text))
+		System::Windows::Forms::MessageBox::Show("Please input an integer larger than zero in the barcode field.");
 	else if(!InputCheck::is_number(this->npd_tB_price->Text))
 		System::Windows::Forms::MessageBox::Show("Please input a number in the price field.");
-	else if(InputCheck::lessThan_zero(this->npd_tB_barcode->Text))
-		System::Windows::Forms::MessageBox::Show("Please input a number larger than zero in the barcode field.");
 	else if(InputCheck::lessThan_zero(this->npd_tB_price->Text))
 		System::Windows::Forms::MessageBox::Show("Please input a number larger than zero in the price field.");
 	else{

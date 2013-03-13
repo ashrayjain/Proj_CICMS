@@ -15,7 +15,7 @@ private:
 	static Product toProduct(System::Windows::Forms::ListViewItem^);
 	static System::Windows::Forms::ListViewItem^ toLvItem(Product);
 	static double toDouble(System::String^);
-	static int toInt(System::String^);
+	static int toUInt(System::String^);
 	static std::string toStdString(System::String^);
 	static System::String^ toSysString(double);
 	static System::String^ toSysString(unsigned);

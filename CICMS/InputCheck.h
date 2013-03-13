@@ -6,4 +6,5 @@ public:
 	static bool lessThan_zero(System::String^);
 	static bool is_empty(System::String^);
 	static bool is_large(System::String^);
+	static bool is_int(System::String^ s);
 };

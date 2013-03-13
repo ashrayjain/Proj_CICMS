@@ -109,7 +109,10 @@ namespace CICMS_UI {
 	private: void Create_addPdForms();
 
 	//**********SEARCH COMPONENTS FUNCTION***********
+	private: void s_rB_byName_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
+	private: void s_rB_byCategory_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 	private: void s_b_submit_Click(System::Object^  sender, System::EventArgs^  e);
+	private: void s_rB_byBarcode_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 	private: int Get_byMethod();
 	private: void Search_product(System::String^ s, int m);
 
@@ -187,6 +190,6 @@ namespace CICMS_UI {
 	private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator2;
 	//**********BRIDGE HANDLER DECLEARATION***********
 	private: Bridge *Bridging;
-	};
+};
 }
 #endif
