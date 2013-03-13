@@ -13,7 +13,7 @@
 /*************************************************************************************************/
 #include "stdafx.h"
 #include "addPdForm.h"
-#include "Bridge.h"
+#include "InputCheck.h"
 
 using namespace CICMS_UI;
 addPdForm::addPdForm(void)
@@ -183,19 +183,19 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 // Upon clicking the OK button, stuff happens here
 // possibly notifying the logic classes to call get_product_details()
 void addPdForm::npd_b_ok_Click(System::Object^  sender, System::EventArgs^  e) {
-	if(Bridge::is_empty(this->npd_tB_name->Text) ||
-		Bridge::is_empty(this->npd_tB_category->Text) ||
-		Bridge::is_empty(this->npd_tB_manuf->Text) ||
-		Bridge::is_empty(this->npd_tB_barcode->Text) ||
-		Bridge::is_empty(this->npd_tB_price->Text))
+	if(InputCheck::is_empty(this->npd_tB_name->Text) ||
+		InputCheck::is_empty(this->npd_tB_category->Text) ||
+		InputCheck::is_empty(this->npd_tB_manuf->Text) ||
+		InputCheck::is_empty(this->npd_tB_barcode->Text) ||
+		InputCheck::is_empty(this->npd_tB_price->Text))
 		System::Windows::Forms::MessageBox::Show("Please fill in all the fields.");
-	else if(!Bridge::is_number(this->npd_tB_barcode->Text))
+	else if(!InputCheck::is_number(this->npd_tB_barcode->Text))
 		System::Windows::Forms::MessageBox::Show("Please input a number in the barcode field.");
-	else if(!Bridge::is_number(this->npd_tB_price->Text))
+	else if(!InputCheck::is_number(this->npd_tB_price->Text))
 		System::Windows::Forms::MessageBox::Show("Please input a number in the price field.");
-	else if(Bridge::lessThan_zero(this->npd_tB_barcode->Text))
+	else if(InputCheck::lessThan_zero(this->npd_tB_barcode->Text))
 		System::Windows::Forms::MessageBox::Show("Please input a number larger than zero in the barcode field.");
-	else if(Bridge::lessThan_zero(this->npd_tB_price->Text))
+	else if(InputCheck::lessThan_zero(this->npd_tB_price->Text))
 		System::Windows::Forms::MessageBox::Show("Please input a number larger than zero in the price field.");
 	else{
 		this->DialogResult = System::Windows::Forms::DialogResult::OK;

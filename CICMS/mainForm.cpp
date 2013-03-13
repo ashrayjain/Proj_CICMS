@@ -80,6 +80,8 @@
 #include "inputForm.h"
 #include "addPdForm.h"
 #include "ListViewItemComparer.h"
+#include "InputCheck.h"
+#include <cliext/vector>
 //#include <vector>
 //#include <string>
 
@@ -144,14 +146,12 @@ void mainForm::Create_addPdForms(){
 
 //Event: when s_b_submit button is clicked
 void mainForm::s_b_submit_Click(System::Object^  sender, System::EventArgs^  e){
-	if(Bridge::is_empty(this->s_tB_input->Text))
+	if(InputCheck::is_empty(this->s_tB_input->Text))
 		System::Windows::Forms::MessageBox::Show("Please fill in the search field.");
-	else if(this->Get_byMethod() == byBarcode){
-		if(!Bridge::is_number(this->s_tB_input->Text))
-			System::Windows::Forms::MessageBox::Show("Please input a number in the search field.");
-		else if(Bridge::lessThan_zero(this->s_tB_input->Text))
-			System::Windows::Forms::MessageBox::Show("Please input a number larger than zero in the search field.");
-	}
+	else if(this->Get_byMethod() == byBarcode && !InputCheck::is_number(this->s_tB_input->Text))
+		System::Windows::Forms::MessageBox::Show("Please input a number in the search field.");
+	else if(this->Get_byMethod() == byBarcode && InputCheck::lessThan_zero(this->s_tB_input->Text))
+		System::Windows::Forms::MessageBox::Show("Please input a number larger than zero in the search field.");
 	else
 		this->Search_product(this->s_tB_input->Text, this->Get_byMethod());
 }
@@ -168,13 +168,12 @@ int mainForm::Get_byMethod(){
 }
 //Function: search the products according to a text and a method; if the result is non-empty, it will add an item onto the listView component
 void mainForm::Search_product(System::String^ s, int m){
-	std::list<Product> r = Bridging->Search(s, m);
-	if(!r.empty()){
-		/*
-		this->list_lv->Clear();
-		for(unsigned i = 0; i < r.size(); i++)
-			this->list_lv->Items->Add(gcnew System::Windows::Forms);
-		*/
+	cliext::vector<System::Windows::Forms::ListViewItem^>^ r = Bridging->Search(s, m);
+	if(!r->empty()){
+		this->list_lv->BeginUpdate();
+		this->list_lv->Items->Clear();
+		this->list_lv->Items->AddRange(r->to_array());
+		this->list_lv->EndUpdate();
 		this->Update_statusBar(searchS);
 	}
 	else
