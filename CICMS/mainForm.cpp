@@ -233,8 +233,10 @@ double mainForm::Create_inputForm(System::String^ formTitle, System::String^ pdD
 void mainForm::Create_sellForm(){
 	for(int i = 0; i < this->list_lv->SelectedItems->Count; i++){
 		unsigned num = (unsigned) this->Create_inputForm(" Sell a product", this->Get_sName(i) + " - " + this->Get_sBarcode(i), "Sell:", "1");
-		if(Bridging->Sell(this->list_lv->SelectedItems[i], num))
+		if(Bridging->Sell(this->list_lv->SelectedItems[i], num)){
+			this->Update_selectedItem_sell(i, num);
 			this->Update_statusBar(sellS);
+		}
 		else
 			this->Update_statusBar(sellF);
 	}
@@ -242,36 +244,39 @@ void mainForm::Create_sellForm(){
 void mainForm::Create_restockForm(){
 	for(int i = 0; i < this->list_lv->SelectedItems->Count; i++){
 		unsigned num = (unsigned) this->Create_inputForm(" Restock a product", this->Get_sName(i) + " - " + this->Get_sBarcode(i), "Restock:", "1");
-		if(Bridging->Restock(this->list_lv->SelectedItems[i], num))
+		if(Bridging->Restock(this->list_lv->SelectedItems[i], num)){
+			this->Update_selectedItem_restock(i, num);
 			this->Update_statusBar(restockS);
+		}
 		else
 			this->Update_statusBar(restockF);
 	}
 }
 
 void mainForm::Create_deleteForm(){
-	enum { No_plsDont, Yes_deleteThem, tooMany = 1};
-	int deteleAllSelectedItem = No_plsDont;
+	enum { No_No, Yes_Yes, tooMany = 1};
+	int case_tooMany = No_No;
 	System::Windows::Forms::DialogResult r;
 	if(this->list_lv->SelectedItems->Count > tooMany){
+		case_tooMany = Yes_Yes;
 		if(this->list_lv->SelectedItems->Count > 2)
 			r = this->Create_messageBox("delete", "Are you sure that you would like \nto delete all the selected products?");
-		else
+		else// == 2
 			r = this->Create_messageBox("delete", "Are you sure that you would like \nto delete both of the selected products?");
 		if(r == System::Windows::Forms::DialogResult::Yes)
-			deteleAllSelectedItem = Yes_deleteThem;
+			;//del all
 		else if(r == System::Windows::Forms::DialogResult::No)
 			return;//quit the loop directly
 	}
 	for(int i = 0; i < this->list_lv->SelectedItems->Count; i++){
-		if(deteleAllSelectedItem == Yes_deleteThem || this->Create_messageBox("delete", 
+		if(case_tooMany == Yes_Yes || this->Create_messageBox("delete", 
 			"Are you sure that you would like \nto delete this product, " +
 			this->Get_sName(i) + " - " + 
 			this->Get_sBarcode(i) +
 			"?"
 			) == System::Windows::Forms::DialogResult::Yes){
 				Bridging->Del(this->list_lv->SelectedItems[i]);
-				this->Clear_selectedList(i--);//if delete an item, selectedItems->Count will decrease, index will change as well
+				this->Clear_selectedItem(i--);//if delete an item, selectedItems->Count will decrease, index will change as well
 		}
 	}
 	this->Toggle_list_b(false);
@@ -315,12 +320,24 @@ void mainForm::Sort_list_lv(System::Windows::Forms::ColumnClickEventArgs^ e, boo
 	this->list_lv->ListViewItemSorter = gcnew ListViewItemComparer(e->Column, t, is_num);// sort it
 }
 //Function: clear the selected item in the list
-void mainForm::Clear_selectedList(int index){
+void mainForm::Clear_selectedItem(int index){
 	this->list_lv->SelectedItems[index]->Remove();
 }
+//
+void mainForm::Update_selectedItem_sell(int index, unsigned num){
+	int no_stock = System::Convert::ToInt32(this->list_lv->SelectedItems[index]->SubItems[5]->Text) - num,
+		no_sold = System::Convert::ToInt32(this->list_lv->SelectedItems[index]->SubItems[6]->Text) + num;
+	this->list_lv->SelectedItems[index]->SubItems[5]->Text = no_stock.ToString();
+	this->list_lv->SelectedItems[index]->SubItems[6]->Text = no_sold.ToString();
+}
+//
+void mainForm::Update_selectedItem_restock(int index, unsigned num){
+	int no_stock = System::Convert::ToInt32(this->list_lv->SelectedItems[index]->SubItems[5]->Text) + num;
+	this->list_lv->SelectedItems[index]->SubItems[5]->Text = no_stock.ToString();
+}
 //Function: get selected item's barcode number
-int mainForm::Get_sBarcode(int index){
-	return System::Convert::ToInt32(this->list_lv->SelectedItems[index]->SubItems[2]->Text);
+System::String^ mainForm::Get_sBarcode(int index){
+	return this->list_lv->SelectedItems[index]->SubItems[2]->Text;
 }
 //Function: get selected item's name
 System::String^ mainForm::Get_sName(int index){
