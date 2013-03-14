@@ -92,6 +92,7 @@ namespace CICMS_UI {
 		mainForm()
 		{
 			InitializeComponent();
+			SelectAll_toggle = true;
 			Bridging = new Bridge;
 		}
 
@@ -115,6 +116,8 @@ namespace CICMS_UI {
 	private: void s_rB_byBarcode_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 	private: int Get_byMethod();
 	private: void Search_product(System::String^ s, int m);
+	private: void s_tB_input_Click(System::Object^  sender, System::EventArgs^  e);
+	private: void s_tB_input_LostFocus(System::Object^  sender, System::EventArgs^  e);
 
 	//**********LIST DETAILS COMPONENTS FUNCTION***********
 	private: void list_b_delete_Click(System::Object^  sender, System::EventArgs^  e);
@@ -152,8 +155,6 @@ namespace CICMS_UI {
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_f_quit;
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_about;
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_f_addNewProducts;
-	private: System::Windows::Forms::OpenFileDialog^  openFileDialog;
-	private: System::Windows::Forms::SaveFileDialog^  saveFileDialog;
 
 	//**********SEARCH COMPONENTS DECLEARATION***********
 	private: System::Windows::Forms::TextBox^  s_tB_input;
@@ -163,6 +164,7 @@ namespace CICMS_UI {
 	private: System::Windows::Forms::RadioButton^  s_rB_byCategory;
 	private: System::Windows::Forms::RadioButton^  s_rB_byBarcode;
 	private: System::Windows::Forms::RadioButton^  s_rB_byName;
+	private: bool SelectAll_toggle;
 
 	//**********LIST COMPONENTS DECLEARATION***********
 	private: System::Windows::Forms::ListView^  list_lv;
@@ -192,6 +194,7 @@ namespace CICMS_UI {
 	private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator2;
 	//**********BRIDGE HANDLER DECLEARATION***********
 	private: Bridge *Bridging;
+
 };
 }
 #endif

@@ -149,19 +149,15 @@ void mainForm::Create_addPdForms(){
 
 //Event: when s_rB_byName is selected
 void mainForm::s_rB_byName_CheckedChanged(System::Object^  sender, System::EventArgs^  e){
-	if(this->Get_byMethod() == byName)
-		this->s_tB_input->Text = "";
 }
 //Event: when s_rB_byCategory is selected
 void mainForm::s_rB_byCategory_CheckedChanged(System::Object^  sender, System::EventArgs^  e){
-	if(this->Get_byMethod() == byCategory)
-		this->s_tB_input->Text = "";
 }
-
 //Event: when s_rB_byBarcode is selected
 void mainForm::s_rB_byBarcode_CheckedChanged(System::Object^  sender, System::EventArgs^  e){
 	if(this->Get_byMethod() == byBarcode){
-		this->s_tB_input->Text = "";
+		if(this->s_tB_input->Text->Length > 9)
+			this->s_tB_input->Text = this->s_tB_input->Text->Substring(0,9);
 		this->s_tB_input->MaxLength = 9;
 	}
 	else{
@@ -198,10 +194,23 @@ void mainForm::Search_product(System::String^ s, int m){
 		this->list_lv->Items->Clear();
 		this->list_lv->Items->AddRange(r->to_array());
 		this->list_lv->EndUpdate();
+		this->list_lv->Focus();
+		this->list_lv->Items[0]->Selected = true;
 		this->Update_statusBar(searchS);
 	}
 	else
 		this->Update_statusBar(searchF);
+}
+//Event: when s_tB_input is clicked
+void mainForm::s_tB_input_Click(System::Object^  sender, System::EventArgs^  e){
+	if(this->SelectAll_toggle == true){
+		this->s_tB_input->SelectAll();
+		this->SelectAll_toggle = false;
+	}
+}
+//Event: when s_tB_input is lost focus
+void mainForm::s_tB_input_LostFocus(System::Object^  sender, System::EventArgs^  e){
+	this->SelectAll_toggle = true;
 }
 //*****************************************************
 //**********LIST DETAILS COMPONENTS FUNCTION***********
@@ -283,6 +292,8 @@ void mainForm::Create_deleteForm(){
 				else
 					this->Update_statusBar(deleteF);
 		}
+		else
+			return;
 	}
 	this->Toggle_list_b(false);
 }
@@ -344,6 +355,8 @@ System::String^ mainForm::Get_sBarcode(int index){
 }
 //Function: get selected item's name
 System::String^ mainForm::Get_sName(int index){
+	if(this->list_lv->SelectedItems[index]->SubItems[0]->Text->Length > 15)
+		return this->list_lv->SelectedItems[index]->SubItems[0]->Text->Substring(0,15) + "...";
 	return this->list_lv->SelectedItems[index]->SubItems[0]->Text;
 }
 
@@ -399,8 +412,6 @@ void mainForm::InitializeComponent()
 	this->menu_stat_BSmanu = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->menu_stat_top10pd = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->menu_about = (gcnew System::Windows::Forms::ToolStripMenuItem());
-	this->openFileDialog = (gcnew System::Windows::Forms::OpenFileDialog());
-	this->saveFileDialog = (gcnew System::Windows::Forms::SaveFileDialog());
 	this->s_tB_input = (gcnew System::Windows::Forms::TextBox());
 	this->s_b_submit = (gcnew System::Windows::Forms::Button());
 	this->s_grp = (gcnew System::Windows::Forms::GroupBox());
@@ -509,17 +520,6 @@ void mainForm::InitializeComponent()
 	this->menu_about->Text = L"About";
 	this->menu_about->Click += gcnew System::EventHandler(this, &mainForm::menu_about_Click);
 	// 
-	// openFileDialog
-	// 
-	this->openFileDialog->AutoUpgradeEnabled = false;
-	this->openFileDialog->FileName = L"Data.CICMS";
-	this->openFileDialog->InitialDirectory = L"c:\\";
-	// 
-	// saveFileDialog
-	// 
-	this->saveFileDialog->AutoUpgradeEnabled = false;
-	this->saveFileDialog->InitialDirectory = L"c:\\";
-	// 
 	// s_tB_input
 	// 
 	this->s_tB_input->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 11, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
@@ -530,6 +530,8 @@ void mainForm::InitializeComponent()
 	this->s_tB_input->Size = System::Drawing::Size(172, 24);
 	this->s_tB_input->TabIndex = 0;
 	this->s_tB_input->Text = L" input here";
+	this->s_tB_input->Click += gcnew System::EventHandler(this, &mainForm::s_tB_input_Click);
+	this->s_tB_input->LostFocus += gcnew System::EventHandler(this, &mainForm::s_tB_input_LostFocus);
 	// 
 	// s_b_submit
 	// 
@@ -655,12 +657,12 @@ void mainForm::InitializeComponent()
 	// list_col_name
 	// 
 	this->list_col_name->Text = L"Name";
-	this->list_col_name->Width = 92;
+	this->list_col_name->Width = 110;
 	// 
 	// list_col_category
 	// 
 	this->list_col_category->Text = L"Category";
-	this->list_col_category->Width = 89;
+	this->list_col_category->Width = 61;
 	// 
 	// list_col_barcode
 	// 
@@ -670,7 +672,7 @@ void mainForm::InitializeComponent()
 	// list_col_price
 	// 
 	this->list_col_price->Text = L"Price";
-	this->list_col_price->Width = 47;
+	this->list_col_price->Width = 60;
 	// 
 	// list_col_manuf
 	// 
