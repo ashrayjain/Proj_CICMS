@@ -298,7 +298,7 @@ void mainForm::list_lv_SelectedIndexChanged(System::Object^  sender, System::Eve
 void mainForm::list_lv_ColumnClick(System::Object^, System::Windows::Forms::ColumnClickEventArgs^ e){
 	if(this->list_lv->Items->Count > 0)
 	{
-		bool is_num = is_number(this->list_lv->Items[0]->SubItems[e->Column]->Text);
+		bool is_num = InputCheck::is_number(this->list_lv->Items[0]->SubItems[e->Column]->Text);
 		if(e->Column != this->list_sortColumn){// check whether it clicks the same column
 			this->list_sortColumn = e->Column;
 			this->Sort_list_lv(e, Ascending, is_num);
