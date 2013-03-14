@@ -33,7 +33,7 @@ private:
 	double _price;
 
 public:
-	Product(std::string, std::string, std::string, unsigned, double);
+	Product(std::string, std::string, std::string, unsigned, double, unsigned, unsigned);
 	std::string getName();
 	std::string getCategory();
 	std::string getManufacturer();
@@ -41,8 +41,10 @@ public:
 	unsigned getNoInStock();
 	unsigned getNoSold();
 	double getPrice();
-	void updateSale(unsigned);
+	bool updateSale(unsigned);
 	void updateStock(unsigned);
+	inline bool operator==(Product& rhs) { return this->getBarcode()==rhs.getBarcode(); }
+	inline bool operator!=(Product& rhs){return !(this->operator==(rhs));}
 };
 
 #endif
