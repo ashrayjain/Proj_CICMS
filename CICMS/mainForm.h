@@ -81,22 +81,22 @@
 /*************************************************************************************************/
 #ifndef _GUARD_UI_mainForm
 #define _GUARD_UI_mainForm
-#include "logic.h"
+
+#include "Bridge.h"
 
 namespace CICMS_UI {
 
 	public ref class mainForm : public System::Windows::Forms::Form
 	{
 	public:
-		mainForm(void)
+		mainForm()
 		{
 			InitializeComponent();
-			handler = new logic;
+			Bridging = new Bridge;
 		}
 
-		~mainForm()
-		{
-			delete handler;
+		~mainForm(){
+			delete Bridging;
 		}
 	//********************************************************
 	//*************MEMBER FUNCTION DECLEARATION***************
@@ -104,16 +104,15 @@ namespace CICMS_UI {
 
 	//**********MENU COMPONENTS FUNCTION***********
 	private: void menu_f_addNewProducts_Click(System::Object^  sender, System::EventArgs^  e);
-	private: void menu_f_loadProductList_Click(System::Object^  sender, System::EventArgs^  e);
-	private: void menu_f_saveProductList_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void menu_f_quit_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void menu_about_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void Create_addPdForms();
-	private: void Create_openFileDlg();
-	private: void Create_saveFileDlg();
 
 	//**********SEARCH COMPONENTS FUNCTION***********
+	private: void s_rB_byName_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
+	private: void s_rB_byCategory_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 	private: void s_b_submit_Click(System::Object^  sender, System::EventArgs^  e);
+	private: void s_rB_byBarcode_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 	private: int Get_byMethod();
 	private: void Search_product(System::String^ s, int m);
 
@@ -126,12 +125,14 @@ namespace CICMS_UI {
 	private: void Create_sellForm();
 	private: void Create_restockForm();
 	private: void Create_deleteForm();
-	private: void Clear_selectedList(int index);
+	private: void Clear_selectedItem(int index);
 	private: void list_lv_ColumnClick(System::Object^, System::Windows::Forms::ColumnClickEventArgs^ e);
 	private: void Toggle_list_b(bool tof);
 	private: void Sort_list_lv(System::Windows::Forms::ColumnClickEventArgs^ e, bool t, bool is_num);
-	private: int Get_sBarcode(int index);
+	private: System::String^ Get_sBarcode(int index);
 	private: System::String^ Get_sName(int index);
+	private: void Update_selectedItem_sell(int index, unsigned num);
+	private: void Update_selectedItem_restock(int index, unsigned num);
 
 	//**********STATUSBAR COMPONENTS FUNCTION***********
 	void Update_statusBar(int i);
@@ -148,8 +149,6 @@ namespace CICMS_UI {
 	//**********MENU COMPONENTS DECLEARATION***********
 	private: System::Windows::Forms::MenuStrip^  menu;
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_f;
-	private: System::Windows::Forms::ToolStripMenuItem^  menu_f_saveProductList;
-	private: System::Windows::Forms::ToolStripMenuItem^  menu_f_loadProductList;
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_f_quit;
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_about;
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_f_addNewProducts;
@@ -164,8 +163,6 @@ namespace CICMS_UI {
 	private: System::Windows::Forms::RadioButton^  s_rB_byCategory;
 	private: System::Windows::Forms::RadioButton^  s_rB_byBarcode;
 	private: System::Windows::Forms::RadioButton^  s_rB_byName;
-	private: System::Windows::Forms::RadioButton^  s_rB_stockLT;
-	private: System::Windows::Forms::RadioButton^  s_rB_byManuf;
 
 	//**********LIST COMPONENTS DECLEARATION***********
 	private: System::Windows::Forms::ListView^  list_lv;
@@ -180,15 +177,21 @@ namespace CICMS_UI {
 	private: System::Windows::Forms::Button^  list_b_delete;
 	private: System::Windows::Forms::Button^  list_b_sell;
 	private: System::Windows::Forms::Button^  list_b_restock;
-
 	private: System::Int32 list_sortColumn;
 	private: bool list_sort;
 
 	//**********STATUS COMPONENTS DECLEARATION***********
 	private: System::Windows::Forms::StatusStrip^  statusStrip1;
 	private: System::Windows::Forms::ToolStripStatusLabel^  toolStripStatusLabel1;
-	//**********LOGIC HANDLER DECLEARATION***********
-	private: logic* handler;
-	};
+	private: System::Windows::Forms::ToolStripMenuItem^  menu_stat;
+	private: System::Windows::Forms::ToolStripMenuItem^  menu_stat_genStat;
+	private: System::Windows::Forms::ToolStripMenuItem^  menu_stat_BSpd;
+	private: System::Windows::Forms::ToolStripMenuItem^  menu_stat_BSmanu;
+	private: System::Windows::Forms::ToolStripMenuItem^  menu_stat_top10pd;
+	private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
+	private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator2;
+	//**********BRIDGE HANDLER DECLEARATION***********
+	private: Bridge *Bridging;
+};
 }
 #endif

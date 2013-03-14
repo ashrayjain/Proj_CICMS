@@ -23,6 +23,8 @@ int main(array<System::String ^> ^args)
 	System::Windows::Forms::Application::EnableVisualStyles();
 	System::Windows::Forms::Application::SetCompatibleTextRenderingDefault(false);
 	//Autobots, roll out!
-    System::Windows::Forms::Application::Run(gcnew CICMS_UI::mainForm());
+	CICMS_UI::mainForm^ UI_main = gcnew CICMS_UI::mainForm();
+	UI_main->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
+    System::Windows::Forms::Application::Run(UI_main);
     return 0;
 }

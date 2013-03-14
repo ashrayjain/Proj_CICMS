@@ -8,11 +8,12 @@
 //  CICMS_UI::addPdForm::addPdForm(); //create a addPdForm object
 //  CICMS_UI::addPdForm::System::Windows::Forms::get_product_details() //Allows other objects to pull the data gathered in this object to them
 //
-//  Main authors: XIE KAI(A0102016E),  
+//  Main authors: XIE KAI(A0102016E), BOB WONG (A0094718U)
 //
 /*************************************************************************************************/
 #include "stdafx.h"
 #include "addPdForm.h"
+#include "InputCheck.h"
 
 using namespace CICMS_UI;
 addPdForm::addPdForm(void)
@@ -61,6 +62,7 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	// npd_tB_name
 	// 
 	this->npd_tB_name->Location = System::Drawing::Point(88, 24);
+	this->npd_tB_name->MaxLength = 21;
 	this->npd_tB_name->Name = L"npd_tB_name";
 	this->npd_tB_name->Size = System::Drawing::Size(138, 20);
 	this->npd_tB_name->TabIndex = 5;
@@ -68,6 +70,7 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	// npd_tB_category
 	// 
 	this->npd_tB_category->Location = System::Drawing::Point(87, 50);
+	this->npd_tB_category->MaxLength = 21;
 	this->npd_tB_category->Name = L"npd_tB_category";
 	this->npd_tB_category->Size = System::Drawing::Size(138, 20);
 	this->npd_tB_category->TabIndex = 6;
@@ -75,6 +78,7 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	// npd_tB_barcode
 	// 
 	this->npd_tB_barcode->Location = System::Drawing::Point(87, 76);
+	this->npd_tB_barcode->MaxLength = 9;
 	this->npd_tB_barcode->Name = L"npd_tB_barcode";
 	this->npd_tB_barcode->Size = System::Drawing::Size(138, 20);
 	this->npd_tB_barcode->TabIndex = 7;
@@ -82,6 +86,7 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	// npd_tB_price
 	// 
 	this->npd_tB_price->Location = System::Drawing::Point(87, 102);
+	this->npd_tB_price->MaxLength = 9;
 	this->npd_tB_price->Name = L"npd_tB_price";
 	this->npd_tB_price->Size = System::Drawing::Size(138, 20);
 	this->npd_tB_price->TabIndex = 8;
@@ -89,6 +94,7 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	// npd_tB_manuf
 	// 
 	this->npd_tB_manuf->Location = System::Drawing::Point(87, 128);
+	this->npd_tB_manuf->MaxLength = 21;
 	this->npd_tB_manuf->Name = L"npd_tB_manuf";
 	this->npd_tB_manuf->Size = System::Drawing::Size(138, 20);
 	this->npd_tB_manuf->TabIndex = 9;
@@ -141,7 +147,7 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	// npd_b_cancel
 	// 
 	this->npd_b_cancel->DialogResult = System::Windows::Forms::DialogResult::Cancel;
-	this->npd_b_cancel->Location = System::Drawing::Point(155, 194);
+	this->npd_b_cancel->Location = System::Drawing::Point(155, 184);
 	this->npd_b_cancel->Name = L"npd_b_cancel";
 	this->npd_b_cancel->Size = System::Drawing::Size(75, 23);
 	this->npd_b_cancel->TabIndex = 7;
@@ -150,8 +156,7 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	// 
 	// npd_b_ok
 	// 
-	this->npd_b_ok->DialogResult = System::Windows::Forms::DialogResult::OK;
-	this->npd_b_ok->Location = System::Drawing::Point(39, 194);
+	this->npd_b_ok->Location = System::Drawing::Point(39, 184);
 	this->npd_b_ok->Name = L"npd_b_ok";
 	this->npd_b_ok->Size = System::Drawing::Size(75, 23);
 	this->npd_b_ok->TabIndex = 6;
@@ -165,15 +170,15 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 	this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 	this->CancelButton = this->npd_b_cancel;
-	this->ClientSize = System::Drawing::Size(275, 233);
+	this->ClientSize = System::Drawing::Size(275, 218);
 	this->Controls->Add(this->npd_b_cancel);
 	this->Controls->Add(this->npd_b_ok);
 	this->Controls->Add(this->npd_grp);
-	this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
+	this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedDialog;
 	this->MaximizeBox = false;
 	this->MinimizeBox = false;
 	this->Name = L"addPdForm";
-	this->Text = L"Add a new product";
+	this->Text = L" Add a new product";
 	this->npd_grp->ResumeLayout(false);
 	this->npd_grp->PerformLayout();
 	this->ResumeLayout(false);
@@ -183,12 +188,28 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 // Upon clicking the OK button, stuff happens here
 // possibly notifying the logic classes to call get_product_details()
 void addPdForm::npd_b_ok_Click(System::Object^  sender, System::EventArgs^  e) {
-	this->Close(); //Closing the form
+	if(InputCheck::is_empty(this->npd_tB_name->Text) ||
+		InputCheck::is_empty(this->npd_tB_category->Text) ||
+		InputCheck::is_empty(this->npd_tB_manuf->Text) ||
+		InputCheck::is_empty(this->npd_tB_barcode->Text) ||
+		InputCheck::is_empty(this->npd_tB_price->Text))
+		System::Windows::Forms::MessageBox::Show("Please fill in all the fields.");
+	else if(!InputCheck::is_int(this->npd_tB_barcode->Text))
+		System::Windows::Forms::MessageBox::Show("Please input an integer in the barcode field.");
+	else if(InputCheck::lessThan_zero(this->npd_tB_barcode->Text))
+		System::Windows::Forms::MessageBox::Show("Please input an integer larger than zero in the barcode field.");
+	else if(!InputCheck::is_number(this->npd_tB_price->Text))
+		System::Windows::Forms::MessageBox::Show("Please input a number in the price field.");
+	else if(InputCheck::lessThan_zero(this->npd_tB_price->Text))
+		System::Windows::Forms::MessageBox::Show("Please input a number larger than zero in the price field.");
+	else{
+		this->DialogResult = System::Windows::Forms::DialogResult::OK;
+		this->Close();
+	}
 }
 
 //Data return in the form of strings
 System::Windows::Forms::ListViewItem^ addPdForm::get_product_details(){
-	//need to check whether they are blank/number/...
 	return gcnew System::Windows::Forms::ListViewItem(gcnew cli::array<System::String^>(7) {
 		this->npd_tB_name->Text, 
 		this->npd_tB_category->Text,

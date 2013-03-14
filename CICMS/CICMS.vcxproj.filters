@@ -48,6 +48,12 @@
     <ClInclude Include="List_v1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Bridge.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputCheck.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc">
@@ -82,10 +88,17 @@
     <ClCompile Include="logic.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="File_processing.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="List_v1.cpp">
+=======
+    <ClCompile Include="Bridge.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InputCheck.cpp">
+>>>>>>> 279b3a3cb0420beefce4046be133c26f99fd67dc
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

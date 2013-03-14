@@ -13,7 +13,7 @@
 //  CICMS_UI::inputForm::get_input(); // Called to return double datatype of value entered in this object
 //  CICMS_UI::inputForm::set_inputForm(); //Called to set the default starting value and name/content of this object
 //
-//  Main authors: XIE KAI(A0102016E),  
+//  Main authors: XIE KAI(A0102016E), HUI HUI(A0105566E)
 //
 /*************************************************************************************************/
 
@@ -38,13 +38,9 @@ namespace CICMS_UI {
 	//********************************************************
 	//*************MEMBER FUNCTION DECLEARATION***************
 	//********************************************************
-	 void InitializeComponent();
+	void InitializeComponent();
 
-	 void input_b_yes_Click(System::Object^  sender, System::EventArgs^  e) ;
-
-	//this function should be in the handler/logic part
-	 bool is_valid(System::String^ s);
-
+	void input_b_yes_Click(System::Object^  sender, System::EventArgs^  e) ;
 	
 	public:
 		inputForm()

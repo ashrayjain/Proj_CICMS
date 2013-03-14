@@ -2,34 +2,36 @@
     APPLICATION : CICMS Project Overview
 ========================================================================
 
-AppWizard has created this CICMS Application for you.  
+Group members: XIE KAI, ASHRAY JAIN, BOB WONG, HUI HUI
 
-This file contains a summary of what you will find in each of the files that
-make up your CICMS application.
+addPdForm.cpp: Contains the class implementation of addPdForm, which creates a window that receives new product details. It contains get_product_details(), which when called, returns the details of the product.
 
-CICMS.vcxproj
-    This is the main project file for VC++ projects generated using an Application Wizard. 
-    It contains information about the version of Visual C++ that generated the file, and 
-    information about the platforms, configurations, and project features selected with the
-    Application Wizard.
+addPdForm.h: Contains the class specification of addPdForm.
 
-CICMS.vcxproj.filters
-    This is the filters file for VC++ projects generated using an Application Wizard. 
-    It contains information about the association between the files in your project 
-    and the filters. This association is used in the IDE to show grouping of files with
-    similar extensions under a specific node (for e.g. ".cpp" files are associated with the
-    "Source Files" filter).
+inputForm.cpp: Contains the class implementation of inputForm, which creates a window that receives a number for various purposes. These purposes are listed as such: 
+The number of unique products to add
+The number of a single product sold
+The number by which a single product is restocked
 
-main.cpp
-    This is the main application source file.
+inputForm.h: Contains the class specification of inputForm.
 
-AssemblyInfo.cpp
-	Contains custom attributes for modifying assembly metadata.
+ListViewItemComparer.cpp: Contains the class implementation of ListViewItemComparer. This is used by mainForm to sort the items in the displayed list alphabetically.
 
-/////////////////////////////////////////////////////////////////////////////
-Other notes:
+ListViewItemComparer.h: Contains the class definition of ListViewItemComparer.
 
-AppWizard uses "TODO:" to indicate parts of the source code you
-should add to or customize.
+logic.cpp: Contains the class implementation of logic. This contains a number of functions which are used to search, add, delete, restock, and convert the ListViewItem object returned from addPdForm to a Product object for search and handling by internal logic functions.
 
-/////////////////////////////////////////////////////////////////////////////
+logic.h: Contains the class specification of logic.
+
+main.cpp: Creates mainForm and does miscellaneous GUI stuff.
+
+mainForm.cpp: Contains the class implementation of mainForm, which creates the main window. Contains numerous elements which trigger the creation of addPdForm and inputForm objects, in addition to displaying data returned from the logic object.
+
+mainForm.h: Contains the class specification of mainForm.
+
+Product.cpp: Contains the class implementation of the Product object, which includes functions to return specific values of the Product object.
+
+Product.h: Contains the class specification of the Product object.
+
+ 
+ 

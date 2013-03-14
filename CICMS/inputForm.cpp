@@ -9,13 +9,14 @@
 //  CICMS_UI::inputForm::get_input();     //Called to return double datatype of value entered in this object
 //  CICMS_UI::inputForm::set_inputForm(); //Called to set the default starting value and name/content of this object
 //
-//  Main authors: XIE KAI(A0102016E),  
+//  Main authors: XIE KAI(A0102016E), HUI HUI (A0105566E)
 //
 /*************************************************************************************************/
 
 
 #include "stdafx.h"
 #include "inputForm.h"
+#include "InputCheck.h"
 
 using namespace CICMS_UI;
 
@@ -41,7 +42,6 @@ void inputForm::InitializeComponent()
 	// 
 	// input_b_yes
 	// 
-	this->input_b_yes->DialogResult = System::Windows::Forms::DialogResult::OK;
 	this->input_b_yes->Location = System::Drawing::Point(13, 73);
 	this->input_b_yes->Name = L"input_b_yes";
 	this->input_b_yes->Size = System::Drawing::Size(75, 23);
@@ -63,7 +63,7 @@ void inputForm::InitializeComponent()
 	// input_tB_input
 	// 
 	this->input_tB_input->Location = System::Drawing::Point(82, 39);
-	this->input_tB_input->MaxLength = 10;
+	this->input_tB_input->MaxLength = 7;
 	this->input_tB_input->Name = L"input_tB_input";
 	this->input_tB_input->Size = System::Drawing::Size(85, 20);
 	this->input_tB_input->TabIndex = 1;
@@ -98,25 +98,28 @@ void inputForm::InitializeComponent()
 	this->Text = L"formTitle";
 	this->ResumeLayout(false);
 	this->PerformLayout();
+
 }
 
 void inputForm::input_b_yes_Click(System::Object^  sender, System::EventArgs^  e) {
-	//submit check here
-	if(!is_valid(input_tB_input->Text))
-		input_tB_input->Text = "0";
-}
-
-
-bool inputForm::is_valid(System::String^ s){
-	if(s->Contains("%")){
-		System::Windows::Forms::MessageBox::Show("Please input something like 0.9, instead of 90%.");
-		return false;
+	if(InputCheck::is_empty(this->input_tB_input->Text))
+		System::Windows::Forms::MessageBox::Show("Please fill in the field.");
+	else if(!InputCheck::is_int(this->input_tB_input->Text))
+		System::Windows::Forms::MessageBox::Show("Please input an integer");
+	else if(InputCheck::lessThan_zero(this->input_tB_input->Text))
+		System::Windows::Forms::MessageBox::Show("Please input an integer larger than zero.");
+	else if(InputCheck::is_large(this->input_tB_input->Text)){
+		if(System::Windows::Forms::MessageBox::Show("The number you input is large, are you sure?", " Input Checking",
+		System::Windows::Forms::MessageBoxButtons::YesNo,
+		System::Windows::Forms::MessageBoxIcon::Warning) == System::Windows::Forms::DialogResult::Yes){
+			this->DialogResult = System::Windows::Forms::DialogResult::OK;
+			this->Close();
+		}
 	}
-	else if(!is_number(s)){
-		System::Windows::Forms::MessageBox::Show("Please input a number.");
-		return false;
+	else{
+		this->DialogResult = System::Windows::Forms::DialogResult::OK;
+		this->Close();
 	}
-	else return true;
 }
 
 void inputForm::set_inputForm(System::String^ title, System::String^ pdDescript, System::String^ descript, System::String^ stringInTB){
