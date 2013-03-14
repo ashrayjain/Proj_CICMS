@@ -19,7 +19,7 @@ bool InputCheck::is_number(System::String^ s)
 //Check whether a number (represented in System::String) is less than 0 or not
 bool InputCheck::lessThan_zero(System::String^ s)
 {
-	return System::Convert::ToDouble(s) < 0;
+	return System::Convert::ToDouble(s) <= 0;
 }
 //Check whether a string is empty or not
 bool InputCheck::is_empty(System::String^ s)

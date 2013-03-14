@@ -33,7 +33,7 @@ private:
 	double _price;
 
 public:
-	Product(std::string, std::string, std::string, unsigned, double, unsigned, unsigned);
+	Product(std::string, std::string, std::string, unsigned, double, unsigned _no_in_stock = 0, unsigned _no_sold = 0);
 	std::string getName();
 	std::string getCategory();
 	std::string getManufacturer();

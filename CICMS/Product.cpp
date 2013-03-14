@@ -26,7 +26,7 @@
 
 using namespace std;
 
-Product::Product(std::string name, std::string category, std::string manufacturer, unsigned barcode, double price, unsigned no_in_stock = 0, unsigned no_sold = 0)
+Product::Product(std::string name, std::string category, std::string manufacturer, unsigned barcode, double price, unsigned no_in_stock, unsigned no_sold)
 {
 	_name = name;
 	_category = category;

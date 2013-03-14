@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "File_processing.h"
 
 bool File_processing::load()

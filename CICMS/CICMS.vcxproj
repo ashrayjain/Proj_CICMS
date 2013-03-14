@@ -87,15 +87,16 @@
     <ClInclude Include="addPdForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="DB_Processing.h" />
     <ClInclude Include="File_processing.h" />
     <ClInclude Include="Bridge.h" />
     <ClInclude Include="InputCheck.h" />
     <ClInclude Include="ListViewItemComparer.h" />
     <ClInclude Include="List_v1.h" />
-    <ClInclude Include="logic.h" />
     <ClInclude Include="mainForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="Processing.h" />
     <ClInclude Include="Product.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="inputForm.h">
@@ -109,18 +110,15 @@
   <ItemGroup>
     <ClCompile Include="addPdForm.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
-<<<<<<< HEAD
+    <ClCompile Include="DB_Processing.cpp" />
     <ClCompile Include="File_processing.cpp" />
-=======
     <ClCompile Include="Bridge.cpp" />
     <ClCompile Include="InputCheck.cpp" />
->>>>>>> 279b3a3cb0420beefce4046be133c26f99fd67dc
     <ClCompile Include="ListViewItemComparer.cpp" />
-    <ClCompile Include="List_v1.cpp" />
-    <ClCompile Include="logic.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainForm.cpp" />
     <ClCompile Include="inputForm.cpp" />
+    <ClCompile Include="Processing.cpp" />
     <ClCompile Include="Product.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

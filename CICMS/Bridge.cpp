@@ -10,40 +10,41 @@
 cliext::vector<System::Windows::Forms::ListViewItem^>^ Bridge::Search(System::String^ s, int i)
 {
 	enum BYMETHOD { byName, byBarcode, byCategory, byStock, byManuf };
-	std::list<Product> *r = new std::list<Product>;//no need new ... here
+	List_v1<Product> *r;
 	//return a list of product, but here i shall convert them into listViewItem
-	//if(i == byBarcode)
-	//	r = Handler.Search(toUInt(s), i);
-	//else
-	//	r = Handler.Search(toStdString(s), i);
+	if(i == byBarcode)
+		r = Handler.db->search(toStdString(s), i);
+	else
+		r = Handler.db->search(toStdString(s), i);
 	cliext::vector<System::Windows::Forms::ListViewItem^>^ items = gcnew cliext::vector<System::Windows::Forms::ListViewItem^>;
-	for(std::list<Product>::iterator i = r->begin(); i != r->end(); i++){
-		items->push_back(toLvItem(*i));
+	unsigned test = r->size();
+	for(unsigned i = 0; i < r->size(); i++) {
+		items->push_back(toLvItem((*r)[i]));
 	}
 	return items;
 }
 bool Bridge::Add(System::Windows::Forms::ListViewItem^ item)
 {
-	//if(Handler.Add(toProduct(item)))
-	//	return true;
+	if(Handler.db->addProduct(toProduct(item)))
+		return true;
 	return false;
 }
-bool Bridge::Restock(System::Windows::Forms::ListViewItem^ item, unsigned^ i)
+bool Bridge::Restock(System::Windows::Forms::ListViewItem^ item, unsigned i)
 {
-	//if(Handler.Restock(toProduct(item), i))
-	//	return true;
+	if(Handler.db->updateStock(toProduct(item), i))
+		return true;
 	return false;
 }
-bool Bridge::Sell(System::Windows::Forms::ListViewItem^ item, unsigned^ i)
+bool Bridge::Sell(System::Windows::Forms::ListViewItem^ item, unsigned i)
 {
-	//if(Handler.Sell(toProduct(item), i))
-	//	return ture;
+	if(Handler.db->updateSale(toProduct(item), i))
+		return true;
 	return false;
 }
 bool Bridge::Del(System::Windows::Forms::ListViewItem^ item)
 {
-	//if(Handler.Del(toProduct(item)))
-	//	return true;
+	if(Handler.db->delProduct(toProduct(item)))
+		return true;
 	return false;
 }
 //**************************************************
