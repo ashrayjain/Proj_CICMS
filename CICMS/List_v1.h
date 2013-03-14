@@ -16,8 +16,7 @@ public:
 	bool add(T newItem);
 	bool del(T delItem);
 	T& operator[](int idx);
-	inline unsigned size() { 
-		return _database.size(); }
+	inline unsigned size() { return _database.size(); }
 	inline bool isEmpty() { return _database.empty(); }
 };
 

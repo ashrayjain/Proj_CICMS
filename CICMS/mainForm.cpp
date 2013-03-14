@@ -275,13 +275,16 @@ void mainForm::Create_deleteForm(){
 			this->Get_sBarcode(i) +
 			"?"
 			) == System::Windows::Forms::DialogResult::Yes){
-				Bridging->Del(this->list_lv->SelectedItems[i]);
-				this->Clear_selectedItem(i--);//if delete an item, selectedItems->Count will decrease, index will change as well
+				if(Bridging->Del(this->list_lv->SelectedItems[i]))
+				{
+					this->Clear_selectedItem(i--);//if delete an item, selectedItems->Count will decrease, index will change as well
+					this->Update_statusBar(deleteS);
+				}
+				else
+					this->Update_statusBar(deleteF);
 		}
 	}
 	this->Toggle_list_b(false);
-	//this->Update_statusBar(deleteS);
-	this->Update_statusBar(deleteF);
 }
 //Function: toggle 'enabled' properties for pd_b_delete, pd_b_sell, pd_b_restock buttons
 void mainForm::Toggle_list_b(bool tof){

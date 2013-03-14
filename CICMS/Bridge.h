@@ -13,6 +13,7 @@ class Bridge{
 private:
 	Processing Handler;
 	//Type converting
+	static Product toNewProduct(System::Windows::Forms::ListViewItem^ item);
 	static Product toProduct(System::Windows::Forms::ListViewItem^);
 	static System::Windows::Forms::ListViewItem^ toLvItem(Product);
 	static double toDouble(System::String^);

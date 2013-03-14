@@ -9,10 +9,10 @@ class DB_Processing
 {
 private:
 	List_v1<Product>* _db;
-	List_v1<Product> searchByName(string);
-	List_v1<Product> searchByCategory(string);
-	List_v1<Product> searchByManufacturer(string);
-	List_v1<Product> searchByBarcode(string);
+	List_v1<Product>* searchByName(string);
+	List_v1<Product>* searchByCategory(string);
+	List_v1<Product>* searchByManufacturer(string);
+	List_v1<Product*>* searchByBarcode(string);
 
 public:
 	DB_Processing(List_v1<Product>& db) { _db = &db; }
@@ -20,7 +20,7 @@ public:
 	bool delProduct(Product);
 	List_v1<Product>* search(string, int);
 	bool updateStock(Product, int);
-	bool updateSale(Product, int);
+	bool updateSale(Product, unsigned);
 	List_v1<Product> generateStats(int);
 };
 

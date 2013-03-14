@@ -10,22 +10,19 @@
 cliext::vector<System::Windows::Forms::ListViewItem^>^ Bridge::Search(System::String^ s, int i)
 {
 	enum BYMETHOD { byName, byBarcode, byCategory, byStock, byManuf };
-	List_v1<Product> *r;
+	List_v1<Product> *r = NULL;
 	//return a list of product, but here i shall convert them into listViewItem
-	if(i == byBarcode)
-		r = Handler.db->search(toStdString(s), i);
-	else
-		r = Handler.db->search(toStdString(s), i);
+	r = Handler.db->search(toStdString(s), i);
 	cliext::vector<System::Windows::Forms::ListViewItem^>^ items = gcnew cliext::vector<System::Windows::Forms::ListViewItem^>;
-	unsigned test = r->size();
 	for(unsigned i = 0; i < r->size(); i++) {
 		items->push_back(toLvItem((*r)[i]));
 	}
+	delete r;
 	return items;
 }
 bool Bridge::Add(System::Windows::Forms::ListViewItem^ item)
 {
-	if(Handler.db->addProduct(toProduct(item)))
+	if(Handler.db->addProduct(toNewProduct(item)))
 		return true;
 	return false;
 }
@@ -51,15 +48,29 @@ bool Bridge::Del(System::Windows::Forms::ListViewItem^ item)
 //
 //Type converting
 //
+//Conversion from ListViewItem to a new Product
+Product Bridge::toNewProduct(System::Windows::Forms::ListViewItem^ item)
+{
+	return Product(
+		toStdString(item->SubItems[0]->Text),
+		toStdString(item->SubItems[1]->Text),
+		toStdString(item->SubItems[4]->Text),
+		toUInt(item->SubItems[2]->Text),
+		toDouble(item->SubItems[3]->Text)
+		);
+}
+
 //Conversion from ListViewItem to Product
 Product Bridge::toProduct(System::Windows::Forms::ListViewItem^ item)
 {
 	return Product(
 		toStdString(item->SubItems[0]->Text),
 		toStdString(item->SubItems[1]->Text),
-		toStdString(item->SubItems[2]->Text),
-		toUInt(item->SubItems[3]->Text),
-		toDouble(item->SubItems[4]->Text)
+		toStdString(item->SubItems[4]->Text),
+		toUInt(item->SubItems[2]->Text),
+		toDouble(item->SubItems[3]->Text),
+		toUInt(item->SubItems[5]->Text), 
+		toUInt(item->SubItems[6]->Text)
 		);
 }
 //Conversion from Product to ListViewItem

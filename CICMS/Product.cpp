@@ -77,11 +77,11 @@ bool Product::updateSale(unsigned sale)
 	if(_no_in_stock < sale)
 		return false;
 	_no_sold += sale;
-	updateStock(_no_in_stock-sale);
+	_no_in_stock -= sale;
 	return true;
 }
 
 void Product::updateStock(unsigned stock)
 {
-	_no_in_stock = stock;
+	_no_in_stock += stock;
 }

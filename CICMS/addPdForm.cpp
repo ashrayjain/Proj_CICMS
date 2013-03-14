@@ -213,8 +213,8 @@ System::Windows::Forms::ListViewItem^ addPdForm::get_product_details(){
 	return gcnew System::Windows::Forms::ListViewItem(gcnew cli::array<System::String^>(7) {
 		this->npd_tB_name->Text, 
 		this->npd_tB_category->Text,
-		this->npd_tB_manuf->Text, 
-		this->npd_tB_barcode->Text, 
+		this->npd_tB_barcode->Text,
 		this->npd_tB_price->Text, 
+		this->npd_tB_manuf->Text
 	});
 }
