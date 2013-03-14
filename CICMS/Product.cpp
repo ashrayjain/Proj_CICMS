@@ -26,14 +26,14 @@
 
 using namespace std;
 
-Product::Product(std::string name, std::string category, std::string manufacturer, unsigned barcode, double price)
+Product::Product(std::string name, std::string category, std::string manufacturer, unsigned barcode, double price, unsigned no_in_stock, unsigned no_sold)
 {
 	_name = name;
 	_category = category;
 	_manufacturer = manufacturer;
 	_barcode = barcode;
-	_no_in_stock = 0;
-	_no_sold = 0;
+	_no_in_stock = no_in_stock;
+	_no_sold = no_sold;
 	_price = price;
 }
 
@@ -72,10 +72,13 @@ double Product::getPrice()
 	return _price;
 }
 
-void Product::updateSale(unsigned sale)
+bool Product::updateSale(unsigned sale)
 {
+	if(_no_in_stock < sale)
+		return false;
 	_no_sold += sale;
 	updateStock(_no_in_stock-sale);
+	return true;
 }
 
 void Product::updateStock(unsigned stock)

@@ -46,8 +46,6 @@ public:
 	bool DB_sell(System::Windows::Forms::ListViewItem^% t, unsigned^);
 	// Process restocking of a product
 	bool DB_restock(System::Windows::Forms::ListViewItem^% t, unsigned^);
-	// Checkes if string is a number
-	static bool is_number(System::String^ s);
 
 private:
 	// Store all the products currently in the store

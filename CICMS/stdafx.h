@@ -7,7 +7,3 @@
 
 // TODO: reference additional headers your program requires here
 
-#include <string>
-#include <vector>
-
-bool is_number(System::String^ s);
