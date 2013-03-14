@@ -147,11 +147,33 @@ void mainForm::Create_addPdForms(){
 //**********SEARCH COMPONENTS FUNCTION***********
 //***********************************************
 
+
+//Event: when s_tB_input is clicked
+void mainForm::s_tB_input_Click(System::Object^  sender, System::EventArgs^  e){
+	if(this->SelectAll_toggle == true){
+		this->s_tB_input->SelectAll();
+		this->SelectAll_toggle = false;
+	}
+}
+//Event: when s_tB_input is lost focus
+void mainForm::s_tB_input_LostFocus(System::Object^  sender, System::EventArgs^  e){
+	this->SelectAll_toggle = true;
+}
 //Event: when s_rB_byName is selected
 void mainForm::s_rB_byName_CheckedChanged(System::Object^  sender, System::EventArgs^  e){
+	if(this->Get_byMethod() == byName){
+		this->s_tB_input->Focus();
+		this->s_tB_input->SelectAll();
+		this->SelectAll_toggle = false;
+	}
 }
 //Event: when s_rB_byCategory is selected
 void mainForm::s_rB_byCategory_CheckedChanged(System::Object^  sender, System::EventArgs^  e){
+	if(this->Get_byMethod() == byCategory){
+		this->s_tB_input->Focus();
+		this->s_tB_input->SelectAll();
+		this->SelectAll_toggle = false;
+	}
 }
 //Event: when s_rB_byBarcode is selected
 void mainForm::s_rB_byBarcode_CheckedChanged(System::Object^  sender, System::EventArgs^  e){
@@ -159,6 +181,9 @@ void mainForm::s_rB_byBarcode_CheckedChanged(System::Object^  sender, System::Ev
 		if(this->s_tB_input->Text->Length > 9)
 			this->s_tB_input->Text = this->s_tB_input->Text->Substring(0,9);
 		this->s_tB_input->MaxLength = 9;
+		this->s_tB_input->Focus();
+		this->s_tB_input->SelectAll();
+		this->SelectAll_toggle = false;
 	}
 	else{
 		this->s_tB_input->MaxLength = 21;
@@ -200,17 +225,6 @@ void mainForm::Search_product(System::String^ s, int m){
 	}
 	else
 		this->Update_statusBar(searchF);
-}
-//Event: when s_tB_input is clicked
-void mainForm::s_tB_input_Click(System::Object^  sender, System::EventArgs^  e){
-	if(this->SelectAll_toggle == true){
-		this->s_tB_input->SelectAll();
-		this->SelectAll_toggle = false;
-	}
-}
-//Event: when s_tB_input is lost focus
-void mainForm::s_tB_input_LostFocus(System::Object^  sender, System::EventArgs^  e){
-	this->SelectAll_toggle = true;
 }
 //*****************************************************
 //**********LIST DETAILS COMPONENTS FUNCTION***********
@@ -529,7 +543,7 @@ void mainForm::InitializeComponent()
 	this->s_tB_input->Name = L"s_tB_input";
 	this->s_tB_input->Size = System::Drawing::Size(172, 24);
 	this->s_tB_input->TabIndex = 0;
-	this->s_tB_input->Text = L" input here";
+	this->s_tB_input->Text = L"";
 	this->s_tB_input->Click += gcnew System::EventHandler(this, &mainForm::s_tB_input_Click);
 	this->s_tB_input->LostFocus += gcnew System::EventHandler(this, &mainForm::s_tB_input_LostFocus);
 	// 
