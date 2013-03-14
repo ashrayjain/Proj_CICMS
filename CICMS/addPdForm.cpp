@@ -174,11 +174,11 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	this->Controls->Add(this->npd_b_cancel);
 	this->Controls->Add(this->npd_b_ok);
 	this->Controls->Add(this->npd_grp);
-	this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
+	this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedDialog;
 	this->MaximizeBox = false;
 	this->MinimizeBox = false;
 	this->Name = L"addPdForm";
-	this->Text = L"Add a new product";
+	this->Text = L" Add a new product";
 	this->npd_grp->ResumeLayout(false);
 	this->npd_grp->PerformLayout();
 	this->ResumeLayout(false);

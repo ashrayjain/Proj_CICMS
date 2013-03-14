@@ -131,12 +131,15 @@ void mainForm::Create_addPdForms(){
 	for( int i = 0; i < num; i++){
 		addPdForm^ dlg = gcnew addPdForm();
 		dlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
-		if (dlg->ShowDialog() == System::Windows::Forms::DialogResult::OK){
+		System::Windows::Forms::DialogResult r = dlg->ShowDialog();
+		if (r == System::Windows::Forms::DialogResult::OK){
 			if(Bridging->Add(dlg->get_product_details()))
 				this->Update_statusBar(addS);
 			else
 				this->Update_statusBar(addF);
 		}
+		else if(r == System::Windows::Forms::DialogResult::Cancel)
+			break;
 	}
 }
 
@@ -247,15 +250,21 @@ void mainForm::Create_restockForm(){
 }
 
 void mainForm::Create_deleteForm(){
-	enum { No_plsDont, Yes_deleteThem, tooMany = 2};
+	enum { No_plsDont, Yes_deleteThem, tooMany = 1};
 	int deteleAllSelectedItem = No_plsDont;
-
-	if(this->list_lv->SelectedItems->Count > tooMany &&
-		this->Create_messageBox("delete", "Are you sure that you would like \nto delete all the selected products?"
-		) == System::Windows::Forms::DialogResult::Yes)
-		deteleAllSelectedItem = Yes_deleteThem;
+	System::Windows::Forms::DialogResult r;
+	if(this->list_lv->SelectedItems->Count > tooMany){
+		if(this->list_lv->SelectedItems->Count > 2)
+			r = this->Create_messageBox("delete", "Are you sure that you would like \nto delete all the selected products?");
+		else
+			r = this->Create_messageBox("delete", "Are you sure that you would like \nto delete both of the selected products?");
+		if(r == System::Windows::Forms::DialogResult::Yes)
+			deteleAllSelectedItem = Yes_deleteThem;
+		else if(r == System::Windows::Forms::DialogResult::No)
+			return;//quit the loop directly
+	}
 	for(int i = 0; i < this->list_lv->SelectedItems->Count; i++){
-		if(deteleAllSelectedItem || this->Create_messageBox("delete", 
+		if(deteleAllSelectedItem == Yes_deleteThem || this->Create_messageBox("delete", 
 			"Are you sure that you would like \nto delete this product, " +
 			this->Get_sName(i) + " - " + 
 			this->Get_sBarcode(i) +
@@ -708,11 +717,11 @@ void mainForm::InitializeComponent()
 	this->Controls->Add(this->list_grp);
 	this->Controls->Add(this->s_grp);
 	this->Controls->Add(this->menu);
-	this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedSingle;
+	this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedDialog;
 	this->MainMenuStrip = this->menu;
 	this->MaximizeBox = false;
 	this->Name = L"mainForm";
-	this->Text = L"CICMS";
+	this->Text = L" CICMS";
 	this->menu->ResumeLayout(false);
 	this->menu->PerformLayout();
 	this->s_grp->ResumeLayout(false);
