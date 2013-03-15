@@ -610,7 +610,7 @@ void mainForm::InitializeComponent()
 	// s_rB_byManufacturer
 	// 
 	this->s_rB_byManufacturer->AutoSize = true;
-	this->s_rB_byManufacturer->Location = System::Drawing::Point(105, 74);
+	this->s_rB_byManufacturer->Location = System::Drawing::Point(109, 75);
 	this->s_rB_byManufacturer->Name = L"s_rB_byManufacturer";
 	this->s_rB_byManufacturer->Size = System::Drawing::Size(85, 17);
 	this->s_rB_byManufacturer->TabIndex = 8;
@@ -622,7 +622,7 @@ void mainForm::InitializeComponent()
 	// s_l_by
 	// 
 	this->s_l_by->AutoSize = true;
-	this->s_l_by->Location = System::Drawing::Point(11, 54);
+	this->s_l_by->Location = System::Drawing::Point(15, 55);
 	this->s_l_by->Name = L"s_l_by";
 	this->s_l_by->Size = System::Drawing::Size(19, 13);
 	this->s_l_by->TabIndex = 7;
@@ -631,7 +631,7 @@ void mainForm::InitializeComponent()
 	// s_rB_byCategory
 	// 
 	this->s_rB_byCategory->AutoSize = true;
-	this->s_rB_byCategory->Location = System::Drawing::Point(105, 53);
+	this->s_rB_byCategory->Location = System::Drawing::Point(109, 54);
 	this->s_rB_byCategory->Name = L"s_rB_byCategory";
 	this->s_rB_byCategory->Size = System::Drawing::Size(64, 17);
 	this->s_rB_byCategory->TabIndex = 4;
@@ -643,7 +643,7 @@ void mainForm::InitializeComponent()
 	// s_rB_byBarcode
 	// 
 	this->s_rB_byBarcode->AutoSize = true;
-	this->s_rB_byBarcode->Location = System::Drawing::Point(35, 74);
+	this->s_rB_byBarcode->Location = System::Drawing::Point(39, 75);
 	this->s_rB_byBarcode->Name = L"s_rB_byBarcode";
 	this->s_rB_byBarcode->Size = System::Drawing::Size(62, 17);
 	this->s_rB_byBarcode->TabIndex = 3;
@@ -656,7 +656,7 @@ void mainForm::InitializeComponent()
 	// 
 	this->s_rB_byName->AutoSize = true;
 	this->s_rB_byName->Checked = true;
-	this->s_rB_byName->Location = System::Drawing::Point(35, 53);
+	this->s_rB_byName->Location = System::Drawing::Point(39, 54);
 	this->s_rB_byName->Name = L"s_rB_byName";
 	this->s_rB_byName->Size = System::Drawing::Size(50, 17);
 	this->s_rB_byName->TabIndex = 2;
