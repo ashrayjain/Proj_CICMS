@@ -530,6 +530,7 @@ void mainForm::InitializeComponent()
 	this->s_tB_input->Size = System::Drawing::Size(172, 24);
 	this->s_tB_input->TabIndex = 0;
 	this->s_tB_input->Text = L" input here";
+	this->s_tB_input->TextChanged += gcnew System::EventHandler(this, &mainForm::s_b_submit_Click);
 	// 
 	// s_b_submit
 	// 
