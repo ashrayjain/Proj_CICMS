@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Bridge.h"
+#include "List_v1.h"
 #include <msclr\marshal_cppstd.h>
 #include <cliext/vector>
 
@@ -11,7 +12,6 @@ cliext::vector<System::Windows::Forms::ListViewItem^>^ Bridge::Search(System::St
 {
 	enum BYMETHOD { byName, byBarcode, byCategory, byStock, byManuf };
 	List_v1<Product> *r = NULL;
-	//return a list of product, but here i shall convert them into listViewItem
 	r = Handler.db->search(toStdString(s), i);
 	cliext::vector<System::Windows::Forms::ListViewItem^>^ items = gcnew cliext::vector<System::Windows::Forms::ListViewItem^>;
 	for(unsigned i = 0; i < r->size(); i++) {
@@ -22,7 +22,7 @@ cliext::vector<System::Windows::Forms::ListViewItem^>^ Bridge::Search(System::St
 }
 bool Bridge::Add(System::Windows::Forms::ListViewItem^ item)
 {
-	if(Handler.db->addProduct(toNewProduct(item)))
+	if(Handler.db->addProduct(toProduct(item)))
 		return true;
 	return false;
 }
@@ -44,23 +44,39 @@ bool Bridge::Del(System::Windows::Forms::ListViewItem^ item)
 		return true;
 	return false;
 }
+System::String^ Bridge::Gen_BSpd(){
+	List_v1<Product> *r = Handler.db->search("Cola", 0);// set to NULL later; ptr -> reference better
+	//r = Handler.db->Report_BestSelling_pd();
+	System::String^ s = "";
+	for(unsigned i = 0; i < r->size(); i++)
+		s += toSysString((*r)[i].getName()) + " (" + toSysString((*r)[i].getBarcode()) + " - " + toSysString((*r)[i].getCategory()) + ") \n";
+	delete r;
+	return s;
+}
+System::String^ Bridge::Gen_BSmanu(){
+	List_v1<std::string> *r = new List_v1<std::string>; //set to NULL later
+	//r = Handler.db->Report_BestSelling_manu();
+	System::String^ s = "";
+	for(unsigned i = 0; i < r->size(); i++)
+		s += toSysString((*r)[i]) + "\n";
+	delete r;
+	return s;
+}
+//combine Gen_TopXpd and Gen_BSpd???
+System::String^ Bridge::Gen_TopXpd(int x){
+	List_v1<Product> *r = Handler.db->search("Cola", 0);// set to NULL later; ptr -> reference better
+	//r = Handler.db->Report_Top_X_pd(x);
+	System::String^ s = "";
+	for(unsigned i = 0; i < r->size(); i++)
+		s += toSysString((*r)[i].getName()) + " (" + toSysString((*r)[i].getBarcode()) + " - " + toSysString((*r)[i].getCategory()) + ") \n";
+	delete r;
+	return s;
+}
 //**************************************************
 //
 //Type converting
 //
 //Conversion from ListViewItem to a new Product
-Product Bridge::toNewProduct(System::Windows::Forms::ListViewItem^ item)
-{
-	return Product(
-		toStdString(item->SubItems[0]->Text),
-		toStdString(item->SubItems[1]->Text),
-		toStdString(item->SubItems[4]->Text),
-		toUInt(item->SubItems[2]->Text),
-		toDouble(item->SubItems[3]->Text)
-		);
-}
-
-//Conversion from ListViewItem to Product
 Product Bridge::toProduct(System::Windows::Forms::ListViewItem^ item)
 {
 	return Product(
@@ -68,9 +84,7 @@ Product Bridge::toProduct(System::Windows::Forms::ListViewItem^ item)
 		toStdString(item->SubItems[1]->Text),
 		toStdString(item->SubItems[4]->Text),
 		toUInt(item->SubItems[2]->Text),
-		toDouble(item->SubItems[3]->Text),
-		toUInt(item->SubItems[5]->Text), 
-		toUInt(item->SubItems[6]->Text)
+		toDouble(item->SubItems[3]->Text)
 		);
 }
 //Conversion from Product to ListViewItem

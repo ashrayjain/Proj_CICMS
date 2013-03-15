@@ -4,7 +4,6 @@
 
 #include "stdafx.h"
 #include "Product.h"
-#include "List_v1.h"
 #include <string>
 #include "Processing.h"
 #include <cliext/vector>
@@ -13,7 +12,6 @@ class Bridge{
 private:
 	Processing Handler;
 	//Type converting
-	static Product toNewProduct(System::Windows::Forms::ListViewItem^ item);
 	static Product toProduct(System::Windows::Forms::ListViewItem^);
 	static System::Windows::Forms::ListViewItem^ toLvItem(Product);
 	static double toDouble(System::String^);
@@ -30,6 +28,9 @@ public:
 	bool Restock(System::Windows::Forms::ListViewItem^, unsigned);
 	bool Sell(System::Windows::Forms::ListViewItem^, unsigned);
 	bool Del(System::Windows::Forms::ListViewItem^);
+	System::String^ Bridge::Gen_BSpd();
+	System::String^ Bridge::Gen_BSmanu();
+	System::String^ Bridge::Gen_TopXpd(int x);
 };
 
 #endif

@@ -92,6 +92,8 @@ namespace CICMS_UI {
 		mainForm()
 		{
 			InitializeComponent();
+			SelectAll_toggle = true;
+			last_keyword = "";
 			Bridging = new Bridge;
 		}
 
@@ -105,16 +107,24 @@ namespace CICMS_UI {
 	//**********MENU COMPONENTS FUNCTION***********
 	private: void menu_f_addNewProducts_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void menu_f_quit_Click(System::Object^  sender, System::EventArgs^  e);
+	private: void menu_stat_BSpd_Click(System::Object^  sender, System::EventArgs^  e);
+	private: void menu_stat_BSmanu_Click(System::Object^  sender, System::EventArgs^  e);
+	private: void menu_stat_topXpd_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void menu_about_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void Create_addPdForms();
 
 	//**********SEARCH COMPONENTS FUNCTION***********
+	private: void s_tB_input_TextChanged(System::Object^  sender, System::EventArgs^  e);
+	private: void s_tB_input_Click(System::Object^  sender, System::EventArgs^  e);
+	private: void s_tB_input_LostFocus(System::Object^  sender, System::EventArgs^  e);
 	private: void s_rB_byName_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 	private: void s_rB_byCategory_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
-	private: void s_b_submit_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void s_rB_byBarcode_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
+	private: void s_rB_byManufacturer_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
+	private: void s_b_submit_Click(System::Object^  sender, System::EventArgs^  e);
 	private: int Get_byMethod();
 	private: void Search_product(System::String^ s, int m);
+	private: System::String^ last_keyword;
 
 	//**********LIST DETAILS COMPONENTS FUNCTION***********
 	private: void list_b_delete_Click(System::Object^  sender, System::EventArgs^  e);
@@ -139,7 +149,6 @@ namespace CICMS_UI {
 	void Set_statusBar(System::String^ s, System::Drawing::Color c);
 
 	//**********OTHER COMPONENTS FUNCTION***********
-	private: System::Windows::Forms::DialogResult Create_messageBox(System::String^ typeMB, System::String^ s);
 	private: void InitializeComponent();
 
 	//********************************************************
@@ -152,8 +161,6 @@ namespace CICMS_UI {
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_f_quit;
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_about;
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_f_addNewProducts;
-	private: System::Windows::Forms::OpenFileDialog^  openFileDialog;
-	private: System::Windows::Forms::SaveFileDialog^  saveFileDialog;
 
 	//**********SEARCH COMPONENTS DECLEARATION***********
 	private: System::Windows::Forms::TextBox^  s_tB_input;
@@ -163,6 +170,7 @@ namespace CICMS_UI {
 	private: System::Windows::Forms::RadioButton^  s_rB_byCategory;
 	private: System::Windows::Forms::RadioButton^  s_rB_byBarcode;
 	private: System::Windows::Forms::RadioButton^  s_rB_byName;
+	private: bool SelectAll_toggle;
 
 	//**********LIST COMPONENTS DECLEARATION***********
 	private: System::Windows::Forms::ListView^  list_lv;
@@ -184,14 +192,19 @@ namespace CICMS_UI {
 	private: System::Windows::Forms::StatusStrip^  statusStrip1;
 	private: System::Windows::Forms::ToolStripStatusLabel^  toolStripStatusLabel1;
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_stat;
-	private: System::Windows::Forms::ToolStripMenuItem^  menu_stat_genStat;
+
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_stat_BSpd;
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_stat_BSmanu;
-	private: System::Windows::Forms::ToolStripMenuItem^  menu_stat_top10pd;
+	private: System::Windows::Forms::ToolStripMenuItem^  menu_stat_topXpd;
+
 	private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
-	private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator2;
+private: System::Windows::Forms::RadioButton^  s_rB_byManufacturer;
+
+
+
 	//**********BRIDGE HANDLER DECLEARATION***********
 	private: Bridge *Bridging;
+
 };
 }
 #endif
