@@ -176,8 +176,10 @@ void mainForm::Create_addPdForms(){
 
 //Event: when Text in s_tB_input is changed, used for Search Instant
 void mainForm::s_tB_input_TextChanged(System::Object^  sender, System::EventArgs^  e){
-	if(this->s_tB_input->Text->Length > 1)
+	if(this->s_tB_input->Text->Length > 1 && this->s_tB_input->Text != this->last_keyword){
+		this->last_keyword = this->s_tB_input->Text;
 		this->s_b_submit->PerformClick();
+	}
 }
 //Event: when s_tB_input is clicked
 void mainForm::s_tB_input_Click(System::Object^  sender, System::EventArgs^  e){
@@ -297,7 +299,7 @@ void mainForm::Create_sellForm(){
 	for(int i = 0; i < this->list_lv->SelectedItems->Count; i++){
 		unsigned num = (unsigned) this->Create_inputForm(" Sell a product", this->Get_sName(i) + " - " + this->Get_sBarcode(i), "Sell:", "1");
 		if(num == 0)//if cancel the MessageBox
-			return;
+			break;
 		else if(Bridging->Sell(this->list_lv->SelectedItems[i], num)){
 			this->Update_selectedItem_sell(i, num);
 			this->Update_statusBar(sellS);
@@ -310,7 +312,7 @@ void mainForm::Create_restockForm(){
 	for(int i = 0; i < this->list_lv->SelectedItems->Count; i++){
 		unsigned num = (unsigned) this->Create_inputForm(" Restock a product", this->Get_sName(i) + " - " + this->Get_sBarcode(i), "Restock:", "1");
 		if(num == 0)//if cancel the MessageBox
-			return;
+			break;
 		else if(Bridging->Restock(this->list_lv->SelectedItems[i], num)){
 			this->Update_selectedItem_restock(i, num);
 			this->Update_statusBar(restockS);

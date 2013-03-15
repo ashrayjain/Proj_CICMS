@@ -93,6 +93,7 @@ namespace CICMS_UI {
 		{
 			InitializeComponent();
 			SelectAll_toggle = true;
+			last_keyword = "";
 			Bridging = new Bridge;
 		}
 
@@ -123,6 +124,7 @@ namespace CICMS_UI {
 	private: void s_b_submit_Click(System::Object^  sender, System::EventArgs^  e);
 	private: int Get_byMethod();
 	private: void Search_product(System::String^ s, int m);
+	private: System::String^ last_keyword;
 
 	//**********LIST DETAILS COMPONENTS FUNCTION***********
 	private: void list_b_delete_Click(System::Object^  sender, System::EventArgs^  e);
