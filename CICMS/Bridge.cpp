@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Bridge.h"
+#include "List_v1.h"
 #include <msclr\marshal_cppstd.h>
 #include <cliext/vector>
 
@@ -11,7 +12,6 @@ cliext::vector<System::Windows::Forms::ListViewItem^>^ Bridge::Search(System::St
 {
 	enum BYMETHOD { byName, byBarcode, byCategory, byStock, byManuf };
 	List_v1<Product> *r = NULL;
-	//return a list of product, but here i shall convert them into listViewItem
 	r = Handler.db->search(toStdString(s), i);
 	cliext::vector<System::Windows::Forms::ListViewItem^>^ items = gcnew cliext::vector<System::Windows::Forms::ListViewItem^>;
 	for(unsigned i = 0; i < r->size(); i++) {
@@ -43,6 +43,34 @@ bool Bridge::Del(System::Windows::Forms::ListViewItem^ item)
 	if(Handler.db->delProduct(toProduct(item)))
 		return true;
 	return false;
+}
+System::String^ Bridge::Gen_BSpd(){
+	List_v1<Product> *r = Handler.db->search("Cola", 0);// set to NULL later; ptr -> reference better
+	//r = Handler.db->Report_BestSelling_pd();
+	System::String^ s = "";
+	for(unsigned i = 0; i < r->size(); i++)
+		s += toSysString((*r)[i].getName()) + " (" + toSysString((*r)[i].getBarcode()) + " - " + toSysString((*r)[i].getCategory()) + ") \n";
+	delete r;
+	return s;
+}
+System::String^ Bridge::Gen_BSmanu(){
+	List_v1<std::string> *r = new List_v1<std::string>; //set to NULL later
+	//r = Handler.db->Report_BestSelling_manu();
+	System::String^ s = "";
+	for(unsigned i = 0; i < r->size(); i++)
+		s += toSysString((*r)[i]) + "\n";
+	delete r;
+	return s;
+}
+//combine Gen_TopXpd and Gen_BSpd???
+System::String^ Bridge::Gen_TopXpd(int x){
+	List_v1<Product> *r = Handler.db->search("Cola", 0);// set to NULL later; ptr -> reference better
+	//r = Handler.db->Report_Top_X_pd(x);
+	System::String^ s = "";
+	for(unsigned i = 0; i < r->size(); i++)
+		s += toSysString((*r)[i].getName()) + " (" + toSysString((*r)[i].getBarcode()) + " - " + toSysString((*r)[i].getCategory()) + ") \n";
+	delete r;
+	return s;
 }
 //**************************************************
 //

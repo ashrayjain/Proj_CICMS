@@ -4,7 +4,6 @@
 
 #include "stdafx.h"
 #include "Product.h"
-#include "List_v1.h"
 #include <string>
 #include "Processing.h"
 #include <cliext/vector>
@@ -29,6 +28,9 @@ public:
 	bool Restock(System::Windows::Forms::ListViewItem^, unsigned);
 	bool Sell(System::Windows::Forms::ListViewItem^, unsigned);
 	bool Del(System::Windows::Forms::ListViewItem^);
+	System::String^ Bridge::Gen_BSpd();
+	System::String^ Bridge::Gen_BSmanu();
+	System::String^ Bridge::Gen_TopXpd(int x);
 };
 
 #endif
