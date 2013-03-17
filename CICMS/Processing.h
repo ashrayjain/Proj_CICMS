@@ -10,12 +10,12 @@ class Processing
 {
 private:
 	List_v1<Product> _database;
+	File_processing *file;
 public:
 	Processing();
 	~Processing();
-	inline int size() { return _database.size(); }
-	File_processing *file;
 	DB_Processing *db;
+	inline int size() { return _database.size(); }
 };
 
 #endif

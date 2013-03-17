@@ -39,22 +39,25 @@
     <ClInclude Include="Product.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="File_processing.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="List_v1.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Bridge.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="InputCheck.h">
+    <ClInclude Include="Processing.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inputCheck.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DB_Processing.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Processing.h">
+    <ClInclude Include="File_Processing.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="List_v1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Search.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -68,9 +71,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="mainForm.cpp">
@@ -88,19 +88,25 @@
     <ClCompile Include="Product.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="File_processing.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Bridge.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="InputCheck.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Processing.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="inputCheck.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="DB_Processing.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="File_Processing.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Search.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

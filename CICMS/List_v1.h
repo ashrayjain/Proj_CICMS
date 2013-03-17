@@ -12,7 +12,6 @@ class List_v1
 private:
 	vector<T> _database;
 public:
-	List_v1(){}
 	bool add(T newItem);
 	bool del(T delItem);
 	T& operator[](int idx);

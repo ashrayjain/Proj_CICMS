@@ -1,187 +1,35 @@
 #include "stdafx.h"
+#include <list>
 #include "DB_Processing.h"
 
-int DB_Processing::count_occurences(string a, char b)
+
+vector<Product>* DB_Processing::search(string query, int method)
 {
-	int count = 0;
-	for(unsigned i=0; i<a.size(); i++)
-		if(a[i]==b)
-			count++;
-	return count;
-}
-int DB_Processing::edit_distance(string a, string b)
-{ 
-	
-	string replace = "r", ins = "i", del = "d";
-	int l1 = a.size(), l2 = b.size();
-
-	// make L1 greater
-    if(l1 < l2)
-	{
-		int temp = l1;
-		l1 = l2;
-		l2 = temp;
-		string temp_s = a;
-		a = b;
-		b = temp_s;
-	}
-
-	vector<string> models;
-    if(l1 - l2 == 0)
-	{
-		models.push_back(ins+del);
-		models.push_back(del+ins);
-		models.push_back(replace+replace);
-	}
-	else if(l1 - l2 == 1)
-	{
-		models.push_back(del+replace);
-		models.push_back(replace+del);
-	}
-	else if(l1 - l2 == 2)
-		models.push_back(del+del);
-	else
-	{
-		istringstream iss(b);
-		string word;
-		while(iss>>word)
-		{
-			int temp = a.find(word);
-			if(temp!=-1)
-			{
-				if(a.find(b)==-1)
-					return 3;
-				else
-					return 4;
-			}	
-		}
-		return -1;
-	}
-
-    int res = 3;
-    for(unsigned z = 0; z < models.size(); z++)
-	{
-		int i, j, c = 0;
-		i = j = c;
-		while ((i < l1) && (j < l2))
-		{
-			if(a[i] != b[j])
-			{
-				c = c+1;
-                if(2 < c)
-                    break;
-                char cmd = models[z][c-1];
-                if(cmd == del[0])
-                    i = i+1;
-				else if(cmd == ins[0])
-                    j = j+1;
-                else
-				{
-                    i++;
-					j++;
-				}
-			}
-            else
-			{
-				i++;
-				j++;
-			}
-		}
-        if(2 < c)
-			continue;
-		else if(i < l1)
-        {
-			if(l1-i <= count_occurences(models[z].substr(c, models[z].size()), del[0]))
-                c = c + (l1-i);
-            else
-                continue;
-		}
-        else if(j < l2)
-		{
-            if(l2-j <= count_occurences(models[z].substr(c, models[z].size()), ins[0]))
-                c = c + (l2-j);
-            else
-                continue;
-		}
-        if(c < res)
-            res = c;
-	}
-    if(res == 3)
-        res = -1;
-	if(res==2)
-		res = -1;
-    return res;
-}
-List_v1<Product>* DB_Processing::searchByName(string query)
-{
-	List_v1<Product>* results = new List_v1<Product>();
-	for(unsigned i = 0; i < _db->size(); i++)
-		if(edit_distance((*_db)[i].getName(),query) != -1)
-			results->add((*_db)[i]);
-	return results;
-}
-
-List_v1<Product>* DB_Processing::searchByCategory(string query)
-{
-	List_v1<Product>* results = new List_v1<Product>();
-	for(unsigned i = 0; i < _db->size(); i++)
-		if(edit_distance((*_db)[i].getCategory(),query) != -1)
-			results->add((*_db)[i]);
-	return results;
-}
-
-List_v1<Product>* DB_Processing::searchByManufacturer(string query)
-{
-	List_v1<Product>* results = new List_v1<Product>();
-	for(unsigned i = 0; i < _db->size(); i++)
-		if(edit_distance((*_db)[i].getManufacturer(),query) != -1)
-			results->add((*_db)[i]);
-	return results;
-}
-
-List_v1<Product*>* DB_Processing::searchByBarcode(string query)
-{
-	List_v1<Product*>* results = new List_v1<Product*>();
-	for(unsigned i = 0; i < _db->size(); i++)
-		if(edit_distance(to_string((*_db)[i].getBarcode()),query) != -1)
-			results->add(&(*_db)[i]);
-	return results;
-}
-
-List_v1<Product>* DB_Processing::search(string query, int method)
-{
-	List_v1<Product*>* results_p = NULL;
-	List_v1<Product>* results = NULL;
 	switch(method)
 	{
-		case 0: return searchByName(query);
-		case 1: 
-			 results = new List_v1<Product>();
-			results_p = searchByBarcode(query);
-			for(unsigned i = 0; i < results_p->size(); i++)
-				results->add(*(*results_p)[i]);
-			delete results_p;
-			return results;
-		case 2: return searchByCategory(query);
-		case 3: return searchByManufacturer(query);
-		default: return &List_v1<Product>();
+		case 0: return s.searchByName(query);
+		case 1: return s.searchByBarcode(query);
+		case 2: return s.searchByCategory(query);
+		case 3: return s.searchByManufacturer(query);
+		default: return &vector<Product>();
 	}
+}
 
+Product* DB_Processing::getProduct(unsigned barcode)
+{
+	Product* p = NULL;
+	for(unsigned i = 0; i<_db->size() && !p; i++)
+		if((*_db)[i].getBarcode() == barcode)
+			p = &(*_db)[i];
+	return p;
 }
 
 bool DB_Processing::addProduct(Product p)
 {
-	List_v1<Product*>* results = searchByBarcode(to_string(p.getBarcode()));
-	if(results->isEmpty())
-	{
-		delete results;
-		return _db->add(p);
-	}
-	else
-	{
-		delete results;
+	Product* result = getProduct(p.getBarcode());
+	if(result)
 		return false;
-	}
+	return _db->add(p);
 }
 
 bool DB_Processing::delProduct(Product p)
@@ -191,23 +39,128 @@ bool DB_Processing::delProduct(Product p)
 
 bool DB_Processing::updateStock(Product p, int stock)
 {
-	List_v1<Product*>* results = searchByBarcode(to_string(p.getBarcode()));
-	if(results->size() != 1)
+	Product* result = getProduct(p.getBarcode());
+	if(!result)
 		return false;
-	else
-		(*results)[0]->updateStock(stock);
+	result->updateStock(stock);
 	return true;
 }
 
 bool DB_Processing::updateSale(Product p, unsigned sale)
 {
-	List_v1<Product*>* results = searchByBarcode(to_string(p.getBarcode()));
-	if(results->size() == 1)
-		return (*results)[0]->updateSale(sale);
+	Product* result = getProduct(p.getBarcode());
+	if(result)
+		return result->updateSale(sale);
 	return false;
 }
 
-List_v1<Product> DB_Processing::generateStats(int method)
+
+/*
+bool DB_Processing::ins_sort(list<int>* arr, unsigned item, int x)
 {
-	return List_v1<Product>();
+	if(arr->back() >= item)
+		return false;
+	else
+		for(list<int>::iterator i = arr->begin(); i != arr->end(); i++)
+			if(*i < item)
+			{
+				arr->insert(i, item); 
+				arr->remove(*i);
+			}
+
+
+vector<Product>* DB_Processing::generatePrd(int X = 1)
+{
+	list<list<Product>> prd_list;
+	list<int> top_sales(1, -1);
+	for(unsigned i = 0; i < _db->size(); i++)
+	{
+		Product p = (*_db)[i];
+		if(top_sales.size() < X)
+		{
+
+			if(p.getNoSold() > max_sale)
+			{
+				max_sale = temp;
+				result_idx.add(i);
+			}
+			else if(temp == max_sale)
+				result_idx.add(i);
+		}
+	}
+	for(unsigned i = 0; i < result_idx->size(); i++)
+		results.add((*_db)[i]);
+	delete result_idx;
+	return results;
+}
+*/
+
+vector<Product>* DB_Processing::generatePrd(string cat)
+{
+	vector<Product>* results = new vector<Product>();
+	vector<int>* result_idx = NULL;
+	int max_sale = -1;
+	for(unsigned i = 0; i < _db->size(); i++)
+	{
+		Product p = (*_db)[i];
+		if(p.getCategory() == cat)
+		{
+			int temp = p.getNoSold();
+			if(temp > max_sale)
+			{
+				max_sale = temp;
+				delete result_idx;
+				result_idx = new vector<int>();
+				result_idx->push_back(i);
+			}
+			else if(temp == max_sale)
+				result_idx->push_back(i);
+		}
+	}
+	for(unsigned i = 0; i < result_idx->size(); i++)
+		results->push_back((*_db)[(*result_idx)[i]]);
+	delete result_idx;
+	return results;
+}
+
+
+vector<string>* DB_Processing::generateManu()
+{
+	struct manufacturer
+	{
+		string name;
+		int sales;
+	};
+	vector<manufacturer> results;
+	for(unsigned i = 0; i < _db->size(); i++)
+	{
+		Product p = (*_db)[i];
+		bool alreadyExists = false;
+		for(unsigned i = 0; i < results.size() && !alreadyExists; i++)
+			if(p.getManufacturer() == results[i].name)
+			{
+				results[i].sales += p.getNoSold();
+				alreadyExists = true;
+			}
+		if(!alreadyExists)
+		{
+			manufacturer temp;
+			temp.name = p.getManufacturer();
+			temp.sales = p.getNoSold();
+			results.push_back(temp);
+		}
+	}
+	vector<string>* top_manu = new vector<string>();
+	int max_sales = -1;
+	for(unsigned i = 0; i < results.size(); i++)
+		if(results[i].sales > max_sales)
+		{
+			max_sales = results[i].sales;
+			delete top_manu;
+			top_manu = new vector<string>();
+			top_manu->push_back(results[i].name);
+		}
+		else if (results[i].sales > max_sales)
+			top_manu->push_back(results[i].name);
+	return top_manu;
 }

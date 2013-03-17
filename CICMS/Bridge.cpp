@@ -11,7 +11,7 @@
 cliext::vector<System::Windows::Forms::ListViewItem^>^ Bridge::Search(System::String^ s, int i)
 {
 	enum BYMETHOD { byName, byBarcode, byCategory, byStock, byManuf };
-	List_v1<Product> *r = NULL;
+	vector<Product> *r = NULL;
 	r = Handler.db->search(toStdString(s), i);
 	cliext::vector<System::Windows::Forms::ListViewItem^>^ items = gcnew cliext::vector<System::Windows::Forms::ListViewItem^>;
 	for(unsigned i = 0; i < r->size(); i++) {
@@ -45,6 +45,7 @@ bool Bridge::Del(System::Windows::Forms::ListViewItem^ item)
 	return false;
 }
 System::String^ Bridge::Gen_BSpd(){
+	/*
 	List_v1<Product> *r = Handler.db->search("Cola", 0);// set to NULL later; ptr -> reference better
 	//r = Handler.db->Report_BestSelling_pd();
 	System::String^ s = "";
@@ -52,10 +53,13 @@ System::String^ Bridge::Gen_BSpd(){
 		s += toSysString((*r)[i].getName()) + " (" + toSysString((*r)[i].getBarcode()) + " - " + toSysString((*r)[i].getCategory()) + ") \n";
 	delete r;
 	return s;
+	*/
+	System::String^ s = "";
+	return s;
 }
 System::String^ Bridge::Gen_BSmanu(){
-	List_v1<std::string> *r = new List_v1<std::string>; //set to NULL later
-	//r = Handler.db->Report_BestSelling_manu();
+	vector<std::string> *r = NULL;//new List_v1<std::string>; //set to NULL later
+	r = Handler.db->generateManu();
 	System::String^ s = "";
 	for(unsigned i = 0; i < r->size(); i++)
 		s += toSysString((*r)[i]) + "\n";
@@ -64,12 +68,12 @@ System::String^ Bridge::Gen_BSmanu(){
 }
 //combine Gen_TopXpd and Gen_BSpd???
 System::String^ Bridge::Gen_TopXpd(int x){
-	List_v1<Product> *r = Handler.db->search("Cola", 0);// set to NULL later; ptr -> reference better
-	//r = Handler.db->Report_Top_X_pd(x);
+	//vector<Product> *r = NULL;//Handler.db->search("Cola", 0);// set to NULL later; ptr -> reference better
+	//r = Handler.db->generatePrd(x);
 	System::String^ s = "";
-	for(unsigned i = 0; i < r->size(); i++)
-		s += toSysString((*r)[i].getName()) + " (" + toSysString((*r)[i].getBarcode()) + " - " + toSysString((*r)[i].getCategory()) + ") \n";
-	delete r;
+	//for(unsigned i = 0; i < r->size(); i++)
+	//	s += toSysString((*r)[i].getName()) + " (" + toSysString((*r)[i].getBarcode()) + " - " + toSysString((*r)[i].getCategory()) + ") \n";
+	//delete r;
 	return s;
 }
 //**************************************************
