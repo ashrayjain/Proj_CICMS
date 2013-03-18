@@ -215,13 +215,16 @@ void mainForm::s_tB_input_LostFocus(System::Object^  sender, System::EventArgs^ 
 //Event: when s_b_submit button is clicked
 void mainForm::Submit_search(){
 	this->list_lv->Items->Clear();
-	this->Toggle_list_b(false);
 	//input Checking first
-	if(InputCheck::is_empty(this->s_tB_input->Text))
+	if(InputCheck::is_empty(this->s_tB_input->Text)){
 		this->Set_statusBar("Ready", System::Drawing::Color::LightSkyBlue);
+		this->Toggle_list_b(false);
+	}
 	else if(this->Get_byMethod() == byBarcode && (this->s_tB_input->Text->Length > 9 || !InputCheck::is_int(this->s_tB_input->Text) || 
-		InputCheck::lessThan_zero(this->s_tB_input->Text)))
+		InputCheck::lessThan_zero(this->s_tB_input->Text))){
 		this->Update_statusBar(searchF);//barcode shall be an integer, larger than zero and its length <= 9
+		this->Toggle_list_b(false);
+	}
 	//if all satisfied
 	else
 		this->Search_product(this->s_tB_input->Text, this->Get_byMethod());
@@ -249,8 +252,10 @@ void mainForm::Search_product(System::String^ s, int m){
 		this->list_lv->Items[0]->Selected = true;
 		this->Update_statusBar(searchS);
 	}
-	else
+	else{
 		this->Update_statusBar(searchF);
+		this->Toggle_list_b(false);
+	}
 }
 //*****************************************************
 //**********LIST DETAILS COMPONENTS FUNCTION***********
