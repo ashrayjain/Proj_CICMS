@@ -183,18 +183,12 @@ void mainForm::s_tB_input_TextChanged(System::Object^  sender, System::EventArgs
 //Event: when s_rB_byName, s_rB_byCategory, s_rB_byManufacturer or s_rB_byBarcode is selected
 void mainForm::s_rB_CheckedChanged(System::Object^  sender, System::EventArgs^  e){
 	this->Submit_search();//search here
-	this->s_tB_input->Focus();
 	this->s_tB_input->SelectAll();
 	this->SelectAll_toggle = false;
 }
 //Event: when there is keypress in s_tB_input component
 void mainForm::s_tB_input_KeyPress(Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e){
-	if(e->KeyChar == 13){//13 is CR
-		this->s_tB_input->Focus();
-		this->s_tB_input->SelectAll();
-		this->Submit_search();//search here
-	}
-	else if(!this->s_tB_input->Focused && ((e->KeyChar >= 'a' && e->KeyChar <= 'z') || (e->KeyChar >= 'A' && e->KeyChar <= 'Z') || (e->KeyChar >= '0' && e->KeyChar <= '9'))){
+	if(!this->s_tB_input->Focused && ((e->KeyChar >= 'a' && e->KeyChar <= 'z') || (e->KeyChar >= 'A' && e->KeyChar <= 'Z') || (e->KeyChar >= '0' && e->KeyChar <= '9'))){
 		this->s_tB_input->Text = System::Convert::ToString(e->KeyChar);
 		this->s_tB_input->Focus();
 		this->s_tB_input->SelectionStart = this->s_tB_input->Text->Length;
@@ -256,6 +250,11 @@ void mainForm::Search_product(System::String^ s, int m){
 		this->Update_statusBar(searchF);
 		this->Toggle_list_b(false);
 	}
+}
+//Event: triggered when CR is pressed
+void mainForm::s_b_Enter_Click(System::Object^  sender, System::EventArgs^  e) {
+		this->s_tB_input->Focus();
+		this->s_tB_input->SelectAll();
 }
 //*****************************************************
 //**********LIST DETAILS COMPONENTS FUNCTION***********
@@ -473,6 +472,7 @@ void mainForm::InitializeComponent()
 	this->list_col_stock = (gcnew System::Windows::Forms::ColumnHeader());
 	this->list_col_sold = (gcnew System::Windows::Forms::ColumnHeader());
 	this->list_grp = (gcnew System::Windows::Forms::GroupBox());
+	this->s_b_Enter = (gcnew System::Windows::Forms::Button());
 	this->statusStrip1 = (gcnew System::Windows::Forms::StatusStrip());
 	this->toolStripStatusLabel1 = (gcnew System::Windows::Forms::ToolStripStatusLabel());
 	this->menu->SuspendLayout();
@@ -576,6 +576,7 @@ void mainForm::InitializeComponent()
 	this->s_grp->Controls->Add(this->s_rB_byBarcode);
 	this->s_grp->Controls->Add(this->s_rB_byName);
 	this->s_grp->Controls->Add(this->s_tB_input);
+	this->s_grp->Controls->Add(this->s_b_Enter);
 	this->s_grp->Location = System::Drawing::Point(9, 27);
 	this->s_grp->Name = L"s_grp";
 	this->s_grp->Size = System::Drawing::Size(193, 101);
@@ -734,6 +735,16 @@ void mainForm::InitializeComponent()
 	this->list_grp->TabStop = false;
 	this->list_grp->Text = L"Result";
 	// 
+	// s_b_Enter
+	// 
+	this->s_b_Enter->Location = System::Drawing::Point(90, 25);
+	this->s_b_Enter->Name = L"s_b_Enter";
+	this->s_b_Enter->Size = System::Drawing::Size(75, 17);
+	this->s_b_Enter->TabIndex = 16;
+	this->s_b_Enter->Text = L"Enter";
+	this->s_b_Enter->UseVisualStyleBackColor = true;
+	this->s_b_Enter->Click += gcnew System::EventHandler(this, &mainForm::s_b_Enter_Click);
+	// 
 	// statusStrip1
 	// 
 	this->statusStrip1->BackColor = System::Drawing::Color::LightSkyBlue;
@@ -753,6 +764,7 @@ void mainForm::InitializeComponent()
 	// 
 	// mainForm
 	// 
+	this->AcceptButton = this->s_b_Enter;
 	this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 	this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 	this->ClientSize = System::Drawing::Size(881, 431);

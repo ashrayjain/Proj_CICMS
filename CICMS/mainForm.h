@@ -121,6 +121,7 @@ namespace CICMS_UI {
 	private: void Submit_search();
 	private: int Get_byMethod();
 	private: void Search_product(System::String^ s, int m);
+	private: void s_b_Enter_Click(System::Object^  sender, System::EventArgs^  e);
 
 	//**********LIST DETAILS COMPONENTS FUNCTION***********
 	private: void list_b_delete_Click(System::Object^  sender, System::EventArgs^  e);
@@ -167,6 +168,8 @@ namespace CICMS_UI {
 	private: System::Windows::Forms::RadioButton^  s_rB_byBarcode;
 	private: System::Windows::Forms::RadioButton^  s_rB_byName;
 	private: bool SelectAll_toggle;
+	private: System::Windows::Forms::RadioButton^  s_rB_byManufacturer;
+	private: System::Windows::Forms::Button^  s_b_Enter;
 
 	//**********LIST COMPONENTS DECLEARATION***********
 	private: System::Windows::Forms::ListView^  list_lv;
@@ -194,12 +197,14 @@ namespace CICMS_UI {
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_stat_topXpd;
 
 	private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
-private: System::Windows::Forms::RadioButton^  s_rB_byManufacturer;
+
+
 
 
 
 	//**********BRIDGE HANDLER DECLEARATION***********
 	private: Bridge *Bridging;
+
 
 };
 }
