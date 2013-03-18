@@ -93,7 +93,6 @@ namespace CICMS_UI {
 		{
 			InitializeComponent();
 			SelectAll_toggle = true;
-			last_keyword = "";
 			Bridging = new Bridge;
 		}
 
@@ -117,11 +116,11 @@ namespace CICMS_UI {
 	private: void s_tB_input_TextChanged(System::Object^  sender, System::EventArgs^  e);
 	private: void s_tB_input_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void s_tB_input_LostFocus(System::Object^  sender, System::EventArgs^  e);
+	private: void s_tB_input_KeyPress(Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e);
 	private: void s_rB_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 	private: void Submit_search();
 	private: int Get_byMethod();
 	private: void Search_product(System::String^ s, int m);
-	private: System::String^ last_keyword;
 
 	//**********LIST DETAILS COMPONENTS FUNCTION***********
 	private: void list_b_delete_Click(System::Object^  sender, System::EventArgs^  e);

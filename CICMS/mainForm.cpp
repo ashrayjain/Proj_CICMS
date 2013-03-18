@@ -161,7 +161,7 @@ void mainForm::Create_addPdForms(){
 		System::Windows::Forms::DialogResult r = dlg->ShowDialog();
 		if (r == System::Windows::Forms::DialogResult::OK){
 			if(Bridging->Add(dlg->get_product_details())){
-				this->Submit_search();
+				this->Submit_search();// refresh the search result
 				this->Update_statusBar(addS);
 			}
 			else
@@ -178,9 +178,26 @@ void mainForm::Create_addPdForms(){
 
 //Event: when Text in s_tB_input is changed, used for Search Instant
 void mainForm::s_tB_input_TextChanged(System::Object^  sender, System::EventArgs^  e){
-	if(this->s_tB_input->Text != this->last_keyword){// thus Ctrl+A or other meaningless operations will not trigger this event
-		this->last_keyword = this->s_tB_input->Text;
-		this->Submit_search();
+	this->Submit_search();//search here
+}
+//Event: when s_rB_byName, s_rB_byCategory, s_rB_byManufacturer or s_rB_byBarcode is selected
+void mainForm::s_rB_CheckedChanged(System::Object^  sender, System::EventArgs^  e){
+	this->Submit_search();//search here
+	this->s_tB_input->Focus();
+	this->s_tB_input->SelectAll();
+	this->SelectAll_toggle = false;
+}
+//Event: when there is keypress in s_tB_input component
+void mainForm::s_tB_input_KeyPress(Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e){
+	if(e->KeyChar == 13){//13 is CR
+		this->s_tB_input->Focus();
+		this->s_tB_input->SelectAll();
+		this->Submit_search();//search here
+	}
+	else if(!this->s_tB_input->Focused && ((e->KeyChar >= 'a' && e->KeyChar <= 'z') || (e->KeyChar >= 'A' && e->KeyChar <= 'Z') || (e->KeyChar >= '0' && e->KeyChar <= '9'))){
+		this->s_tB_input->Text = System::Convert::ToString(e->KeyChar);
+		this->s_tB_input->Focus();
+		this->s_tB_input->SelectionStart = this->s_tB_input->Text->Length;
 	}
 }
 //Event: when s_tB_input is clicked
@@ -192,22 +209,20 @@ void mainForm::s_tB_input_Click(System::Object^  sender, System::EventArgs^  e){
 }
 //Event: when s_tB_input is lost focus
 void mainForm::s_tB_input_LostFocus(System::Object^  sender, System::EventArgs^  e){
-	this->SelectAll_toggle = true;
-}
-//Event: when s_rB_byName, s_rB_byCategory, s_rB_byManufacturer or s_rB_byBarcode is selected
-void mainForm::s_rB_CheckedChanged(System::Object^  sender, System::EventArgs^  e){
-	this->s_tB_input->Focus();
 	this->s_tB_input->SelectAll();
 	this->SelectAll_toggle = false;
 }
 //Event: when s_b_submit button is clicked
 void mainForm::Submit_search(){
+	this->list_lv->Items->Clear();
+	this->Toggle_list_b(false);
 	//input Checking first
 	if(InputCheck::is_empty(this->s_tB_input->Text))
 		this->Set_statusBar("Ready", System::Drawing::Color::LightSkyBlue);
 	else if(this->Get_byMethod() == byBarcode && (this->s_tB_input->Text->Length > 9 || !InputCheck::is_int(this->s_tB_input->Text) || 
 		InputCheck::lessThan_zero(this->s_tB_input->Text)))
 		this->Update_statusBar(searchF);//barcode shall be an integer, larger than zero and its length <= 9
+	//if all satisfied
 	else
 		this->Search_product(this->s_tB_input->Text, this->Get_byMethod());
 }
@@ -229,16 +244,13 @@ void mainForm::Search_product(System::String^ s, int m){
 	cliext::vector<System::Windows::Forms::ListViewItem^>^ r = Bridging->Search(s, m);
 	if(!r->empty()){
 		this->list_lv->BeginUpdate();
-		this->list_lv->Items->Clear();
 		this->list_lv->Items->AddRange(r->to_array());
 		this->list_lv->EndUpdate();
 		this->list_lv->Items[0]->Selected = true;
 		this->Update_statusBar(searchS);
 	}
-	else{
-		this->list_lv->Items->Clear();
+	else
 		this->Update_statusBar(searchF);
-	}
 }
 //*****************************************************
 //**********LIST DETAILS COMPONENTS FUNCTION***********
@@ -541,6 +553,7 @@ void mainForm::InitializeComponent()
 	// 
 	this->s_tB_input->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 11, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 		static_cast<System::Byte>(134)));
+	this->s_tB_input->HideSelection = false;
 	this->s_tB_input->Location = System::Drawing::Point(10, 23);
 	this->s_tB_input->MaxLength = 21;
 	this->s_tB_input->Name = L"s_tB_input";
@@ -743,10 +756,12 @@ void mainForm::InitializeComponent()
 	this->Controls->Add(this->s_grp);
 	this->Controls->Add(this->menu);
 	this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedDialog;
+	this->KeyPreview = true;
 	this->MainMenuStrip = this->menu;
 	this->MaximizeBox = false;
 	this->Name = L"mainForm";
 	this->Text = L" CICMS";
+	this->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &mainForm::s_tB_input_KeyPress);
 	this->menu->ResumeLayout(false);
 	this->menu->PerformLayout();
 	this->s_grp->ResumeLayout(false);

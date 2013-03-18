@@ -13,8 +13,8 @@ Food
 971324986
 1526.550000
 Fisher Price
-845
-467
+844
+468
 
 Tea Tree
 Breakfast Foods
@@ -32661,8 +32661,8 @@ Kindle DX
 639824297
 4853.520000
 CLR
-459
-757
+458
+758
 
 Tentacle USB Hub
 Kindle Store
@@ -49613,8 +49613,8 @@ MP3 & Media Players
 440384073
 8692.110000
 Dilmah
-314
-121
+313
+122
 
 Flaming Dice
 Condiments & Dressings
@@ -74949,8 +74949,8 @@ Skin Care
 569451282
 566.310000
 Wow Select
-635
-596
+632
+599
 
 Hanes® Heavyweight Hooded Sweatshirt
 Deodorant
