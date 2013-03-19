@@ -192,7 +192,6 @@ void mainForm::s_tB_input_KeyPress(Object^ sender, System::Windows::Forms::KeyPr
 		this->s_tB_input->Text = System::Convert::ToString(e->KeyChar);
 		this->s_tB_input->Focus();
 		this->s_tB_input->SelectionStart = this->s_tB_input->Text->Length;
->>>>>>> bb0096f8b90ad065aff0ed287fd087240ab32714
 	}
 }
 //Event: when s_tB_input is clicked
