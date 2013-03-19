@@ -160,8 +160,10 @@ void mainForm::Create_addPdForms(){
 		dlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 		System::Windows::Forms::DialogResult r = dlg->ShowDialog();
 		if (r == System::Windows::Forms::DialogResult::OK){
-			if(Bridging->Add(dlg->get_product_details()))
+			if(Bridging->Add(dlg->get_product_details())){
+				this->Submit_search();// refresh the search result
 				this->Update_statusBar(addS);
+			}
 			else
 				this->Update_statusBar(addF);
 		}
@@ -176,9 +178,21 @@ void mainForm::Create_addPdForms(){
 
 //Event: when Text in s_tB_input is changed, used for Search Instant
 void mainForm::s_tB_input_TextChanged(System::Object^  sender, System::EventArgs^  e){
-	if(this->s_tB_input->Text->Length > 0 && this->s_tB_input->Text != this->last_keyword){
-		this->last_keyword = this->s_tB_input->Text;
-		this->s_b_submit->PerformClick();
+	this->Submit_search();//search here
+}
+//Event: when s_rB_byName, s_rB_byCategory, s_rB_byManufacturer or s_rB_byBarcode is selected
+void mainForm::s_rB_CheckedChanged(System::Object^  sender, System::EventArgs^  e){
+	this->Submit_search();//search here
+	this->s_tB_input->SelectAll();
+	this->SelectAll_toggle = false;
+}
+//Event: when there is keypress in s_tB_input component
+void mainForm::s_tB_input_KeyPress(Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e){
+	if(!this->s_tB_input->Focused && ((e->KeyChar >= 'a' && e->KeyChar <= 'z') || (e->KeyChar >= 'A' && e->KeyChar <= 'Z') || (e->KeyChar >= '0' && e->KeyChar <= '9'))){
+		this->s_tB_input->Text = System::Convert::ToString(e->KeyChar);
+		this->s_tB_input->Focus();
+		this->s_tB_input->SelectionStart = this->s_tB_input->Text->Length;
+>>>>>>> bb0096f8b90ad065aff0ed287fd087240ab32714
 	}
 }
 //Event: when s_tB_input is clicked
@@ -190,54 +204,23 @@ void mainForm::s_tB_input_Click(System::Object^  sender, System::EventArgs^  e){
 }
 //Event: when s_tB_input is lost focus
 void mainForm::s_tB_input_LostFocus(System::Object^  sender, System::EventArgs^  e){
-	this->SelectAll_toggle = true;
-}
-//Event: when s_rB_byName is selected
-void mainForm::s_rB_byName_CheckedChanged(System::Object^  sender, System::EventArgs^  e){
-	if(this->Get_byMethod() == byName){
-		this->s_tB_input->Focus();
-		this->s_tB_input->SelectAll();
-		this->SelectAll_toggle = false;
-	}
-}
-//Event: when s_rB_byCategory is selected
-void mainForm::s_rB_byCategory_CheckedChanged(System::Object^  sender, System::EventArgs^  e){
-	if(this->Get_byMethod() == byCategory){
-		this->s_tB_input->Focus();
-		this->s_tB_input->SelectAll();
-		this->SelectAll_toggle = false;
-	}
-}
-//Event: when s_rB_byBarcode is selected
-void mainForm::s_rB_byBarcode_CheckedChanged(System::Object^  sender, System::EventArgs^  e){
-	if(this->Get_byMethod() == byBarcode){
-		if(this->s_tB_input->Text->Length > 9)
-			this->s_tB_input->Text = this->s_tB_input->Text->Substring(0,9);
-		this->s_tB_input->MaxLength = 9;
-		this->s_tB_input->Focus();
-		this->s_tB_input->SelectAll();
-		this->SelectAll_toggle = false;
-	}
-	else{
-		this->s_tB_input->MaxLength = 21;
-	}
-}
-//Event: when s_rB_byManufacturer is selected
-void mainForm::s_rB_byManufacturer_CheckedChanged(System::Object^  sender, System::EventArgs^  e){
-	if(this->Get_byMethod() == byManuf){
-		this->s_tB_input->Focus();
-		this->s_tB_input->SelectAll();
-		this->SelectAll_toggle = false;
-	}
+	this->s_tB_input->SelectAll();
+	this->SelectAll_toggle = false;
 }
 //Event: when s_b_submit button is clicked
-void mainForm::s_b_submit_Click(System::Object^  sender, System::EventArgs^  e){
-	if(InputCheck::is_empty(this->s_tB_input->Text))
-		System::Windows::Forms::MessageBox::Show("Please fill in the search field.");
-	else if(this->Get_byMethod() == byBarcode && !InputCheck::is_int(this->s_tB_input->Text))
-		;//System::Windows::Forms::MessageBox::Show("Please input an integer in the search field.");
-	else if(this->Get_byMethod() == byBarcode && InputCheck::lessThan_zero(this->s_tB_input->Text))
-		;//System::Windows::Forms::MessageBox::Show("Please input an integer larger than zero in the search field.");
+void mainForm::Submit_search(){
+	this->list_lv->Items->Clear();
+	//input Checking first
+	if(InputCheck::is_empty(this->s_tB_input->Text)){
+		this->Set_statusBar("Ready", System::Drawing::Color::LightSkyBlue);
+		this->Toggle_list_b(false);
+	}
+	else if(this->Get_byMethod() == byBarcode && (this->s_tB_input->Text->Length > 9 || !InputCheck::is_int(this->s_tB_input->Text) || 
+		InputCheck::lessThan_zero(this->s_tB_input->Text))){
+		this->Update_statusBar(searchF);//barcode shall be an integer, larger than zero and its length <= 9
+		this->Toggle_list_b(false);
+	}
+	//if all satisfied
 	else
 		this->Search_product(this->s_tB_input->Text, this->Get_byMethod());
 }
@@ -259,14 +242,20 @@ void mainForm::Search_product(System::String^ s, int m){
 	cliext::vector<System::Windows::Forms::ListViewItem^>^ r = Bridging->Search(s, m);
 	if(!r->empty()){
 		this->list_lv->BeginUpdate();
-		this->list_lv->Items->Clear();
 		this->list_lv->Items->AddRange(r->to_array());
 		this->list_lv->EndUpdate();
 		this->list_lv->Items[0]->Selected = true;
 		this->Update_statusBar(searchS);
 	}
-	else
+	else{
 		this->Update_statusBar(searchF);
+		this->Toggle_list_b(false);
+	}
+}
+//Event: triggered when CR is pressed
+void mainForm::s_b_Enter_Click(System::Object^  sender, System::EventArgs^  e) {
+		this->s_tB_input->Focus();
+		this->s_tB_input->SelectAll();
 }
 //*****************************************************
 //**********LIST DETAILS COMPONENTS FUNCTION***********
@@ -466,7 +455,6 @@ void mainForm::InitializeComponent()
 	this->menu_stat_topXpd = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->menu_about = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->s_tB_input = (gcnew System::Windows::Forms::TextBox());
-	this->s_b_submit = (gcnew System::Windows::Forms::Button());
 	this->s_grp = (gcnew System::Windows::Forms::GroupBox());
 	this->s_rB_byManufacturer = (gcnew System::Windows::Forms::RadioButton());
 	this->s_l_by = (gcnew System::Windows::Forms::Label());
@@ -485,6 +473,7 @@ void mainForm::InitializeComponent()
 	this->list_col_stock = (gcnew System::Windows::Forms::ColumnHeader());
 	this->list_col_sold = (gcnew System::Windows::Forms::ColumnHeader());
 	this->list_grp = (gcnew System::Windows::Forms::GroupBox());
+	this->s_b_Enter = (gcnew System::Windows::Forms::Button());
 	this->statusStrip1 = (gcnew System::Windows::Forms::StatusStrip());
 	this->toolStripStatusLabel1 = (gcnew System::Windows::Forms::ToolStripStatusLabel());
 	this->menu->SuspendLayout();
@@ -499,7 +488,7 @@ void mainForm::InitializeComponent()
 		this->menu_about});
 	this->menu->Location = System::Drawing::Point(0, 0);
 	this->menu->Name = L"menu";
-	this->menu->Size = System::Drawing::Size(845, 24);
+	this->menu->Size = System::Drawing::Size(881, 24);
 	this->menu->TabIndex = 15;
 	this->menu->Text = L"menu";
 	// 
@@ -570,6 +559,7 @@ void mainForm::InitializeComponent()
 	// 
 	this->s_tB_input->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 11, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 		static_cast<System::Byte>(134)));
+	this->s_tB_input->HideSelection = false;
 	this->s_tB_input->Location = System::Drawing::Point(10, 23);
 	this->s_tB_input->MaxLength = 21;
 	this->s_tB_input->Name = L"s_tB_input";
@@ -579,18 +569,6 @@ void mainForm::InitializeComponent()
 	this->s_tB_input->TextChanged += gcnew System::EventHandler(this, &mainForm::s_tB_input_TextChanged);
 	this->s_tB_input->LostFocus += gcnew System::EventHandler(this, &mainForm::s_tB_input_LostFocus);
 	// 
-	// s_b_submit
-	// 
-	this->s_b_submit->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
-		static_cast<System::Byte>(134)));
-	this->s_b_submit->Location = System::Drawing::Point(188, 23);
-	this->s_b_submit->Name = L"s_b_submit";
-	this->s_b_submit->Size = System::Drawing::Size(42, 24);
-	this->s_b_submit->TabIndex = 1;
-	this->s_b_submit->Text = L"Go";
-	this->s_b_submit->UseVisualStyleBackColor = true;
-	this->s_b_submit->Click += gcnew System::EventHandler(this, &mainForm::s_b_submit_Click);
-	// 
 	// s_grp
 	// 
 	this->s_grp->Controls->Add(this->s_rB_byManufacturer);
@@ -599,10 +577,10 @@ void mainForm::InitializeComponent()
 	this->s_grp->Controls->Add(this->s_rB_byBarcode);
 	this->s_grp->Controls->Add(this->s_rB_byName);
 	this->s_grp->Controls->Add(this->s_tB_input);
-	this->s_grp->Controls->Add(this->s_b_submit);
-	this->s_grp->Location = System::Drawing::Point(16, 27);
+	this->s_grp->Controls->Add(this->s_b_Enter);
+	this->s_grp->Location = System::Drawing::Point(9, 27);
 	this->s_grp->Name = L"s_grp";
-	this->s_grp->Size = System::Drawing::Size(239, 101);
+	this->s_grp->Size = System::Drawing::Size(193, 101);
 	this->s_grp->TabIndex = 14;
 	this->s_grp->TabStop = false;
 	this->s_grp->Text = L"Search";
@@ -610,19 +588,19 @@ void mainForm::InitializeComponent()
 	// s_rB_byManufacturer
 	// 
 	this->s_rB_byManufacturer->AutoSize = true;
-	this->s_rB_byManufacturer->Location = System::Drawing::Point(109, 75);
+	this->s_rB_byManufacturer->Location = System::Drawing::Point(101, 74);
 	this->s_rB_byManufacturer->Name = L"s_rB_byManufacturer";
 	this->s_rB_byManufacturer->Size = System::Drawing::Size(85, 17);
 	this->s_rB_byManufacturer->TabIndex = 8;
 	this->s_rB_byManufacturer->TabStop = true;
 	this->s_rB_byManufacturer->Text = L"Manufacturer";
 	this->s_rB_byManufacturer->UseVisualStyleBackColor = true;
-	this->s_rB_byManufacturer->CheckedChanged += gcnew System::EventHandler(this, &mainForm::s_rB_byManufacturer_CheckedChanged);
+	this->s_rB_byManufacturer->CheckedChanged += gcnew System::EventHandler(this, &mainForm::s_rB_CheckedChanged);
 	// 
 	// s_l_by
 	// 
 	this->s_l_by->AutoSize = true;
-	this->s_l_by->Location = System::Drawing::Point(15, 55);
+	this->s_l_by->Location = System::Drawing::Point(10, 55);
 	this->s_l_by->Name = L"s_l_by";
 	this->s_l_by->Size = System::Drawing::Size(19, 13);
 	this->s_l_by->TabIndex = 7;
@@ -631,44 +609,44 @@ void mainForm::InitializeComponent()
 	// s_rB_byCategory
 	// 
 	this->s_rB_byCategory->AutoSize = true;
-	this->s_rB_byCategory->Location = System::Drawing::Point(109, 54);
+	this->s_rB_byCategory->Location = System::Drawing::Point(101, 54);
 	this->s_rB_byCategory->Name = L"s_rB_byCategory";
 	this->s_rB_byCategory->Size = System::Drawing::Size(64, 17);
 	this->s_rB_byCategory->TabIndex = 4;
 	this->s_rB_byCategory->TabStop = true;
 	this->s_rB_byCategory->Text = L"Category";
 	this->s_rB_byCategory->UseVisualStyleBackColor = true;
-	this->s_rB_byCategory->CheckedChanged += gcnew System::EventHandler(this, &mainForm::s_rB_byCategory_CheckedChanged);
+	this->s_rB_byCategory->CheckedChanged += gcnew System::EventHandler(this, &mainForm::s_rB_CheckedChanged);
 	// 
 	// s_rB_byBarcode
 	// 
 	this->s_rB_byBarcode->AutoSize = true;
-	this->s_rB_byBarcode->Location = System::Drawing::Point(39, 75);
+	this->s_rB_byBarcode->Location = System::Drawing::Point(34, 74);
 	this->s_rB_byBarcode->Name = L"s_rB_byBarcode";
 	this->s_rB_byBarcode->Size = System::Drawing::Size(62, 17);
 	this->s_rB_byBarcode->TabIndex = 3;
 	this->s_rB_byBarcode->TabStop = true;
 	this->s_rB_byBarcode->Text = L"Barcode";
 	this->s_rB_byBarcode->UseVisualStyleBackColor = true;
-	this->s_rB_byBarcode->CheckedChanged += gcnew System::EventHandler(this, &mainForm::s_rB_byBarcode_CheckedChanged);
+	this->s_rB_byBarcode->CheckedChanged += gcnew System::EventHandler(this, &mainForm::s_rB_CheckedChanged);
 	// 
 	// s_rB_byName
 	// 
 	this->s_rB_byName->AutoSize = true;
 	this->s_rB_byName->Checked = true;
-	this->s_rB_byName->Location = System::Drawing::Point(39, 54);
+	this->s_rB_byName->Location = System::Drawing::Point(34, 54);
 	this->s_rB_byName->Name = L"s_rB_byName";
 	this->s_rB_byName->Size = System::Drawing::Size(50, 17);
 	this->s_rB_byName->TabIndex = 2;
 	this->s_rB_byName->TabStop = true;
 	this->s_rB_byName->Text = L"Name";
 	this->s_rB_byName->UseVisualStyleBackColor = true;
-	this->s_rB_byName->CheckedChanged += gcnew System::EventHandler(this, &mainForm::s_rB_byName_CheckedChanged);
+	this->s_rB_byName->CheckedChanged += gcnew System::EventHandler(this, &mainForm::s_rB_CheckedChanged);
 	// 
 	// list_b_restock
 	// 
 	this->list_b_restock->Enabled = false;
-	this->list_b_restock->Location = System::Drawing::Point(395, 339);
+	this->list_b_restock->Location = System::Drawing::Point(91, 19);
 	this->list_b_restock->Name = L"list_b_restock";
 	this->list_b_restock->Size = System::Drawing::Size(75, 23);
 	this->list_b_restock->TabIndex = 9;
@@ -679,7 +657,7 @@ void mainForm::InitializeComponent()
 	// list_b_sell
 	// 
 	this->list_b_sell->Enabled = false;
-	this->list_b_sell->Location = System::Drawing::Point(314, 339);
+	this->list_b_sell->Location = System::Drawing::Point(10, 19);
 	this->list_b_sell->Name = L"list_b_sell";
 	this->list_b_sell->Size = System::Drawing::Size(75, 23);
 	this->list_b_sell->TabIndex = 8;
@@ -690,7 +668,7 @@ void mainForm::InitializeComponent()
 	// list_b_delete
 	// 
 	this->list_b_delete->Enabled = false;
-	this->list_b_delete->Location = System::Drawing::Point(476, 339);
+	this->list_b_delete->Location = System::Drawing::Point(172, 19);
 	this->list_b_delete->Name = L"list_b_delete";
 	this->list_b_delete->Size = System::Drawing::Size(75, 23);
 	this->list_b_delete->TabIndex = 11;
@@ -703,10 +681,10 @@ void mainForm::InitializeComponent()
 	this->list_lv->Columns->AddRange(gcnew cli::array< System::Windows::Forms::ColumnHeader^  >(7) {this->list_col_name, this->list_col_category, 
 		this->list_col_barcode, this->list_col_price, this->list_col_manuf, this->list_col_stock, this->list_col_sold});
 	this->list_lv->FullRowSelect = true;
-	this->list_lv->Location = System::Drawing::Point(11, 23);
+	this->list_lv->Location = System::Drawing::Point(11, 50);
 	this->list_lv->Name = L"list_lv";
 	this->list_lv->ShowGroups = false;
-	this->list_lv->Size = System::Drawing::Size(539, 306);
+	this->list_lv->Size = System::Drawing::Size(636, 309);
 	this->list_lv->TabIndex = 7;
 	this->list_lv->UseCompatibleStateImageBehavior = false;
 	this->list_lv->View = System::Windows::Forms::View::Details;
@@ -716,12 +694,12 @@ void mainForm::InitializeComponent()
 	// list_col_name
 	// 
 	this->list_col_name->Text = L"Name";
-	this->list_col_name->Width = 110;
+	this->list_col_name->Width = 146;
 	// 
 	// list_col_category
 	// 
 	this->list_col_category->Text = L"Category";
-	this->list_col_category->Width = 61;
+	this->list_col_category->Width = 107;
 	// 
 	// list_col_barcode
 	// 
@@ -735,7 +713,7 @@ void mainForm::InitializeComponent()
 	// list_col_manuf
 	// 
 	this->list_col_manuf->Text = L"Manufacturer";
-	this->list_col_manuf->Width = 82;
+	this->list_col_manuf->Width = 97;
 	// 
 	// list_col_stock
 	// 
@@ -749,14 +727,24 @@ void mainForm::InitializeComponent()
 	// 
 	this->list_grp->Controls->Add(this->list_lv);
 	this->list_grp->Controls->Add(this->list_b_restock);
-	this->list_grp->Controls->Add(this->list_b_delete);
 	this->list_grp->Controls->Add(this->list_b_sell);
-	this->list_grp->Location = System::Drawing::Point(269, 27);
+	this->list_grp->Controls->Add(this->list_b_delete);
+	this->list_grp->Location = System::Drawing::Point(213, 27);
 	this->list_grp->Name = L"list_grp";
-	this->list_grp->Size = System::Drawing::Size(561, 373);
+	this->list_grp->Size = System::Drawing::Size(658, 373);
 	this->list_grp->TabIndex = 13;
 	this->list_grp->TabStop = false;
 	this->list_grp->Text = L"Result";
+	// 
+	// s_b_Enter
+	// 
+	this->s_b_Enter->Location = System::Drawing::Point(90, 25);
+	this->s_b_Enter->Name = L"s_b_Enter";
+	this->s_b_Enter->Size = System::Drawing::Size(75, 17);
+	this->s_b_Enter->TabIndex = 16;
+	this->s_b_Enter->Text = L"Enter";
+	this->s_b_Enter->UseVisualStyleBackColor = true;
+	this->s_b_Enter->Click += gcnew System::EventHandler(this, &mainForm::s_b_Enter_Click);
 	// 
 	// statusStrip1
 	// 
@@ -764,7 +752,7 @@ void mainForm::InitializeComponent()
 	this->statusStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) {this->toolStripStatusLabel1});
 	this->statusStrip1->Location = System::Drawing::Point(0, 409);
 	this->statusStrip1->Name = L"statusStrip1";
-	this->statusStrip1->Size = System::Drawing::Size(845, 22);
+	this->statusStrip1->Size = System::Drawing::Size(881, 22);
 	this->statusStrip1->SizingGrip = false;
 	this->statusStrip1->TabIndex = 12;
 	this->statusStrip1->Text = L"statusStrip";
@@ -777,19 +765,21 @@ void mainForm::InitializeComponent()
 	// 
 	// mainForm
 	// 
-	this->AcceptButton = this->s_b_submit;
+	this->AcceptButton = this->s_b_Enter;
 	this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 	this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-	this->ClientSize = System::Drawing::Size(845, 431);
+	this->ClientSize = System::Drawing::Size(881, 431);
 	this->Controls->Add(this->statusStrip1);
 	this->Controls->Add(this->list_grp);
 	this->Controls->Add(this->s_grp);
 	this->Controls->Add(this->menu);
 	this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedDialog;
+	this->KeyPreview = true;
 	this->MainMenuStrip = this->menu;
 	this->MaximizeBox = false;
 	this->Name = L"mainForm";
 	this->Text = L" CICMS";
+	this->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &mainForm::s_tB_input_KeyPress);
 	this->menu->ResumeLayout(false);
 	this->menu->PerformLayout();
 	this->s_grp->ResumeLayout(false);

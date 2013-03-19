@@ -93,7 +93,6 @@ namespace CICMS_UI {
 		{
 			InitializeComponent();
 			SelectAll_toggle = true;
-			last_keyword = "";
 			Bridging = new Bridge;
 		}
 
@@ -117,14 +116,12 @@ namespace CICMS_UI {
 	private: void s_tB_input_TextChanged(System::Object^  sender, System::EventArgs^  e);
 	private: void s_tB_input_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void s_tB_input_LostFocus(System::Object^  sender, System::EventArgs^  e);
-	private: void s_rB_byName_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
-	private: void s_rB_byCategory_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
-	private: void s_rB_byBarcode_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
-	private: void s_rB_byManufacturer_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
-	private: void s_b_submit_Click(System::Object^  sender, System::EventArgs^  e);
+	private: void s_tB_input_KeyPress(Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e);
+	private: void s_rB_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
+	private: void Submit_search();
 	private: int Get_byMethod();
 	private: void Search_product(System::String^ s, int m);
-	private: System::String^ last_keyword;
+	private: void s_b_Enter_Click(System::Object^  sender, System::EventArgs^  e);
 
 	//**********LIST DETAILS COMPONENTS FUNCTION***********
 	private: void list_b_delete_Click(System::Object^  sender, System::EventArgs^  e);
@@ -164,13 +161,15 @@ namespace CICMS_UI {
 
 	//**********SEARCH COMPONENTS DECLEARATION***********
 	private: System::Windows::Forms::TextBox^  s_tB_input;
-	private: System::Windows::Forms::Button^  s_b_submit;
+
 	private: System::Windows::Forms::GroupBox^  s_grp;
 	private: System::Windows::Forms::Label^  s_l_by;
 	private: System::Windows::Forms::RadioButton^  s_rB_byCategory;
 	private: System::Windows::Forms::RadioButton^  s_rB_byBarcode;
 	private: System::Windows::Forms::RadioButton^  s_rB_byName;
 	private: bool SelectAll_toggle;
+	private: System::Windows::Forms::RadioButton^  s_rB_byManufacturer;
+	private: System::Windows::Forms::Button^  s_b_Enter;
 
 	//**********LIST COMPONENTS DECLEARATION***********
 	private: System::Windows::Forms::ListView^  list_lv;
@@ -198,12 +197,14 @@ namespace CICMS_UI {
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_stat_topXpd;
 
 	private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
-private: System::Windows::Forms::RadioButton^  s_rB_byManufacturer;
+
+
 
 
 
 	//**********BRIDGE HANDLER DECLEARATION***********
 	private: Bridge *Bridging;
+
 
 };
 }
