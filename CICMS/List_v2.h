@@ -4,7 +4,7 @@
 #include "Product.h"
 
 template <typename T>
-class list_v2
+class list_adt
 {
 private:
 	struct Node
@@ -22,10 +22,10 @@ private:
 public:
 
 	//constructor
-	list_v2();
+	list_adt();
 
 	//destructor
-	~list_v2();
+	~list_adt();
 
 	//overload operator[]
 	T &operator[](int index);
@@ -48,7 +48,7 @@ public:
 };
 
 template <typename T>
-list_v2 <T>::list_v2()
+list_adt <T>::list_adt()
 {
 	_head = NULL;
 	_size=0;
@@ -58,7 +58,7 @@ list_v2 <T>::list_v2()
 }
 
 template <typename T>
-list_v2 <T>::~list_v2()
+list_adt <T>::~list_adt()
 {
 	while(_head!=NULL)
 	{
@@ -70,14 +70,14 @@ list_v2 <T>::~list_v2()
 }
 
 template <typename T>
-bool list_v2<T>::operator=(T &a)
+bool list_adt<T>::operator=(T &a)
 {
 	_curr->item = a;
 	return true;
 }
 
 template <typename T>
-T& list_v2<T>::operator[] (int index) 
+T& list_adt<T>::operator[] (int index) 
 {
 	if(_curr!=NULL)
 	{
@@ -117,7 +117,7 @@ T& list_v2<T>::operator[] (int index)
 
 //It will always insert to the head of the list
 template <typename T>
-bool list_v2<T>::add(T a)
+bool list_adt<T>::add(T a)
 {
 	try
 	{
@@ -136,7 +136,7 @@ bool list_v2<T>::add(T a)
 
 //this part we need to take care of _last
 template <typename T>
-bool list_v2<T>::del (T a)
+bool list_adt<T>::del (T a)
 {
 	bool flag = false;
 	Node *temp=_head;
@@ -168,13 +168,13 @@ bool list_v2<T>::del (T a)
 }
 
 template <typename T>
-unsigned int list_v2<T>::size()
+unsigned int list_adt<T>::size()
 {
 	return _size;
 }
 
 template <typename T>
-bool list_v2<T>::isempty()
+bool list_adt<T>::isempty()
 {
 	return _size==0;
 }

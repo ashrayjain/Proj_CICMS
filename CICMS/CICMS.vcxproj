@@ -93,6 +93,8 @@
     <ClInclude Include="inputCheck.h" />
     <ClInclude Include="ListViewItemComparer.h" />
     <ClInclude Include="List_v1.h" />
+    <ClInclude Include="List_v2.h" />
+    <ClInclude Include="List_v3.h" />
     <ClInclude Include="mainForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>

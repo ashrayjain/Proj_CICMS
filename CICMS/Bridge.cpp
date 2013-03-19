@@ -55,7 +55,7 @@ System::String^ Bridge::Gen_BSpd(){
 	return s;
 }
 System::String^ Bridge::Gen_BSmanu(){
-	vector<std::string> *r = NULL;//new List_v1<std::string>; //set to NULL later
+	vector<std::string> *r = NULL;//new list_adt<std::string>; //set to NULL later
 	r = Handler.db->generateManu();
 	System::String^ s = "";
 	for(unsigned i = 0; i < r->size(); i++)

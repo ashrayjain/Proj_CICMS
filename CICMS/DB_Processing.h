@@ -9,13 +9,13 @@ using namespace std;
 class DB_Processing
 {
 private:
-	List_v1<Product>* _db;
+	list_adt<Product>* _db;
 	search s;
 	Product* getProduct(unsigned barcode);
 	void ins_sort(list<pair<int, list<Product>>>*, Product, int);
 	
 public:
-	DB_Processing(List_v1<Product>& db): _db(&db), s(&db) {}
+	DB_Processing(list_adt<Product>& db): _db(&db), s(&db) {}
 	bool addProduct(Product);
 	bool delProduct(Product);
 	vector<Product>* search(string, int);

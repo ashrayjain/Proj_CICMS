@@ -9,7 +9,7 @@
 class Processing
 {
 private:
-	List_v1<Product> _database;
+	list_adt<Product> _database;
 	File_processing *file;
 public:
 	Processing();

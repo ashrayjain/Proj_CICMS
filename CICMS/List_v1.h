@@ -7,7 +7,7 @@
 using namespace std;
 
 template <class T>
-class List_v1
+class list_adt
 {
 private:
 	vector<T> _database;
@@ -20,7 +20,7 @@ public:
 };
 
 template <class T>
-bool List_v1<T>::add(T newItem)
+bool list_adt<T>::add(T newItem)
 {
 	try
 	{
@@ -34,7 +34,7 @@ bool List_v1<T>::add(T newItem)
 }
 
 template <class T>
-bool List_v1<T>::del(T delItem)
+bool list_adt<T>::del(T delItem)
 {
 	int delidx = -1;
 	for(unsigned i = 0; i < _database.size(); i++)
@@ -47,7 +47,7 @@ bool List_v1<T>::del(T delItem)
 }
 
 template <class T>
-T& List_v1<T>::operator[](int idx)
+T& list_adt<T>::operator[](int idx)
 {
 	return _database[idx];
 }

@@ -16,7 +16,7 @@ using namespace std;
 class search
 {
 public:
-	search(List_v1<Product> * db): _db(db) {}
+	search(list_adt<Product> * db): _db(db) {}
 	vector<Product>* searchByName(string);
 	vector<Product>* searchByCategory(string);
 	vector<Product>* searchByManufacturer(string);
@@ -24,7 +24,7 @@ public:
 	int min(int a, int b);
 	int max(int a, int b);
 private:
-	List_v1<Product>* _db;
+	list_adt<Product>* _db;
 	string convertToLower(string);
 	void smartSearch(Product, string, string, vector<Product>*, vector<vector<Product>> &, vector<Product> &, bool &, int);
 	void search::getFilteredResults(vector<Product>*, vector<vector<Product>> &, vector<Product> &, int);
