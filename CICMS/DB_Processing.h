@@ -3,6 +3,7 @@
 
 #include "List_v1.h"
 #include "Search.h"
+#include <list>
 using namespace std;
 
 class DB_Processing
@@ -11,6 +12,7 @@ private:
 	List_v1<Product>* _db;
 	search s;
 	Product* getProduct(unsigned barcode);
+	void ins_sort(list<pair<int, list<Product>>>*, Product, int);
 	
 public:
 	DB_Processing(List_v1<Product>& db): _db(&db), s(&db) {}
@@ -19,7 +21,7 @@ public:
 	vector<Product>* search(string, int);
 	bool updateStock(Product, int);
 	bool updateSale(Product, unsigned);
-	vector<Product>* generatePrd(int X);
+	vector<Product>* generatePrd(int X = 1);
 	vector<Product>* generatePrd(string cat);
 	vector<string>* generateManu();
 };

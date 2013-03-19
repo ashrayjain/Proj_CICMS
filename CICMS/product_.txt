@@ -1,0 +1,82 @@
+10
+
+Pen
+Stationary
+1000000
+97.100000
+Parker
+954
+296
+
+Pork
+Meat
+1000001
+3.030000
+Super Pig
+742
+235
+
+Necklace
+Lady's Accessories
+1000002
+19.270000
+Tiffany and Co
+506
+11
+
+Canvas
+Camping Equipment
+1000003
+29.550000
+ODAC Pte Ltd
+421
+10
+
+Apple
+Fruit
+1000004
+20.310000
+The Sunkist Co
+235
+154
+
+Air Force
+Shoes
+1000005
+79.890000
+Nike
+490
+96
+
+Earring
+Lady's Accessories
+1000006
+86.710000
+Tiffany and Co
+437
+464
+
+Apple
+Fruit
+1000007
+21.620000
+NTUC
+163
+160
+
+iPad
+Computers
+1000008
+20.470000
+Apple Inc.
+108
+66
+
+idealPad
+Computers
+1000009
+98.300000
+Lenovo
+553
+466
+

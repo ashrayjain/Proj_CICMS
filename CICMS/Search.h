@@ -5,9 +5,11 @@
 #include "stdafx.h"
 #include "Product.h"
 #include "List_v1.h"
+#include <fstream>
 #include <sstream>
 #include <string>
 #include <vector>
+#include <list>
 
 using namespace std;
 
@@ -19,10 +21,16 @@ public:
 	vector<Product>* searchByCategory(string);
 	vector<Product>* searchByManufacturer(string);
 	vector<Product>* searchByBarcode(string);
+	int min(int a, int b);
+	int max(int a, int b);
 private:
 	List_v1<Product>* _db;
-	int edit_distance(string a, string b);
-	int count_occurrences(string a, char b);
+	string convertToLower(string);
+	void smartSearch(Product, string, string, vector<Product>*, vector<vector<Product>> &, vector<Product> &, bool &, int);
+	void search::getFilteredResults(vector<Product>*, vector<vector<Product>> &, vector<Product> &, int);
+	int substring_search(string, string);
+	int editDistance(string a, string b, int k);
+	int countOccurrences(string a, char b);
 };
 
 #endif

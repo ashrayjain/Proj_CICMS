@@ -45,16 +45,13 @@ bool Bridge::Del(System::Windows::Forms::ListViewItem^ item)
 	return false;
 }
 System::String^ Bridge::Gen_BSpd(){
-	/*
-	List_v1<Product> *r = Handler.db->search("Cola", 0);// set to NULL later; ptr -> reference better
-	//r = Handler.db->Report_BestSelling_pd();
+	
+	vector<Product> *r = NULL;//Handler.db->search("Cola", 0);// set to NULL later; ptr -> reference better
+	r = Handler.db->generatePrd();
 	System::String^ s = "";
 	for(unsigned i = 0; i < r->size(); i++)
 		s += toSysString((*r)[i].getName()) + " (" + toSysString((*r)[i].getBarcode()) + " - " + toSysString((*r)[i].getCategory()) + ") \n";
 	delete r;
-	return s;
-	*/
-	System::String^ s = "";
 	return s;
 }
 System::String^ Bridge::Gen_BSmanu(){
@@ -68,12 +65,12 @@ System::String^ Bridge::Gen_BSmanu(){
 }
 //combine Gen_TopXpd and Gen_BSpd???
 System::String^ Bridge::Gen_TopXpd(int x){
-	//vector<Product> *r = NULL;//Handler.db->search("Cola", 0);// set to NULL later; ptr -> reference better
-	//r = Handler.db->generatePrd(x);
+	vector<Product> *r = NULL;//Handler.db->search("Cola", 0);// set to NULL later; ptr -> reference better
+	r = Handler.db->generatePrd(x);
 	System::String^ s = "";
-	//for(unsigned i = 0; i < r->size(); i++)
-	//	s += toSysString((*r)[i].getName()) + " (" + toSysString((*r)[i].getBarcode()) + " - " + toSysString((*r)[i].getCategory()) + ") \n";
-	//delete r;
+	for(unsigned i = 0; i < r->size(); i++)
+		s += toSysString((*r)[i].getName()) + " (" + toSysString((*r)[i].getBarcode()) + " - " + toSysString((*r)[i].getCategory()) + ") \n";
+	delete r;
 	return s;
 }
 //**************************************************

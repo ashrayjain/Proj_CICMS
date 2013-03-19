@@ -1,7 +1,24 @@
 #include "stdafx.h"
 #include "Search.h"
 
-int search::count_occurrences(string a, char b)
+string search::convertToLower(string s)
+{
+	for(unsigned int i = 0; i < s.length(); ++i) 
+		s[i] = tolower(s[i]);
+	return s;
+}
+
+int search::substring_search(string name, string query)
+{
+	istringstream iss(query);
+	string word;
+	int count = 0;
+	while(iss>>word)
+		if(name.find(word)!=-1)
+			count++;
+	return count;
+}
+int search::countOccurrences(string a, char b)
 {
 	int count = 0;
 	for(unsigned i=0; i<a.size(); i++)
@@ -9,112 +26,157 @@ int search::count_occurrences(string a, char b)
 			count++;
 	return count;
 }
-int search::edit_distance(string a, string b)
-{ 
-	
-	string replace = "r", ins = "i", del = "d";
 
-	// make L1 greater
-    if(a.size() < b.size())
+int search::min(int a, int b)
+{
+	return a>b?b:a;
+}
+
+int search::max(int a, int b)
+{
+	return a>b?a:b;
+}
+
+int search::editDistance(string a, string b, int k)
+{
+	//Wagner-Fischer Algorithm with memory and complexity optimizations
+
+	int l1 = a.length(), l2 = b.length();
+	if(l1 > l2)
 	{
-		string temp_s = a;
+		string temp = a;
 		a = b;
-		b = temp_s;
-	}
-	int l1 = a.size(), l2 = b.size();
-
-	vector<string> models;
-    if(l1 - l2 == 0)
-	{
-		models.push_back(ins+del);
-		models.push_back(del+ins);
-		models.push_back(replace+replace);
-	}
-	else if(l1 - l2 == 1)
-	{
-		models.push_back(del+replace);
-		models.push_back(replace+del);
-	}
-	else if(l1 - l2 == 2)
-		models.push_back(del+del);
-	else
-	{
-		istringstream iss(b);
-		string word;
-		while(iss>>word)
-		{
-			int temp = a.find(word);
-			if(temp!=-1)
-			{
-				if(a.find(b)==-1)
-					return 3;
-				else
-					return 4;
-			}	
-		}
-		return -1;
+		b = temp;
+		l1 = l2;
+		l2 = b.length();
 	}
 
-    int res = 3;
-    for(unsigned z = 0; z < models.size(); z++)
+	int* curr = new int[l1+1];
+	int* prev = new int[l1+1];
+
+	int boundary = min(k, l1);
+	for(int i = 0; i<=boundary; i++)
+		prev[i] = i;
+	for(int i = boundary+1; i<=l1; i++)
+		prev[i] = 999;
+	for(int i = 0; i<=l1; i++)
+		curr[i] = 999;
+	
+	for(int i = 1; i<=l2; i++)
 	{
-		int i, j, c;
-		i = j = c = 0;
-		for(; (i < l1) && (j < l2); i++, j++)
+		curr[0] = i;
+		
+		int min_idx, max_idx;
+		min_idx = max(1, i-k);
+		max_idx = min(l1, i+k);
+		
+		if(min_idx > max_idx)
+			return -1;
+		
+		if(min_idx != 1)
+			curr[min_idx-1] = 99;
+		
+		for(int j = min_idx; j <= max_idx; j++)
+			if(a[j-1]==b[i-1])
+				curr[j] = prev[j-1];
+			else
+				curr[j] = 1 + min(min(prev[j], curr[j-1]), prev[j-1]);
+
+		int* temp = prev;
+		prev = curr;
+		curr = temp;
+	}
+	
+	return (prev[l1] <= k)?prev[l1]:-1;
+ }
+
+
+void search::getFilteredResults(vector<Product>* results, 
+	vector<vector<Product>> &substring_matches,
+	vector<Product> &edit_distance_matches, int count)
+{
+	if(!results->size())
+	{
+		int counter = 0;
+		for(int i = count-1 ; i >= 0 && counter < 30; i--)
 		{
-			if(a[i] != b[j])
+			unsigned temp = substring_matches[i].size();
+			for(unsigned j = 0; j < temp; j++)
 			{
-				c = c+1;
-                if(2 < c)
-                    break;
-                char cmd = models[z][c-1];
-                if(cmd == del[0])
-                    j--;
-				else if(cmd == ins[0])
-                    i--;
+				results->push_back(substring_matches[i][j]);
+				counter++;
 			}
 		}
-
-        if(2 < c)
-			continue;
-		else if(i < l1)
-        {
-			if(l1-i <= count_occurrences(models[z].substr(c, models[z].size()), del[0]))
-                c = c + (l1-i);
-            else
-                continue;
-		}
-        else if(j < l2)
-		{
-            if(l2-j <= count_occurrences(models[z].substr(c, models[z].size()), ins[0]))
-                c = c + (l2-j);
-            else
-                continue;
-		}
-        if(c < res)
-            res = c;
+		if(!counter)
+			for(unsigned i = 0; i < edit_distance_matches.size(); i++)
+				results->push_back(edit_distance_matches[i]);
 	}
-    if(res == 3)
-        res = -1;
-	if(res==2)
-		res = -1;
-    return res;
+}
+
+
+void search::smartSearch(Product p, string str_p, string _query, vector<Product>* results, 
+	vector<vector<Product>> &substring_matches,
+	vector<Product> &edit_distance_matches, bool &edit_req, int threshold)
+{
+
+	if(str_p.find(_query) == 0)
+			results->push_back(p);
+
+		else if(substring_matches.back().size() < 30)
+		{
+			int temp = substring_search(str_p, _query)-1;
+			if(temp != -1)
+			{
+				substring_matches[temp].push_back(p);
+				edit_req = false;
+			}
+			if(edit_req && editDistance(str_p, _query, threshold) != -1)
+				edit_distance_matches.push_back(p);
+		}
 }
 vector<Product>* search::searchByName(string query)
 {
 	vector<Product>* results = new vector<Product>();
+	string _query = convertToLower(query);
+	istringstream iss(query);
+	string word;
+	int count = 0;
+	while(iss>>word)
+		count++;
+	vector<vector<Product>> substring_matches(count, vector<Product>());
+	vector<Product> edit_distance_matches;
+	bool edit_req = true;
+
 	for(unsigned i = 0; i < _db->size(); i++)
-		if(edit_distance((*_db)[i].getName(),query) != -1)
-			results->push_back((*_db)[i]);
+	{
+		string name = convertToLower((*_db)[i].getName());
+		smartSearch((*_db)[i], name, _query, results, substring_matches, edit_distance_matches, edit_req, 2);
+	}
+
+	getFilteredResults(results, substring_matches, edit_distance_matches, count);
 	return results;
 }
 
 vector<Product>* search::searchByCategory(string query)
 {
 	vector<Product>* results = new vector<Product>();
+	string _query = convertToLower(query);
+	istringstream iss(query);
+	string word;
+	int count = 0;
+	while(iss>>word)
+		count++;
+	
+	vector<vector<Product>> substring_matches(count, vector<Product>());
+	vector<Product> edit_distance_matches;
+	bool edit_req = true;
+
 	for(unsigned i = 0; i < _db->size(); i++)
-		if(edit_distance((*_db)[i].getCategory(),query) != -1)
-			results->push_back((*_db)[i]);
+	{
+		string cat = convertToLower((*_db)[i].getCategory());
+		smartSearch((*_db)[i], cat, _query, results, substring_matches, edit_distance_matches, edit_req, 2);
+	}
+	getFilteredResults(results, substring_matches, edit_distance_matches, count);
 	return results;
 }
 
@@ -122,17 +184,45 @@ vector<Product>* search::searchByCategory(string query)
 vector<Product>* search::searchByManufacturer(string query)
 {
 	vector<Product>* results = new vector<Product>();
+	string _query = convertToLower(query);
+	istringstream iss(query);
+	string word;
+	int count = 0;
+	while(iss>>word)
+		count++;
+	
+	vector<vector<Product>> substring_matches(count, vector<Product>());
+	vector<Product> edit_distance_matches;
+	bool edit_req = true;
+
 	for(unsigned i = 0; i < _db->size(); i++)
-		if(edit_distance((*_db)[i].getManufacturer(),query) != -1)
-			results->push_back((*_db)[i]);
+	{
+		string manu = convertToLower((*_db)[i].getManufacturer());
+		smartSearch((*_db)[i], manu, _query, results, substring_matches, edit_distance_matches, edit_req, 2);
+	}
+	getFilteredResults(results, substring_matches, edit_distance_matches, count);
 	return results;
 }
 
 vector<Product>* search::searchByBarcode(string query)
 {
 	vector<Product>* results = new vector<Product>();
+	string _query = convertToLower(query);
+	istringstream iss(query);
+	string word;
+	int count = 0;
+	while(iss>>word)
+		count++;
+	
+	vector<vector<Product>> substring_matches(count, vector<Product>());
+	vector<Product> edit_distance_matches;
+	bool edit_req = true;
+
 	for(unsigned i = 0; i < _db->size(); i++)
-		if(edit_distance(to_string((*_db)[i].getBarcode()),query) != -1)
-			results->push_back((*_db)[i]);
+	{
+		string barcode = convertToLower(to_string((*_db)[i].getBarcode()));
+		smartSearch((*_db)[i], barcode, _query, results, substring_matches, edit_distance_matches, edit_req, 3);
+	}
+	getFilteredResults(results, substring_matches, edit_distance_matches, count);
 	return results;
 }

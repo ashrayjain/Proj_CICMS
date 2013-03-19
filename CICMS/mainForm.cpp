@@ -176,7 +176,7 @@ void mainForm::Create_addPdForms(){
 
 //Event: when Text in s_tB_input is changed, used for Search Instant
 void mainForm::s_tB_input_TextChanged(System::Object^  sender, System::EventArgs^  e){
-	if(this->s_tB_input->Text->Length > 1 && this->s_tB_input->Text != this->last_keyword){
+	if(this->s_tB_input->Text->Length > 0 && this->s_tB_input->Text != this->last_keyword){
 		this->last_keyword = this->s_tB_input->Text;
 		this->s_b_submit->PerformClick();
 	}

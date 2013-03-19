@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include <list>
+#include <xutility>
+#include <fstream>
 #include "DB_Processing.h"
 
 
@@ -55,45 +57,40 @@ bool DB_Processing::updateSale(Product p, unsigned sale)
 }
 
 
-/*
-bool DB_Processing::ins_sort(list<int>* arr, unsigned item, int x)
-{
-	if(arr->back() >= item)
-		return false;
-	else
-		for(list<int>::iterator i = arr->begin(); i != arr->end(); i++)
-			if(*i < item)
-			{
-				arr->insert(i, item); 
-				arr->remove(*i);
-			}
 
-
-vector<Product>* DB_Processing::generatePrd(int X = 1)
+void DB_Processing::ins_sort(list<pair<int, list<Product>>>* arr, Product p, int x)
 {
-	list<list<Product>> prd_list;
-	list<int> top_sales(1, -1);
-	for(unsigned i = 0; i < _db->size(); i++)
+	int item = p.getNoSold();
+	if(arr->back().first <= item)
 	{
-		Product p = (*_db)[i];
-		if(top_sales.size() < X)
-		{
-
-			if(p.getNoSold() > max_sale)
+		for(list<pair<int, list<Product>>>::iterator i = arr->begin(); i != arr->end(); i++)
+			if(i->first <= item)
 			{
-				max_sale = temp;
-				result_idx.add(i);
+				if(i->first < item)
+					arr->insert(i, pair<int, list<Product>>(item, list<Product>(1, p))); 
+				else if(i->first == item)
+					i->second.push_back(p);
+				break;
 			}
-			else if(temp == max_sale)
-				result_idx.add(i);
-		}
+		arr->resize(x);
 	}
-	for(unsigned i = 0; i < result_idx->size(); i++)
-		results.add((*_db)[i]);
-	delete result_idx;
+}
+
+
+vector<Product>* DB_Processing::generatePrd(int X)
+{
+	list<pair<int, list<Product>>> prd_list(1, pair<int, list<Product>>(-1, list<Product>()));
+	
+	for(unsigned i = 0; i < _db->size(); i++)
+		ins_sort(&prd_list, (*_db)[i], X);
+	
+	vector<Product>* results = new vector<Product>();
+	for(list<pair<int, list<Product>>>::iterator i = prd_list.begin(); i != prd_list.end(); i++)
+		for(list<Product>::iterator j = i->second.begin(); j != i->second.end(); j++)
+			results->push_back(*j);
 	return results;
 }
-*/
+
 
 vector<Product>* DB_Processing::generatePrd(string cat)
 {
