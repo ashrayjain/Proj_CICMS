@@ -24,7 +24,7 @@ bool InputCheck::lessThan_zero(System::String^ s)
 //Check whether a string is empty or not
 bool InputCheck::is_empty(System::String^ s)
 {
-	return s->Length == 0;
+	return System::String::IsNullOrWhiteSpace(s);
 }
 //Check whether a number (represented in System::String) is large or not
 bool InputCheck::is_large(System::String^ s){

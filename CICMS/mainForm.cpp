@@ -125,7 +125,9 @@ void mainForm::menu_f_addNewProducts_Click(System::Object^  sender, System::Even
 void mainForm::menu_stat_BSpd_Click(System::Object^  sender, System::EventArgs^  e){
 	System::String^ output = Bridging->Gen_BSpd();
 	if(output->Length != 0)
-		System::Windows::Forms::MessageBox::Show("The Best-Selling product(s): \n" + output);
+		System::Windows::Forms::MessageBox::Show("The Best-Selling product(s): \n"
+		+ "***************************\n"
+		+ output);
 	else
 		System::Windows::Forms::MessageBox::Show("Report not available.");
 }
@@ -133,7 +135,9 @@ void mainForm::menu_stat_BSpd_Click(System::Object^  sender, System::EventArgs^ 
 void mainForm::menu_stat_BSmanu_Click(System::Object^  sender, System::EventArgs^  e){
 	System::String^ output = Bridging->Gen_BSmanu();
 	if(output->Length != 0)
-		System::Windows::Forms::MessageBox::Show("The Best-Selling manufacturer(s): \n" + output);
+		System::Windows::Forms::MessageBox::Show("The Best-Selling manufacturer(s): \n"
+		+ "********************************\n"
+		+ output);
 	else
 		System::Windows::Forms::MessageBox::Show("Report not available.");
 }
@@ -144,7 +148,9 @@ void mainForm::menu_stat_topXpd_Click(System::Object^  sender, System::EventArgs
 		return;
 	System::String^ output = Bridging->Gen_TopXpd(x);
 	if(output->Length != 0)
-		System::Windows::Forms::MessageBox::Show("The Top " + x.ToString() + " Selling products: \n" + output);
+		System::Windows::Forms::MessageBox::Show("The Top " + x.ToString() + " Selling products: \n"
+		+ "***************************\n"
+		+ output);
 	else
 		System::Windows::Forms::MessageBox::Show("Report not available.");
 }
@@ -188,10 +194,18 @@ void mainForm::s_rB_CheckedChanged(System::Object^  sender, System::EventArgs^  
 }
 //Event: when there is keypress in s_tB_input component
 void mainForm::s_tB_input_KeyPress(Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e){
-	if(!this->s_tB_input->Focused && ((e->KeyChar >= 'a' && e->KeyChar <= 'z') || (e->KeyChar >= 'A' && e->KeyChar <= 'Z') || (e->KeyChar >= '0' && e->KeyChar <= '9'))){
+	if(!this->s_tB_input->Focused && ((e->KeyChar >= 'a' && e->KeyChar <= 'z') || 
+		(e->KeyChar >= 'A' && e->KeyChar <= 'Z') || 
+		(e->KeyChar >= '0' && e->KeyChar <= '9') ||
+		e->KeyChar == ' ')){
 		this->s_tB_input->Text = System::Convert::ToString(e->KeyChar);
 		this->s_tB_input->Focus();
 		this->s_tB_input->SelectionStart = this->s_tB_input->Text->Length;
+	}
+	if(!this->s_tB_input->Focused && e->KeyChar == 8){
+		this->s_tB_input->Text = "";
+		this->s_tB_input->Focus();
+		this->s_tB_input->SelectionStart = 0;
 	}
 }
 //Event: when s_tB_input is clicked
@@ -593,7 +607,7 @@ void mainForm::InitializeComponent()
 	this->s_rB_byManufacturer->Location = System::Drawing::Point(101, 74);
 	this->s_rB_byManufacturer->Name = L"s_rB_byManufacturer";
 	this->s_rB_byManufacturer->Size = System::Drawing::Size(85, 17);
-	this->s_rB_byManufacturer->TabIndex = 8;
+	this->s_rB_byManufacturer->TabIndex = 4;
 	this->s_rB_byManufacturer->TabStop = true;
 	this->s_rB_byManufacturer->Text = L"Manufacturer";
 	this->s_rB_byManufacturer->UseVisualStyleBackColor = true;
@@ -614,7 +628,7 @@ void mainForm::InitializeComponent()
 	this->s_rB_byCategory->Location = System::Drawing::Point(101, 54);
 	this->s_rB_byCategory->Name = L"s_rB_byCategory";
 	this->s_rB_byCategory->Size = System::Drawing::Size(64, 17);
-	this->s_rB_byCategory->TabIndex = 4;
+	this->s_rB_byCategory->TabIndex = 2;
 	this->s_rB_byCategory->TabStop = true;
 	this->s_rB_byCategory->Text = L"Category";
 	this->s_rB_byCategory->UseVisualStyleBackColor = true;
@@ -639,7 +653,7 @@ void mainForm::InitializeComponent()
 	this->s_rB_byName->Location = System::Drawing::Point(34, 54);
 	this->s_rB_byName->Name = L"s_rB_byName";
 	this->s_rB_byName->Size = System::Drawing::Size(50, 17);
-	this->s_rB_byName->TabIndex = 2;
+	this->s_rB_byName->TabIndex = 1;
 	this->s_rB_byName->TabStop = true;
 	this->s_rB_byName->Text = L"Name";
 	this->s_rB_byName->UseVisualStyleBackColor = true;
@@ -651,7 +665,7 @@ void mainForm::InitializeComponent()
 	this->list_b_restock->Location = System::Drawing::Point(91, 19);
 	this->list_b_restock->Name = L"list_b_restock";
 	this->list_b_restock->Size = System::Drawing::Size(75, 23);
-	this->list_b_restock->TabIndex = 9;
+	this->list_b_restock->TabIndex = 6;
 	this->list_b_restock->Text = L"Restock";
 	this->list_b_restock->UseVisualStyleBackColor = true;
 	this->list_b_restock->Click += gcnew System::EventHandler(this, &mainForm::list_b_restock_Click);
@@ -662,7 +676,7 @@ void mainForm::InitializeComponent()
 	this->list_b_sell->Location = System::Drawing::Point(10, 19);
 	this->list_b_sell->Name = L"list_b_sell";
 	this->list_b_sell->Size = System::Drawing::Size(75, 23);
-	this->list_b_sell->TabIndex = 8;
+	this->list_b_sell->TabIndex = 5;
 	this->list_b_sell->Text = L"Sell";
 	this->list_b_sell->UseVisualStyleBackColor = true;
 	this->list_b_sell->Click += gcnew System::EventHandler(this, &mainForm::list_b_sell_Click);
@@ -673,7 +687,7 @@ void mainForm::InitializeComponent()
 	this->list_b_delete->Location = System::Drawing::Point(172, 19);
 	this->list_b_delete->Name = L"list_b_delete";
 	this->list_b_delete->Size = System::Drawing::Size(75, 23);
-	this->list_b_delete->TabIndex = 11;
+	this->list_b_delete->TabIndex = 7;
 	this->list_b_delete->Text = L"Delete";
 	this->list_b_delete->UseVisualStyleBackColor = true;
 	this->list_b_delete->Click += gcnew System::EventHandler(this, &mainForm::list_b_delete_Click);
@@ -687,7 +701,7 @@ void mainForm::InitializeComponent()
 	this->list_lv->Name = L"list_lv";
 	this->list_lv->ShowGroups = false;
 	this->list_lv->Size = System::Drawing::Size(636, 309);
-	this->list_lv->TabIndex = 7;
+	this->list_lv->TabIndex = 8;
 	this->list_lv->UseCompatibleStateImageBehavior = false;
 	this->list_lv->View = System::Windows::Forms::View::Details;
 	this->list_lv->ColumnClick += gcnew System::Windows::Forms::ColumnClickEventHandler(this, &mainForm::list_lv_ColumnClick);
