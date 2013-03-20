@@ -123,9 +123,15 @@ void mainForm::menu_f_addNewProducts_Click(System::Object^  sender, System::Even
 }
 //Event: when click menu_stat_BSpd_Click item, open the MessageBox window to show the result of Best-Selling product(s)
 void mainForm::menu_stat_BSpd_Click(System::Object^  sender, System::EventArgs^  e){
+	array<System::Windows::Forms::ListViewItem^>^ r = Bridging->Gen_TopXpd(1);
+	if(r->Length == 0){
+		System::Windows::Forms::MessageBox::Show("Report not available.");
+		return;
+	}
+
 	statForm^ dlg = gcnew statForm();
 	dlg->Set_grpTitle("The Best-Selling product(s)");
-	dlg->Set_listData(Bridging->Gen_TopXpd(1));
+	dlg->Set_listData(r);
 	dlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 	dlg->ShowDialog();
 }
@@ -151,26 +157,48 @@ void mainForm::menu_stat_BSpdCate_Click(System::Object^  sender, System::EventAr
 		c = inputDlg->get_input();
 	else
 		return;
+	
+	array<System::Windows::Forms::ListViewItem^>^ r = Bridging->Gen_BSpdCate(c);
+	if(r->Length == 0){
+		System::Windows::Forms::MessageBox::Show("Report not available.");
+		return;
+	}
+
 	statForm^ dlg = gcnew statForm();
 	dlg->Set_grpTitle("The Best-Selling product of " + c);
-	dlg->Set_listData(Bridging->Gen_BSpdCate(c));
+	dlg->Set_listData(r);
 	dlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 	dlg->ShowDialog();
 }
 //Event: when click menu_stat_topXpd_Click item, open the inputForm to take in a number X, then open MessageBox window to show the result of Top X Selling products
 void mainForm::menu_stat_topXpd_Click(System::Object^  sender, System::EventArgs^  e){
-	int x = (int) this->Create_inputForm(" The Top X Selling products", "Please input a number for X.", "X is equal to", "5");
-	if(x == 0)//if cancel the MessageBox
+	inputForm^ inputDlg = gcnew inputForm();
+	inputDlg->set_inputForm(" The Top X Selling products", "Please input a number for X.", "X is equal to", "5");
+	inputDlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
+	inputDlg->set_formType(NUMBER);
+	inputDlg->TOP_X_filter(true);
+	
+	int i;
+	if (inputDlg->ShowDialog() == System::Windows::Forms::DialogResult::OK)
+		i = System::Convert::ToInt32(inputDlg->get_input());
+	else
 		return;
+	
+	array<System::Windows::Forms::ListViewItem^>^ r = Bridging->Gen_TopXpd(i);
+	if(r->Length == 0){
+		System::Windows::Forms::MessageBox::Show("Report not available.");
+		return;
+	}
+
 	statForm^ dlg = gcnew statForm();
-	dlg->Set_grpTitle("The Top " + x.ToString() + " Selling products");
-	dlg->Set_listData(Bridging->Gen_TopXpd(x));
+	dlg->Set_grpTitle("The Top " + i.ToString() + " Selling products");
+	dlg->Set_listData(r);
 	dlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 	dlg->ShowDialog();
 }
 //Event: when click menu_about item, open a messageBox that contains our team's description
 void mainForm::menu_about_Click(System::Object^  sender, System::EventArgs^  e) {
-	System::Windows::Forms::MessageBox::Show("Hello! Our team: Ashray, Bob, Hui and Kai!", " About");
+	System::Windows::Forms::MessageBox::Show("Hello! Our team, C07-2: Ashray, Bob, Hui and Kai!", " About");
 }
 //Fuction: create a addPdForm window, and let logic/handler part handle the input
 void mainForm::Create_addPdForms(){

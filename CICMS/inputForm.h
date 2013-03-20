@@ -26,43 +26,51 @@ namespace CICMS_UI {
 
 	public ref class inputForm : public System::Windows::Forms::Form
 	{
-	
-	//********************************************************
-	//*****************PROPERTIES DECLEARATION****************
-	//********************************************************
+
+		//********************************************************
+		//*****************PROPERTIES DECLEARATION****************
+		//********************************************************
 	private: 
 		System::Windows::Forms::Label^  input_l_descript;
 		System::Windows::Forms::Button^  input_b_yes;
-	    System::Windows::Forms::Button^  input_b_no;
-	    System::Windows::Forms::Label^  input_l_pd;
-	    System::Windows::Forms::TextBox^  input_tB_input;
+		System::Windows::Forms::Button^  input_b_no;
+		System::Windows::Forms::Label^  input_l_pd;
+		System::Windows::Forms::TextBox^  input_tB_input;
 		int formType;
+		bool TOP_X;
 
-	//********************************************************
-	//*************MEMBER FUNCTION DECLEARATION***************
-	//********************************************************
-	void InitializeComponent();
+		//********************************************************
+		//*************MEMBER FUNCTION DECLEARATION***************
+		//********************************************************
+		void InitializeComponent();
 
-	void input_b_yes_Click(System::Object^  sender, System::EventArgs^  e) ;
-	
+		void input_b_yes_Click(System::Object^  sender, System::EventArgs^  e) ;
+
 	public:
 		inputForm()
 		{
 			InitializeComponent();
 			formType = NUMBER;
+			TOP_X = false;
 		}
 
-	//API Function: get the input from inputForm
-	System::String^ get_input(){
-				return this->input_tB_input->Text;
-			}
+		//API Function: get the input from inputForm
+		System::String^ get_input(){
+			return this->input_tB_input->Text;
+		}
 
-	void set_formType(int i){
-		this->formType = i;
-	}
+		void set_formType(int i){
+			this->formType = i;
+		}
 
-	//API Function: set the title, description for inputForm class
-	void set_inputForm(System::String^ title, System::String^ pdDescript, System::String^ descript, System::String^ stringInTB);
+		//API Function: set the title, description for inputForm class
+		void set_inputForm(System::String^ title, System::String^ pdDescript, System::String^ descript, System::String^ stringInTB);
+
+	private: void inputForm_Load(System::Object^  sender, System::EventArgs^  e);
+	public: void TOP_X_filter(bool c){
+				 this->TOP_X = c;
+		 }
 	};
+
 }
 #endif

@@ -63,7 +63,7 @@ void inputForm::InitializeComponent()
 	// input_tB_input
 	// 
 	this->input_tB_input->Location = System::Drawing::Point(82, 39);
-	this->input_tB_input->MaxLength = 7;
+	this->input_tB_input->MaxLength = 21;
 	this->input_tB_input->Name = L"input_tB_input";
 	this->input_tB_input->Size = System::Drawing::Size(85, 20);
 	this->input_tB_input->TabIndex = 1;
@@ -96,6 +96,7 @@ void inputForm::InitializeComponent()
 	this->MinimizeBox = false;
 	this->Name = L"inputForm";
 	this->Text = L"formTitle";
+	this->Load += gcnew System::EventHandler(this, &inputForm::inputForm_Load);
 	this->ResumeLayout(false);
 	this->PerformLayout();
 
@@ -109,14 +110,8 @@ void inputForm::input_b_yes_Click(System::Object^  sender, System::EventArgs^  e
 		System::Windows::Forms::MessageBox::Show("Please input an integer");
 	else if(this->formType == NUMBER && InputCheck::lessThan_zero(this->input_tB_input->Text))
 		System::Windows::Forms::MessageBox::Show("Please input an integer larger than zero.");
-	else if(this->formType == NUMBER && InputCheck::is_large(this->input_tB_input->Text)){
-		if(System::Windows::Forms::MessageBox::Show("The number you input is large, are you sure?", " Input Checking",
-			System::Windows::Forms::MessageBoxButtons::YesNo,
-			System::Windows::Forms::MessageBoxIcon::Warning) == System::Windows::Forms::DialogResult::Yes){
-				this->DialogResult = System::Windows::Forms::DialogResult::OK;
-				this->Close();
-		}
-	}
+	else if(this->formType == NUMBER && this->TOP_X == true && InputCheck::is_large(this->input_tB_input->Text))
+		System::Windows::Forms::MessageBox::Show("The number for X shall be not greater than 100.");
 	else{
 		this->DialogResult = System::Windows::Forms::DialogResult::OK;
 		this->Close();
@@ -128,4 +123,11 @@ void inputForm::set_inputForm(System::String^ title, System::String^ pdDescript,
 	this->input_l_pd->Text = pdDescript;
 	this->input_l_descript->Text = descript;
 	this->input_tB_input->Text = stringInTB;
+}
+
+void inputForm::inputForm_Load(System::Object^  sender, System::EventArgs^  e){
+	if(formType == NUMBER)
+		this->input_tB_input->MaxLength = 7;
+	else if(formType == STRING)
+		this->input_tB_input->MaxLength = 21;
 }
