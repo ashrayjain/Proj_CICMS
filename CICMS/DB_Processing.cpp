@@ -95,7 +95,7 @@ vector<Product>* DB_Processing::generatePrd(int X)
 vector<Product>* DB_Processing::generatePrd(string cat)
 {
 	vector<Product>* results = new vector<Product>();
-	vector<int>* result_idx = NULL;
+	vector<int>* result_idx = new vector<int>();
 	int max_sale = -1;
 	for(unsigned i = 0; i < _db->size(); i++)
 	{

@@ -42,8 +42,7 @@ bool Bridge::Del(System::Windows::Forms::ListViewItem^ item)
 	return false;
 }
 System::String^ Bridge::Gen_BSmanu(){
-	vector<std::string> *r = NULL;
-	r = Handler.db->generateManu();
+	vector<std::string> *r = Handler.db->generateManu();
 	System::String^ s = "";
 	for(unsigned i = 0; i < r->size(); i++)
 		s += toSysString((*r)[i]) + "\n";
