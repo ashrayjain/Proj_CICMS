@@ -20,6 +20,8 @@
 #ifndef _GUARD_UI_inputForm
 #define _GUARD_UI_inputForm
 
+enum FORMTYPE { NUMBER, STRING };
+
 namespace CICMS_UI {
 
 	public ref class inputForm : public System::Windows::Forms::Form
@@ -34,6 +36,7 @@ namespace CICMS_UI {
 	    System::Windows::Forms::Button^  input_b_no;
 	    System::Windows::Forms::Label^  input_l_pd;
 	    System::Windows::Forms::TextBox^  input_tB_input;
+		int formType;
 
 	//********************************************************
 	//*************MEMBER FUNCTION DECLEARATION***************
@@ -46,12 +49,17 @@ namespace CICMS_UI {
 		inputForm()
 		{
 			InitializeComponent();
+			formType = NUMBER;
 		}
 
 	//API Function: get the input from inputForm
-	System::Double get_input(){
-				return System::Convert::ToDouble(this->input_tB_input->Text);
+	System::String^ get_input(){
+				return this->input_tB_input->Text;
 			}
+
+	void set_formType(int i){
+		this->formType = i;
+	}
 
 	//API Function: set the title, description for inputForm class
 	void set_inputForm(System::String^ title, System::String^ pdDescript, System::String^ descript, System::String^ stringInTB);

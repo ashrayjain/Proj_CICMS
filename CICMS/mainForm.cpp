@@ -79,9 +79,9 @@
 #include "mainForm.h"
 #include "inputForm.h"
 #include "addPdForm.h"
+#include "statForm.h"
 #include "ListViewItemComparer.h"
 #include "InputCheck.h"
-#include <cliext/vector>
 //#include <vector>
 //#include <string>
 
@@ -123,13 +123,11 @@ void mainForm::menu_f_addNewProducts_Click(System::Object^  sender, System::Even
 }
 //Event: when click menu_stat_BSpd_Click item, open the MessageBox window to show the result of Best-Selling product(s)
 void mainForm::menu_stat_BSpd_Click(System::Object^  sender, System::EventArgs^  e){
-	System::String^ output = Bridging->Gen_BSpd();
-	if(output->Length != 0)
-		System::Windows::Forms::MessageBox::Show("The Best-Selling product(s): \n"
-		+ "***************************\n"
-		+ output);
-	else
-		System::Windows::Forms::MessageBox::Show("Report not available.");
+	statForm^ dlg = gcnew statForm();
+	dlg->Set_grpTitle("The Best-Selling product(s)");
+	dlg->Set_listData(Bridging->Gen_TopXpd(1));
+	dlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
+	dlg->ShowDialog();
 }
 //Event: when click menu_stat_BSmanu_Click item, open the MessageBox window to show the result of Best-Selling manufacturer(s)
 void mainForm::menu_stat_BSmanu_Click(System::Object^  sender, System::EventArgs^  e){
@@ -141,18 +139,34 @@ void mainForm::menu_stat_BSmanu_Click(System::Object^  sender, System::EventArgs
 	else
 		System::Windows::Forms::MessageBox::Show("Report not available.");
 }
+//Event: when click menu_stat_BSpdCate
+void mainForm::menu_stat_BSpdCate_Click(System::Object^  sender, System::EventArgs^  e){
+	inputForm^ inputDlg = gcnew inputForm();
+	inputDlg->set_inputForm(" Report the Best-Selling product", "Please type the category name", "Category: ", "");
+	inputDlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
+	inputDlg->set_formType(STRING);
+	
+	System::String^ c;
+	if (inputDlg->ShowDialog() == System::Windows::Forms::DialogResult::OK)
+		c = inputDlg->get_input();
+	else
+		return;
+	statForm^ dlg = gcnew statForm();
+	dlg->Set_grpTitle("The Best-Selling product of " + c);
+	dlg->Set_listData(Bridging->Gen_BSpdCate(c));
+	dlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
+	dlg->ShowDialog();
+}
 //Event: when click menu_stat_topXpd_Click item, open the inputForm to take in a number X, then open MessageBox window to show the result of Top X Selling products
 void mainForm::menu_stat_topXpd_Click(System::Object^  sender, System::EventArgs^  e){
 	int x = (int) this->Create_inputForm(" The Top X Selling products", "Please input a number for X.", "X is equal to", "5");
 	if(x == 0)//if cancel the MessageBox
 		return;
-	System::String^ output = Bridging->Gen_TopXpd(x);
-	if(output->Length != 0)
-		System::Windows::Forms::MessageBox::Show("The Top " + x.ToString() + " Selling products: \n"
-		+ "***************************\n"
-		+ output);
-	else
-		System::Windows::Forms::MessageBox::Show("Report not available.");
+	statForm^ dlg = gcnew statForm();
+	dlg->Set_grpTitle("The Top " + x.ToString() + " Selling products");
+	dlg->Set_listData(Bridging->Gen_TopXpd(x));
+	dlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
+	dlg->ShowDialog();
 }
 //Event: when click menu_about item, open a messageBox that contains our team's description
 void mainForm::menu_about_Click(System::Object^  sender, System::EventArgs^  e) {
@@ -253,11 +267,11 @@ int mainForm::Get_byMethod(){
 }
 //Function: search the products according to a text and a method; if the result is non-empty, it will add an item onto the listView component
 void mainForm::Search_product(System::String^ s, int m){
-	cliext::vector<System::Windows::Forms::ListViewItem^>^ r = Bridging->Search(s, m);
-	if(!r->empty()){
+	array<System::Windows::Forms::ListViewItem^>^ r = Bridging->Search(s, m);
+	if(r->Length){
 		this->list_lv->BeginUpdate();
 		this->list_lv->Items->Clear();
-		this->list_lv->Items->AddRange(r->to_array());
+		this->list_lv->Items->AddRange(r);
 		this->list_lv->EndUpdate();
 		this->list_lv->Items[0]->Selected = true;
 		this->Update_statusBar(searchS);
@@ -296,7 +310,7 @@ double mainForm::Create_inputForm(System::String^ formTitle, System::String^ pdD
 	dlg->set_inputForm(formTitle, pdDescript, inputDescript, stringInTB);
 	dlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 	if (dlg->ShowDialog() == System::Windows::Forms::DialogResult::OK)
-		return dlg->get_input();
+		return System::Convert::ToDouble(dlg->get_input());
 	else
 		return 0;// 0 is unique, as user cannot input zero
 }
@@ -468,6 +482,7 @@ void mainForm::InitializeComponent()
 	this->menu_stat = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->menu_stat_BSpd = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->menu_stat_BSmanu = (gcnew System::Windows::Forms::ToolStripMenuItem());
+	this->menu_stat_BSpdCate = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->menu_stat_topXpd = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->menu_about = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->s_tB_input = (gcnew System::Windows::Forms::TextBox());
@@ -477,6 +492,7 @@ void mainForm::InitializeComponent()
 	this->s_rB_byCategory = (gcnew System::Windows::Forms::RadioButton());
 	this->s_rB_byBarcode = (gcnew System::Windows::Forms::RadioButton());
 	this->s_rB_byName = (gcnew System::Windows::Forms::RadioButton());
+	this->s_b_Enter = (gcnew System::Windows::Forms::Button());
 	this->list_b_restock = (gcnew System::Windows::Forms::Button());
 	this->list_b_sell = (gcnew System::Windows::Forms::Button());
 	this->list_b_delete = (gcnew System::Windows::Forms::Button());
@@ -489,7 +505,6 @@ void mainForm::InitializeComponent()
 	this->list_col_stock = (gcnew System::Windows::Forms::ColumnHeader());
 	this->list_col_sold = (gcnew System::Windows::Forms::ColumnHeader());
 	this->list_grp = (gcnew System::Windows::Forms::GroupBox());
-	this->s_b_Enter = (gcnew System::Windows::Forms::Button());
 	this->statusStrip1 = (gcnew System::Windows::Forms::StatusStrip());
 	this->toolStripStatusLabel1 = (gcnew System::Windows::Forms::ToolStripStatusLabel());
 	this->menu->SuspendLayout();
@@ -504,7 +519,7 @@ void mainForm::InitializeComponent()
 		this->menu_about});
 	this->menu->Location = System::Drawing::Point(0, 0);
 	this->menu->Name = L"menu";
-	this->menu->Size = System::Drawing::Size(881, 24);
+	this->menu->Size = System::Drawing::Size(890, 24);
 	this->menu->TabIndex = 15;
 	this->menu->Text = L"menu";
 	// 
@@ -537,8 +552,8 @@ void mainForm::InitializeComponent()
 	// 
 	// menu_stat
 	// 
-	this->menu_stat->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {this->menu_stat_BSpd, 
-		this->menu_stat_BSmanu, this->menu_stat_topXpd});
+	this->menu_stat->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(4) {this->menu_stat_BSpd, 
+		this->menu_stat_BSmanu, this->menu_stat_BSpdCate, this->menu_stat_topXpd});
 	this->menu_stat->Name = L"menu_stat";
 	this->menu_stat->Size = System::Drawing::Size(64, 20);
 	this->menu_stat->Text = L"Statistics";
@@ -546,21 +561,28 @@ void mainForm::InitializeComponent()
 	// menu_stat_BSpd
 	// 
 	this->menu_stat_BSpd->Name = L"menu_stat_BSpd";
-	this->menu_stat_BSpd->Size = System::Drawing::Size(261, 22);
+	this->menu_stat_BSpd->Size = System::Drawing::Size(334, 22);
 	this->menu_stat_BSpd->Text = L"Report the Best-Selling product";
 	this->menu_stat_BSpd->Click += gcnew System::EventHandler(this, &mainForm::menu_stat_BSpd_Click);
 	// 
 	// menu_stat_BSmanu
 	// 
 	this->menu_stat_BSmanu->Name = L"menu_stat_BSmanu";
-	this->menu_stat_BSmanu->Size = System::Drawing::Size(261, 22);
+	this->menu_stat_BSmanu->Size = System::Drawing::Size(334, 22);
 	this->menu_stat_BSmanu->Text = L"Report the Best-Selling manufacturer";
 	this->menu_stat_BSmanu->Click += gcnew System::EventHandler(this, &mainForm::menu_stat_BSmanu_Click);
+	// 
+	// menu_stat_BSpdCate
+	// 
+	this->menu_stat_BSpdCate->Name = L"menu_stat_BSpdCate";
+	this->menu_stat_BSpdCate->Size = System::Drawing::Size(334, 22);
+	this->menu_stat_BSpdCate->Text = L"Report the Best-Selling product in a given category";
+	this->menu_stat_BSpdCate->Click += gcnew System::EventHandler(this, &mainForm::menu_stat_BSpdCate_Click);
 	// 
 	// menu_stat_topXpd
 	// 
 	this->menu_stat_topXpd->Name = L"menu_stat_topXpd";
-	this->menu_stat_topXpd->Size = System::Drawing::Size(261, 22);
+	this->menu_stat_topXpd->Size = System::Drawing::Size(334, 22);
 	this->menu_stat_topXpd->Text = L"Report the Top X Selling products";
 	this->menu_stat_topXpd->Click += gcnew System::EventHandler(this, &mainForm::menu_stat_topXpd_Click);
 	// 
@@ -594,7 +616,7 @@ void mainForm::InitializeComponent()
 	this->s_grp->Controls->Add(this->s_rB_byName);
 	this->s_grp->Controls->Add(this->s_tB_input);
 	this->s_grp->Controls->Add(this->s_b_Enter);
-	this->s_grp->Location = System::Drawing::Point(9, 27);
+	this->s_grp->Location = System::Drawing::Point(14, 27);
 	this->s_grp->Name = L"s_grp";
 	this->s_grp->Size = System::Drawing::Size(193, 101);
 	this->s_grp->TabIndex = 14;
@@ -658,6 +680,16 @@ void mainForm::InitializeComponent()
 	this->s_rB_byName->Text = L"Name";
 	this->s_rB_byName->UseVisualStyleBackColor = true;
 	this->s_rB_byName->CheckedChanged += gcnew System::EventHandler(this, &mainForm::s_rB_CheckedChanged);
+	// 
+	// s_b_Enter
+	// 
+	this->s_b_Enter->Location = System::Drawing::Point(90, 25);
+	this->s_b_Enter->Name = L"s_b_Enter";
+	this->s_b_Enter->Size = System::Drawing::Size(75, 17);
+	this->s_b_Enter->TabIndex = 16;
+	this->s_b_Enter->Text = L"Enter";
+	this->s_b_Enter->UseVisualStyleBackColor = true;
+	this->s_b_Enter->Click += gcnew System::EventHandler(this, &mainForm::s_b_Enter_Click);
 	// 
 	// list_b_restock
 	// 
@@ -745,22 +777,12 @@ void mainForm::InitializeComponent()
 	this->list_grp->Controls->Add(this->list_b_restock);
 	this->list_grp->Controls->Add(this->list_b_sell);
 	this->list_grp->Controls->Add(this->list_b_delete);
-	this->list_grp->Location = System::Drawing::Point(213, 27);
+	this->list_grp->Location = System::Drawing::Point(218, 27);
 	this->list_grp->Name = L"list_grp";
 	this->list_grp->Size = System::Drawing::Size(658, 373);
 	this->list_grp->TabIndex = 13;
 	this->list_grp->TabStop = false;
 	this->list_grp->Text = L"Result";
-	// 
-	// s_b_Enter
-	// 
-	this->s_b_Enter->Location = System::Drawing::Point(90, 25);
-	this->s_b_Enter->Name = L"s_b_Enter";
-	this->s_b_Enter->Size = System::Drawing::Size(75, 17);
-	this->s_b_Enter->TabIndex = 16;
-	this->s_b_Enter->Text = L"Enter";
-	this->s_b_Enter->UseVisualStyleBackColor = true;
-	this->s_b_Enter->Click += gcnew System::EventHandler(this, &mainForm::s_b_Enter_Click);
 	// 
 	// statusStrip1
 	// 
@@ -768,7 +790,7 @@ void mainForm::InitializeComponent()
 	this->statusStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) {this->toolStripStatusLabel1});
 	this->statusStrip1->Location = System::Drawing::Point(0, 409);
 	this->statusStrip1->Name = L"statusStrip1";
-	this->statusStrip1->Size = System::Drawing::Size(881, 22);
+	this->statusStrip1->Size = System::Drawing::Size(890, 22);
 	this->statusStrip1->SizingGrip = false;
 	this->statusStrip1->TabIndex = 12;
 	this->statusStrip1->Text = L"statusStrip";
@@ -784,7 +806,7 @@ void mainForm::InitializeComponent()
 	this->AcceptButton = this->s_b_Enter;
 	this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 	this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-	this->ClientSize = System::Drawing::Size(881, 431);
+	this->ClientSize = System::Drawing::Size(890, 431);
 	this->Controls->Add(this->statusStrip1);
 	this->Controls->Add(this->list_grp);
 	this->Controls->Add(this->s_grp);

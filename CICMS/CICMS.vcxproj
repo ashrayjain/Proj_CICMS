@@ -105,6 +105,9 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="Search.h" />
+    <ClInclude Include="statForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
@@ -124,6 +127,7 @@
     <ClCompile Include="Processing.cpp" />
     <ClCompile Include="Product.cpp" />
     <ClCompile Include="Search.cpp" />
+    <ClCompile Include="statForm.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -141,6 +145,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="inputForm.resx">
       <DependentUpon>inputForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="statForm.resx">
+      <DependentUpon>statForm.h</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

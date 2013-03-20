@@ -109,6 +109,7 @@ namespace CICMS_UI {
 	private: void menu_stat_BSpd_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void menu_stat_BSmanu_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void menu_stat_topXpd_Click(System::Object^  sender, System::EventArgs^  e);
+	private: void menu_stat_BSpdCate_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void menu_about_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void Create_addPdForms();
 
@@ -197,6 +198,9 @@ namespace CICMS_UI {
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_stat_topXpd;
 
 	private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
+private: System::Windows::Forms::ToolStripMenuItem^  menu_stat_BSpdCate;
+
+
 
 
 
@@ -204,7 +208,6 @@ namespace CICMS_UI {
 
 	//**********BRIDGE HANDLER DECLEARATION***********
 	private: Bridge *Bridging;
-
 
 };
 }

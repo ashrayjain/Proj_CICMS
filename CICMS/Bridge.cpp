@@ -2,21 +2,18 @@
 #include "Bridge.h"
 #include "List_v1.h"
 #include <msclr\marshal_cppstd.h>
-#include <cliext/vector>
 
 //**************************************************
 //
 //Communication to class Processing
 //
-cliext::vector<System::Windows::Forms::ListViewItem^>^ Bridge::Search(System::String^ s, int i)
+array<System::Windows::Forms::ListViewItem^>^ Bridge::Search(System::String^ s, int i)
 {
 	enum BYMETHOD { byName, byBarcode, byCategory, byStock, byManuf };
-	vector<Product> *r = NULL;
-	r = Handler.db->search(toStdString(s), i);
-	cliext::vector<System::Windows::Forms::ListViewItem^>^ items = gcnew cliext::vector<System::Windows::Forms::ListViewItem^>;
-	for(unsigned i = 0; i < r->size(); i++) {
-		items->push_back(toLvItem((*r)[i]));
-	}
+	vector<Product> *r = Handler.db->search(toStdString(s), i);
+	array<System::Windows::Forms::ListViewItem^>^ items = gcnew array<System::Windows::Forms::ListViewItem^>(r->size());
+	for(unsigned i = 0; i < r->size(); i++)
+		items[i] = toLvItem((*r)[i]);
 	delete r;
 	return items;
 }
@@ -44,18 +41,8 @@ bool Bridge::Del(System::Windows::Forms::ListViewItem^ item)
 		return true;
 	return false;
 }
-System::String^ Bridge::Gen_BSpd(){
-	
-	vector<Product> *r = NULL;//Handler.db->search("Cola", 0);// set to NULL later; ptr -> reference better
-	r = Handler.db->generatePrd();
-	System::String^ s = "";
-	for(unsigned i = 0; i < r->size(); i++)
-		s += toSysString((*r)[i].getName()) + " (" + toSysString((*r)[i].getBarcode()) + " - " + toSysString((*r)[i].getCategory()) + ") \n";
-	delete r;
-	return s;
-}
 System::String^ Bridge::Gen_BSmanu(){
-	vector<std::string> *r = NULL;//new list_adt<std::string>; //set to NULL later
+	vector<std::string> *r = NULL;
 	r = Handler.db->generateManu();
 	System::String^ s = "";
 	for(unsigned i = 0; i < r->size(); i++)
@@ -63,15 +50,22 @@ System::String^ Bridge::Gen_BSmanu(){
 	delete r;
 	return s;
 }
-//combine Gen_TopXpd and Gen_BSpd???
-System::String^ Bridge::Gen_TopXpd(int x){
-	vector<Product> *r = NULL;//Handler.db->search("Cola", 0);// set to NULL later; ptr -> reference better
-	r = Handler.db->generatePrd(x);
-	System::String^ s = "";
+array<System::Windows::Forms::ListViewItem^>^ Bridge::Gen_BSpdCate(System::String^ s){
+	vector<Product> *r = Handler.db->generatePrd(toStdString(s));
+	array<System::Windows::Forms::ListViewItem^>^ items = gcnew array<System::Windows::Forms::ListViewItem^>(r->size());
 	for(unsigned i = 0; i < r->size(); i++)
-		s += toSysString((*r)[i].getName()) + " (" + toSysString((*r)[i].getBarcode()) + " - " + toSysString((*r)[i].getCategory()) + ") \n";
+		items[i] = toLvItem((*r)[i]);
 	delete r;
-	return s;
+	return items;
+}
+//combine Gen_TopXpd and Gen_BSpd
+array<System::Windows::Forms::ListViewItem^>^ Bridge::Gen_TopXpd(int x){
+	vector<Product> *r = Handler.db->generatePrd(x);
+	array<System::Windows::Forms::ListViewItem^>^ items = gcnew array<System::Windows::Forms::ListViewItem^>(r->size());
+	for(unsigned i = 0; i < r->size(); i++)
+		items[i] = toLvItem((*r)[i]);
+	delete r;
+	return items;
 }
 //**************************************************
 //

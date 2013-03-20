@@ -102,18 +102,19 @@ void inputForm::InitializeComponent()
 }
 
 void inputForm::input_b_yes_Click(System::Object^  sender, System::EventArgs^  e) {
+
 	if(InputCheck::is_empty(this->input_tB_input->Text))
 		System::Windows::Forms::MessageBox::Show("Please fill in the field.");
-	else if(!InputCheck::is_int(this->input_tB_input->Text))
+	if(this->formType == NUMBER && !InputCheck::is_int(this->input_tB_input->Text))
 		System::Windows::Forms::MessageBox::Show("Please input an integer");
-	else if(InputCheck::lessThan_zero(this->input_tB_input->Text))
+	else if(this->formType == NUMBER && InputCheck::lessThan_zero(this->input_tB_input->Text))
 		System::Windows::Forms::MessageBox::Show("Please input an integer larger than zero.");
-	else if(InputCheck::is_large(this->input_tB_input->Text)){
+	else if(this->formType == NUMBER && InputCheck::is_large(this->input_tB_input->Text)){
 		if(System::Windows::Forms::MessageBox::Show("The number you input is large, are you sure?", " Input Checking",
-		System::Windows::Forms::MessageBoxButtons::YesNo,
-		System::Windows::Forms::MessageBoxIcon::Warning) == System::Windows::Forms::DialogResult::Yes){
-			this->DialogResult = System::Windows::Forms::DialogResult::OK;
-			this->Close();
+			System::Windows::Forms::MessageBoxButtons::YesNo,
+			System::Windows::Forms::MessageBoxIcon::Warning) == System::Windows::Forms::DialogResult::Yes){
+				this->DialogResult = System::Windows::Forms::DialogResult::OK;
+				this->Close();
 		}
 	}
 	else{

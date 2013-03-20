@@ -6,7 +6,6 @@
 #include "Product.h"
 #include <string>
 #include "Processing.h"
-#include <cliext/vector>
 
 class Bridge{
 private:
@@ -23,14 +22,14 @@ private:
 
 public:
 	//Communication to class Processing
-	cliext::vector<System::Windows::Forms::ListViewItem^>^ Search(System::String^, int);//return type shall be an array of ListViewItem
+	array<System::Windows::Forms::ListViewItem^>^ Search(System::String^, int);//return type shall be an array of ListViewItem
 	bool Add(System::Windows::Forms::ListViewItem^);
 	bool Restock(System::Windows::Forms::ListViewItem^, unsigned);
 	bool Sell(System::Windows::Forms::ListViewItem^, unsigned);
 	bool Del(System::Windows::Forms::ListViewItem^);
-	System::String^ Bridge::Gen_BSpd();
 	System::String^ Bridge::Gen_BSmanu();
-	System::String^ Bridge::Gen_TopXpd(int x);
+	array<System::Windows::Forms::ListViewItem^>^ Bridge::Gen_TopXpd(int x);
+	array<System::Windows::Forms::ListViewItem^>^ Bridge::Gen_BSpdCate(System::String^ s);
 };
 
 #endif
