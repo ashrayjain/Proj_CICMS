@@ -208,15 +208,16 @@ void mainForm::s_tB_input_LostFocus(System::Object^  sender, System::EventArgs^ 
 }
 //Event: when s_b_submit button is clicked
 void mainForm::Submit_search(){
-	this->list_lv->Items->Clear();
 	//input Checking first
 	if(InputCheck::is_empty(this->s_tB_input->Text)){
 		this->Set_statusBar("Ready", System::Drawing::Color::LightSkyBlue);
+		this->list_lv->Items->Clear();
 		this->Toggle_list_b(false);
 	}
 	else if(this->Get_byMethod() == byBarcode && (this->s_tB_input->Text->Length > 9 || !InputCheck::is_int(this->s_tB_input->Text) || 
 		InputCheck::lessThan_zero(this->s_tB_input->Text))){
 		this->Update_statusBar(searchF);//barcode shall be an integer, larger than zero and its length <= 9
+		this->list_lv->Items->Clear();
 		this->Toggle_list_b(false);
 	}
 	//if all satisfied
@@ -241,6 +242,7 @@ void mainForm::Search_product(System::String^ s, int m){
 	cliext::vector<System::Windows::Forms::ListViewItem^>^ r = Bridging->Search(s, m);
 	if(!r->empty()){
 		this->list_lv->BeginUpdate();
+		this->list_lv->Items->Clear();
 		this->list_lv->Items->AddRange(r->to_array());
 		this->list_lv->EndUpdate();
 		this->list_lv->Items[0]->Selected = true;
@@ -248,6 +250,7 @@ void mainForm::Search_product(System::String^ s, int m){
 	}
 	else{
 		this->Update_statusBar(searchF);
+		this->list_lv->Items->Clear();
 		this->Toggle_list_b(false);
 	}
 }
