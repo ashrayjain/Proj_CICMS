@@ -105,7 +105,7 @@ void inputForm::input_b_yes_Click(System::Object^  sender, System::EventArgs^  e
 
 	if(InputCheck::is_empty(this->input_tB_input->Text))
 		System::Windows::Forms::MessageBox::Show("Please fill in the field.");
-	if(this->formType == NUMBER && !InputCheck::is_int(this->input_tB_input->Text))
+	else if(this->formType == NUMBER && !InputCheck::is_int(this->input_tB_input->Text))
 		System::Windows::Forms::MessageBox::Show("Please input an integer");
 	else if(this->formType == NUMBER && InputCheck::lessThan_zero(this->input_tB_input->Text))
 		System::Windows::Forms::MessageBox::Show("Please input an integer larger than zero.");
