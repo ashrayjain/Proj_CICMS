@@ -87,8 +87,8 @@ int search::editDistance(string a, string b, int k)
 		curr = temp;
 	}
 	int ret_val = prev[l1];
-	delete curr;
-	delete prev;
+	delete [] curr;
+	delete [] prev;
 	return (ret_val <= k)?ret_val:-1;
  }
 
