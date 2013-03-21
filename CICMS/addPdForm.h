@@ -55,6 +55,8 @@ namespace CICMS_UI {
 
 	public:
 		addPdForm(void);  //Constructor: Calls InitializeComponent to create GUI
+	public:
+		void set_npd_grp_text(System::String^ s);
 		
 		System::Windows::Forms::ListViewItem^ get_product_details(); //Is called by mainForm object to obtain product details from the form
 	};

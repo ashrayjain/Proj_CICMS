@@ -94,6 +94,7 @@ namespace CICMS_UI {
 			InitializeComponent();
 			SelectAll_toggle = true;
 			Bridging = new Bridge;
+			default_IComparer = this->list_lv->ListViewItemSorter;
 		}
 
 		~mainForm(){
@@ -141,6 +142,7 @@ namespace CICMS_UI {
 	private: System::String^ Get_sName(int index);
 	private: void Update_selectedItem_sell(int index, unsigned num);
 	private: void Update_selectedItem_restock(int index, unsigned num);
+	private: System::Collections::IComparer^ default_IComparer;
 
 	//**********STATUSBAR COMPONENTS FUNCTION***********
 	void Update_statusBar(int i);

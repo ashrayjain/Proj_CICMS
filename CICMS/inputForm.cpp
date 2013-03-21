@@ -63,7 +63,7 @@ void inputForm::InitializeComponent()
 	// input_tB_input
 	// 
 	this->input_tB_input->Location = System::Drawing::Point(82, 39);
-	this->input_tB_input->MaxLength = 21;
+	this->input_tB_input->MaxLength = 42;
 	this->input_tB_input->Name = L"input_tB_input";
 	this->input_tB_input->Size = System::Drawing::Size(85, 20);
 	this->input_tB_input->TabIndex = 1;
@@ -129,5 +129,5 @@ void inputForm::inputForm_Load(System::Object^  sender, System::EventArgs^  e){
 	if(formType == NUMBER)
 		this->input_tB_input->MaxLength = 7;
 	else if(formType == STRING)
-		this->input_tB_input->MaxLength = 21;
+		this->input_tB_input->MaxLength = 42;
 }

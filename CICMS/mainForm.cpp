@@ -206,6 +206,7 @@ void mainForm::Create_addPdForms(){
 	for( int i = 0; i < num; i++){
 		addPdForm^ dlg = gcnew addPdForm();
 		dlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
+		dlg->set_npd_grp_text("New product " + System::Convert::ToString(i+1) + "/" + System::Convert::ToString(num));
 		System::Windows::Forms::DialogResult r = dlg->ShowDialog();
 		if (r == System::Windows::Forms::DialogResult::OK){
 			if(Bridging->Add(dlg->get_product_details())){
@@ -227,6 +228,12 @@ void mainForm::Create_addPdForms(){
 //Event: when Text in s_tB_input is changed, used for Search Instant
 void mainForm::s_tB_input_TextChanged(System::Object^  sender, System::EventArgs^  e){
 	this->Submit_search();//search here
+}
+//Event: triggered when CR is pressed
+void mainForm::s_b_Enter_Click(System::Object^  sender, System::EventArgs^  e) {
+		this->s_tB_input->Focus();
+		this->s_tB_input->SelectAll();
+		this->Submit_search();//search here
 }
 //Event: when s_rB_byName, s_rB_byCategory, s_rB_byManufacturer or s_rB_byBarcode is selected
 void mainForm::s_rB_CheckedChanged(System::Object^  sender, System::EventArgs^  e){
@@ -299,6 +306,7 @@ void mainForm::Search_product(System::String^ s, int m){
 	if(r->Length){
 		this->list_lv->BeginUpdate();
 		this->list_lv->Items->Clear();
+		this->list_lv->ListViewItemSorter = default_IComparer;// set it to default sort mode --- no sort at all; otherwise some results will be confusing
 		this->list_lv->Items->AddRange(r);
 		this->list_lv->EndUpdate();
 		this->list_lv->Items[0]->Selected = true;
@@ -310,11 +318,7 @@ void mainForm::Search_product(System::String^ s, int m){
 		this->Toggle_list_b(false);
 	}
 }
-//Event: triggered when CR is pressed
-void mainForm::s_b_Enter_Click(System::Object^  sender, System::EventArgs^  e) {
-		this->s_tB_input->Focus();
-		this->s_tB_input->SelectAll();
-}
+
 //*****************************************************
 //**********LIST DETAILS COMPONENTS FUNCTION***********
 //*****************************************************
@@ -627,7 +631,7 @@ void mainForm::InitializeComponent()
 		static_cast<System::Byte>(134)));
 	this->s_tB_input->HideSelection = false;
 	this->s_tB_input->Location = System::Drawing::Point(10, 23);
-	this->s_tB_input->MaxLength = 21;
+	this->s_tB_input->MaxLength = 42;
 	this->s_tB_input->Name = L"s_tB_input";
 	this->s_tB_input->Size = System::Drawing::Size(172, 24);
 	this->s_tB_input->TabIndex = 0;
