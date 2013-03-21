@@ -157,7 +157,7 @@ vector<string>* DB_Processing::generateManu()
 			top_manu = new vector<string>();
 			top_manu->push_back(results[i].name);
 		}
-		else if (results[i].sales > max_sales)
+		else if (results[i].sales == max_sales)
 			top_manu->push_back(results[i].name);
 	return top_manu;
 }
