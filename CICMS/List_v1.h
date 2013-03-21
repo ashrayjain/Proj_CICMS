@@ -16,7 +16,7 @@ public:
 	bool del(T delItem);
 	T& operator[](int idx);
 	inline unsigned size() { return _database.size(); }
-	inline bool isEmpty() { return _database.empty(); }
+	inline bool isempty() { return _database.empty(); }
 };
 
 template <class T>
