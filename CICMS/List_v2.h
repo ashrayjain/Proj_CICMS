@@ -193,7 +193,7 @@ unsigned int list_adt<T>::size()
 }
 
 template <typename T>
-bool list_adt<T>::isEmpty()
+bool list_adt<T>::isempty()
 {
 	return _size==0;
 }
