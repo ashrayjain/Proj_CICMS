@@ -47,7 +47,7 @@ public:
 	unsigned int size();
 
 	//return if the function is empty
-	bool isempty();
+	bool isEmpty();
 
 	//delete a product
 	bool del(T a);

@@ -26,8 +26,8 @@ public:
 private:
 	list_adt<Product>* _db;
 	string convertToLower(string);
-	void smartSearch(Product, string, string, vector<Product>*, vector<Product> &, vector<vector<Product>> &, vector<Product> &, bool &, int);
-	void search::getFilteredResults(vector<Product>*, vector<Product> &, vector<vector<Product>> &, vector<Product> &, int);
+	void smartSearch(Product, string, string, vector<Product>* &, vector<Product> &, vector<vector<Product>> &, vector<vector<Product>> &, bool &, int);
+	void search::getConsolidatedResults(vector<Product>* &, vector<Product> &, vector<vector<Product>> &, vector<vector<Product>> &, int);
 	int substring_search(string, string);
 	int editDistance(string a, string b, int k);
 	int countOccurrences(string a, char b);

@@ -28,7 +28,7 @@ bool InputCheck::is_empty(System::String^ s)
 }
 //Check whether a number (represented in System::String) is large or not
 bool InputCheck::is_large(System::String^ s){
-	enum {Large = 100};
+	enum {Large = 10000};
 	return System::Convert::ToDouble(s) > Large;
 }
 //Check whether a number (represented in System::String) is a float or not

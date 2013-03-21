@@ -14,7 +14,7 @@ int search::substring_search(string name, string query)
 	string word;
 	int count = 0;
 	while(iss>>word)
-		if(word.size() > 2 && name.find(word)!=-1)
+		if(word.size() >= 2 && name.find(word)!=-1)
 			count++;
 	return count;
 }
@@ -71,8 +71,11 @@ int search::editDistance(string a, string b, int k)
 		max_idx = min(l1, i+k);
 		
 		if(min_idx > max_idx)
+		{
+			delete [] curr;
+			delete [] prev;
 			return -1;
-		
+		}
 		if(min_idx != 1)
 			curr[min_idx-1] = 99;
 		
@@ -87,39 +90,28 @@ int search::editDistance(string a, string b, int k)
 		curr = temp;
 	}
 	int ret_val = prev[l1];
-	delete curr;
-	delete prev;
+	delete [] curr;
+	delete [] prev;
 	return (ret_val <= k)?ret_val:-1;
  }
 
 
-void search::getFilteredResults(vector<Product>* results, 
+void search::getConsolidatedResults(vector<Product>* &results, 
 	vector<Product> &close_results,
 	vector<vector<Product>> &substring_matches,
-	vector<Product> &edit_distance_matches, int count)
+	vector<vector<Product>> &edit_distance_matches, int count)
 {
 	results->insert(results->end(), close_results.begin(), close_results.end());
-	if(!results->size())
-	{
-		int counter = 0;
-		for(int i = count-1 ; i >= 0 && counter < 30; i--)
-		{
-			unsigned temp = substring_matches[i].size();
-			for(unsigned j = 0; j < temp; j++)
-			{
-				results->push_back(substring_matches[i][j]);
-				counter++;
-			}
-		}
-		if(!counter)
-			results->insert(results->end(), edit_distance_matches.begin(), edit_distance_matches.end());
-	}
+	for(int j =  substring_matches.size()-1; j >= 0 ; j--)
+		results->insert(results->end(), substring_matches[j].begin(), substring_matches[j].end());
+	for(unsigned i = 0; i < edit_distance_matches.size(); i++)
+		results->insert(results->end(), edit_distance_matches[i].begin(), edit_distance_matches[i].end());
 }
 
 
-void search::smartSearch(Product p, string str_p, string _query, vector<Product>* results, 
+void search::smartSearch(Product p, string str_p, string _query, vector<Product>* &results, 
 	vector<Product> &close_results, vector<vector<Product>> &substring_matches,
-	vector<Product> &edit_distance_matches, bool &edit_req, int threshold)
+	vector<vector<Product>> &edit_distance_matches, bool &edit_req, int threshold)
 {
 
 	if(str_p.find(_query) == 0)
@@ -129,16 +121,17 @@ void search::smartSearch(Product p, string str_p, string _query, vector<Product>
 		else
 			close_results.push_back(p);
 	}
-	else if(substring_matches.back().size() < 30)
+	else
 	{
 		int temp = substring_search(str_p, _query)-1;
 		if(temp != -1)
-		{
 			substring_matches[temp].push_back(p);
-			edit_req = false;
+		else
+		{
+			temp = editDistance(str_p, _query, threshold)-1;
+			if(temp>=0)
+				edit_distance_matches[temp].push_back(p);
 		}
-		if(edit_req && editDistance(str_p, _query, threshold) != -1)
-			edit_distance_matches.push_back(p);
 	}
 }
 vector<Product>* search::searchByName(string query)
@@ -151,9 +144,8 @@ vector<Product>* search::searchByName(string query)
 	while(iss>>word)
 		count++;
 
-	vector<vector<Product>> substring_matches(count, vector<Product>());
+	vector<vector<Product>> substring_matches(count, vector<Product>()), edit_distance_matches(2, vector<Product>());
 	vector<Product> close_results;
-	vector<Product> edit_distance_matches;
 	bool edit_req = true;
 
 	for(unsigned i = 0; i < _db->size(); i++)
@@ -162,7 +154,7 @@ vector<Product>* search::searchByName(string query)
 		smartSearch((*_db)[i], name, _query, results, close_results, substring_matches, edit_distance_matches, edit_req, 2);
 	}
 
-	getFilteredResults(results, close_results, substring_matches, edit_distance_matches, count);
+	getConsolidatedResults(results, close_results, substring_matches, edit_distance_matches, count);
 	return results;
 }
 
@@ -176,9 +168,8 @@ vector<Product>* search::searchByCategory(string query)
 	while(iss>>word)
 		count++;
 	
-	vector<vector<Product>> substring_matches(count, vector<Product>());
+	vector<vector<Product>> substring_matches(count, vector<Product>()), edit_distance_matches(2, vector<Product>());
 	vector<Product> close_results;
-	vector<Product> edit_distance_matches;
 	bool edit_req = true;
 
 	for(unsigned i = 0; i < _db->size(); i++)
@@ -186,7 +177,7 @@ vector<Product>* search::searchByCategory(string query)
 		string cat = convertToLower((*_db)[i].getCategory());
 		smartSearch((*_db)[i], cat, _query, results, close_results, substring_matches, edit_distance_matches, edit_req, 2);
 	}
-	getFilteredResults(results, close_results, substring_matches, edit_distance_matches, count);
+	getConsolidatedResults(results, close_results, substring_matches, edit_distance_matches, count);
 	return results;
 }
 
@@ -201,9 +192,8 @@ vector<Product>* search::searchByManufacturer(string query)
 	while(iss>>word)
 		count++;
 	
-	vector<vector<Product>> substring_matches(count, vector<Product>());
+	vector<vector<Product>> substring_matches(count, vector<Product>()), edit_distance_matches(2, vector<Product>());
 	vector<Product> close_results;
-	vector<Product> edit_distance_matches;
 	bool edit_req = true;
 
 	for(unsigned i = 0; i < _db->size(); i++)
@@ -211,7 +201,7 @@ vector<Product>* search::searchByManufacturer(string query)
 		string manu = convertToLower((*_db)[i].getManufacturer());
 		smartSearch((*_db)[i], manu, _query, results, close_results, substring_matches, edit_distance_matches, edit_req, 2);
 	}
-	getFilteredResults(results, close_results, substring_matches, edit_distance_matches, count);
+	getConsolidatedResults(results, close_results, substring_matches, edit_distance_matches, count);
 	return results;
 }
 
@@ -225,9 +215,8 @@ vector<Product>* search::searchByBarcode(string query)
 	while(iss>>word)
 		count++;
 	
-	vector<vector<Product>> substring_matches(count, vector<Product>());
+	vector<vector<Product>> substring_matches(count, vector<Product>()), edit_distance_matches(2, vector<Product>());
 	vector<Product> close_results;
-	vector<Product> edit_distance_matches;
 	bool edit_req = true;
 
 	for(unsigned i = 0; i < _db->size(); i++)
@@ -235,6 +224,6 @@ vector<Product>* search::searchByBarcode(string query)
 		string barcode = convertToLower(to_string((*_db)[i].getBarcode()));
 		smartSearch((*_db)[i], barcode, _query, results, close_results, substring_matches, edit_distance_matches, edit_req, 3);
 	}
-	getFilteredResults(results, close_results, substring_matches, edit_distance_matches, count);
+	getConsolidatedResults(results, close_results, substring_matches, edit_distance_matches, count);
 	return results;
 }
