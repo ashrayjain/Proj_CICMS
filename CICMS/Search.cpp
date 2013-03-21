@@ -215,7 +215,7 @@ vector<Product>* search::searchByBarcode(string query)
 	while(iss>>word)
 		count++;
 	
-	vector<vector<Product>> substring_matches(count, vector<Product>()), edit_distance_matches(2, vector<Product>());
+	vector<vector<Product>> substring_matches(count, vector<Product>()), edit_distance_matches(3, vector<Product>());
 	vector<Product> close_results;
 	bool edit_req = true;
 
