@@ -14,7 +14,7 @@ int search::substring_search(string name, string query)
 	string word;
 	int count = 0;
 	while(iss>>word)
-		if(name.find(word)!=-1)
+		if(word.size() > 2 && name.find(word)!=-1)
 			count++;
 	return count;
 }
@@ -86,8 +86,10 @@ int search::editDistance(string a, string b, int k)
 		prev = curr;
 		curr = temp;
 	}
-	
-	return (prev[l1] <= k)?prev[l1]:-1;
+	int ret_val = prev[l1];
+	delete curr;
+	delete prev;
+	return (ret_val <= k)?ret_val:-1;
  }
 
 
@@ -122,7 +124,7 @@ void search::smartSearch(Product p, string str_p, string _query, vector<Product>
 
 	if(str_p.find(_query) == 0)
 	{
-		if(str_p == _query)
+		if(str_p.size() == _query.size())
 			results->push_back(p);
 		else
 			close_results.push_back(p);
