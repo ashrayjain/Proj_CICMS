@@ -1,10 +1,10 @@
-#ifndef List_v1_
-#define List_v1_
+#ifndef _list_adt_H_
+#define _list_adt_H_
 
 #include "Product.h"
 
 template <typename T>
-class List_v1
+class list_adt
 {
 private:
 	struct Node
@@ -22,10 +22,10 @@ private:
 public:
 
 	//constructor
-	List_v1();
+	list_adt();
 
 	//destructor
-	~List_v1();
+	~list_adt();
 
 	//overload operator[]
 	T &operator[](int index);
@@ -53,7 +53,7 @@ public:
 };
 
 template <typename T>
-List_v1 <T>::List_v1()
+list_adt <T>::list_adt()
 {
 	_head = NULL;
 	_size=0;
@@ -63,7 +63,7 @@ List_v1 <T>::List_v1()
 }
 
 template <typename T>
-List_v1 <T>::~List_v1()
+list_adt <T>::~list_adt()
 {
 	while(_head!=NULL)
 	{
@@ -75,14 +75,14 @@ List_v1 <T>::~List_v1()
 }
 
 template <typename T>
-bool List_v1<T>::operator=(T &a)
+bool list_adt<T>::operator=(T &a)
 {
 	_curr->item = a;
 	return true;
 }
 
 template <typename T>
-T& List_v1<T>::operator[] (int index) 
+T& list_adt<T>::operator[] (int index) 
 {
 	if(_curr!=NULL)
 	{
@@ -122,7 +122,7 @@ T& List_v1<T>::operator[] (int index)
 
 //It will always insert to the head of the list
 template <typename T>
-bool List_v1<T>::add(T a)
+bool list_adt<T>::add(T a)
 {
 	if(_size==0||a.getName()<_head->item.getName())
 	{
@@ -154,7 +154,7 @@ bool List_v1<T>::add(T a)
 
 //this part we need to take care of _last
 template <typename T>
-bool List_v1<T>::del (T a)
+bool list_adt<T>::del (T a)
 {
 	bool flag = false;
 	Node *temp=_head;
@@ -189,13 +189,13 @@ bool List_v1<T>::del (T a)
 
 
 template <typename T>
-unsigned int List_v1<T>::size()
+unsigned int list_adt<T>::size()
 {
 	return _size;
 }
 
 template <typename T>
-bool List_v1<T>::isEmpty()
+bool list_adt<T>::isEmpty()
 {
 	return _size==0;
 }

@@ -1,5 +1,5 @@
-#ifndef _LIST_V1_H_
-#define _LIST_V1_H_
+#ifndef _list_adt_H_
+#define _list_adt_H_
 
 #include <vector>
 #include "Product.h"
