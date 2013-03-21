@@ -1,10 +1,10 @@
-#ifndef LIST_V2_
-#define LIST_V2_
+#ifndef List_v1_
+#define List_v1_
 
 #include "Product.h"
 
 template <typename T>
-class list_adt
+class List_v1
 {
 private:
 	struct Node
@@ -22,10 +22,10 @@ private:
 public:
 
 	//constructor
-	list_adt();
+	List_v1();
 
 	//destructor
-	~list_adt();
+	~List_v1();
 
 	//overload operator[]
 	T &operator[](int index);
@@ -44,7 +44,7 @@ public:
 	unsigned int size();
 
 		 //return if the function is empty
-	 bool isempty();
+	 bool isEmpty();
 
 	 //delete a product
 	 bool del(T a);
@@ -53,7 +53,7 @@ public:
 };
 
 template <typename T>
-list_adt <T>::list_adt()
+List_v1 <T>::List_v1()
 {
 	_head = NULL;
 	_size=0;
@@ -63,7 +63,7 @@ list_adt <T>::list_adt()
 }
 
 template <typename T>
-list_adt <T>::~list_adt()
+List_v1 <T>::~List_v1()
 {
 	while(_head!=NULL)
 	{
@@ -75,14 +75,14 @@ list_adt <T>::~list_adt()
 }
 
 template <typename T>
-bool list_adt<T>::operator=(T &a)
+bool List_v1<T>::operator=(T &a)
 {
 	_curr->item = a;
 	return true;
 }
 
 template <typename T>
-T& list_adt<T>::operator[] (int index) 
+T& List_v1<T>::operator[] (int index) 
 {
 	if(_curr!=NULL)
 	{
@@ -122,7 +122,7 @@ T& list_adt<T>::operator[] (int index)
 
 //It will always insert to the head of the list
 template <typename T>
-bool list_adt<T>::add(T a)
+bool List_v1<T>::add(T a)
 {
 	if(_size==0||a.getName()<_head->item.getName())
 	{
@@ -154,7 +154,7 @@ bool list_adt<T>::add(T a)
 
 //this part we need to take care of _last
 template <typename T>
-bool list_adt<T>::del (T a)
+bool List_v1<T>::del (T a)
 {
 	bool flag = false;
 	Node *temp=_head;
@@ -168,12 +168,14 @@ bool list_adt<T>::del (T a)
 			{
 				Node *curr = _head;
 				_head=_head->next;
+				_size--;
 				delete curr;
 			}
 			else
 			{
 				Node *curr = temp;
 				prev->next = temp->next;
+				_size--;
 				delete curr;
 			}
 		}
@@ -187,13 +189,13 @@ bool list_adt<T>::del (T a)
 
 
 template <typename T>
-unsigned int list_adt<T>::size()
+unsigned int List_v1<T>::size()
 {
 	return _size;
 }
 
 template <typename T>
-bool list_adt<T>::isempty()
+bool List_v1<T>::isEmpty()
 {
 	return _size==0;
 }

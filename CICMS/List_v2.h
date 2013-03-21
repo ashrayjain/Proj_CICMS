@@ -1,16 +1,22 @@
-#ifndef LIST_V2_
-#define LIST_V2_
+#ifndef LIST_V1_
+#define LIST_V1_
 
 #include "Product.h"
 
 template <typename T>
-class list_adt
+class List_v1
 {
 private:
 	struct Node
 	{
-		T item;
+		T* item;
 		Node *next;
+		Node::Node(T _item, Node* _next)
+		{
+			item = new T(_item);
+			next = _next;
+		}
+
 	};
 
 	Node* _head;
@@ -22,10 +28,10 @@ private:
 public:
 
 	//constructor
-	list_adt();
+	List_v1();
 
 	//destructor
-	~list_adt();
+	~List_v1();
 
 	//overload operator[]
 	T &operator[](int index);
@@ -38,17 +44,17 @@ public:
 	bool add(T a);
 
 	//return the size of the list
-	 unsigned int size();
+	unsigned int size();
 
-	 //return if the function is empty
-	 bool isempty();
+	//return if the function is empty
+	bool isEmpty();
 
-	 //delete a product
-	 bool del(T a);
+	//delete a product
+	bool del(T a);
 };
 
 template <typename T>
-list_adt <T>::list_adt()
+List_v1 <T>::List_v1()
 {
 	_head = NULL;
 	_size=0;
@@ -58,41 +64,40 @@ list_adt <T>::list_adt()
 }
 
 template <typename T>
-list_adt <T>::~list_adt()
+List_v1 <T>::~List_v1()
 {
 	while(_head!=NULL)
 	{
 		Node *curr;
 		curr = _head;
 		_head = _head->next;
+		delete curr->item;
 		delete curr;
 	}
 }
 
 template <typename T>
-bool list_adt<T>::operator=(T &a)
+bool List_v1<T>::operator=(T &a)
 {
-	_curr->item = a;
+	*(_curr->item) = a;
 	return true;
 }
 
 template <typename T>
-T& list_adt<T>::operator[] (int index) 
+T& List_v1<T>::operator[] (int index) 
 {
 	if(_curr!=NULL)
 	{
 		if(index == _last)
 		{
-			return _curr->item;
+			return *(_curr->item);
 		}
 		else if(index>_last)
 		{
 			for(int i=0;i<(index-_last);i++)
-			{
 				_curr=_curr->next;
 				_last=index;
-				return _curr->item;
-			}
+				return *(_curr->item);
 		}
 		else
 		{
@@ -101,7 +106,7 @@ T& list_adt<T>::operator[] (int index)
 				temp=temp->next;
 			_last=index;
 			_curr=temp;
-			return temp->item;
+			return *(temp->item);
 		}
 	}
 	else
@@ -111,22 +116,32 @@ T& list_adt<T>::operator[] (int index)
 			temp=temp->next;
 		_last=index;
 		_curr=temp;
-		return temp->item;
+		return *(temp->item);
 	}
 }
 
 //It will always insert to the head of the list
 template <typename T>
-bool list_adt<T>::add(T a)
+bool List_v1<T>::add(T a)
 {
 	try
 	{
-	Node* temp = new Node;
-	temp->item = a;
-	temp->next = _head;
-	_head = temp;
-	_size++;
-	return true;
+		if(_size==0)
+		{
+			Node* temp = NULL;
+			temp = new Node (a, NULL);
+			_head = temp;
+			_size++;
+			return true;
+		}
+		else
+		{
+			Node* temp = NULL;
+			temp = new Node (a, _head);
+			_head = temp;
+			_size++;
+			return true;
+		}
 	}
 	catch(std::bad_alloc)
 	{
@@ -134,28 +149,32 @@ bool list_adt<T>::add(T a)
 	}
 }
 
-//this part we need to take care of _last
 template <typename T>
-bool list_adt<T>::del (T a)
+bool List_v1<T>::del (T a)
 {
 	bool flag = false;
 	Node *temp=_head;
 	Node *prev=NULL;
-	while(temp!=NULL&&!flag)
+
+    while(!flag&&temp!=NULL)
 	{
-		if(temp->item == a)
+		if(*(temp->item) == a)
 		{
 			flag = true;
-			if(temp==_head)
+			if(prev==NULL)
 			{
 				Node *curr = _head;
 				_head=_head->next;
+				_size--;
+				delete curr->item;
 				delete curr;
 			}
 			else
 			{
 				Node *curr = temp;
 				prev->next = temp->next;
+				_size--;
+				delete curr->item;
 				delete curr;
 			}
 		}
@@ -168,13 +187,13 @@ bool list_adt<T>::del (T a)
 }
 
 template <typename T>
-unsigned int list_adt<T>::size()
+unsigned int List_v1<T>::size()
 {
 	return _size;
 }
 
 template <typename T>
-bool list_adt<T>::isempty()
+bool List_v1<T>::isEmpty()
 {
 	return _size==0;
 }
