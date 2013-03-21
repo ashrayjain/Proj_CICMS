@@ -111,7 +111,7 @@ void inputForm::input_b_yes_Click(System::Object^  sender, System::EventArgs^  e
 	else if(this->formType == NUMBER && InputCheck::lessThan_zero(this->input_tB_input->Text))
 		System::Windows::Forms::MessageBox::Show("Please input an integer larger than zero.");
 	else if(this->formType == NUMBER && this->TOP_X == true && InputCheck::is_large(this->input_tB_input->Text))
-		System::Windows::Forms::MessageBox::Show("The number for X shall be not greater than 100.");
+		System::Windows::Forms::MessageBox::Show("The number for X must be not greater than 100.");
 	else{
 		this->DialogResult = System::Windows::Forms::DialogResult::OK;
 		this->Close();
