@@ -109,6 +109,64 @@ enum SORT_ORDER{Descending = false, Ascending = true};
 //*************                            ***************
 //********************************************************
 
+//Event: when there is keypress in s_tB_input component
+void mainForm::mainForm_KeyDown(Object^ sender, System::Windows::Forms::KeyEventArgs^ e){
+	//Enter: will be handled by s_b_Enter_Click
+	//
+	e->SuppressKeyPress = true;//thus keys here will not send to mainForm_KeyPress
+	//Ctrl+A in listView
+	if(this->list_lv->Focused && e->Control && e->KeyCode == System::Windows::Forms::Keys::A){
+		this->list_lv->BeginUpdate();
+		if(this->CA_in_List_lv_toggle == true){
+			for(int i = 0; i < this->list_lv->Items->Count; i++)
+				this->list_lv->Items[i]->Selected = true;
+			this->CA_in_List_lv_toggle = false;
+		}
+		else{//toggle == false
+			for(int i = 0; i < this->list_lv->Items->Count; i++)
+				this->list_lv->Items[i]->Selected = false;
+			this->CA_in_List_lv_toggle = true;
+		}
+		this->list_lv->EndUpdate();
+	}
+	//Ctrl+S for Sale button
+	else if(e->Control && e->KeyCode == System::Windows::Forms::Keys::S){
+		this->list_b_sell->PerformClick();
+	}
+	//Ctrl+R for Restock button
+	else if(e->Control && e->KeyCode == System::Windows::Forms::Keys::R){
+		this->list_b_restock->PerformClick();
+	}
+	//Del for Delete button
+	else if(e->KeyCode == System::Windows::Forms::Keys::Delete/* || (e->Control && e->KeyCode == System::Windows::Forms::Keys::D)*/){
+		this->list_b_delete->PerformClick();
+	}
+	//Ctrl+A for Add New Product button
+	else if(e->Control && e->KeyCode == System::Windows::Forms::Keys::N)
+		this->Create_addPdForms();
+	else
+		e->SuppressKeyPress = false;
+}
+void mainForm::mainForm_KeyPress(Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e){
+	//num, character, space for s_tB_input
+	if(!this->s_tB_input->Focused && (System::Char::IsLetterOrDigit(e->KeyChar) ||
+		e->KeyChar == ' ')){
+		this->s_tB_input->Text = System::Convert::ToString(e->KeyChar);
+		this->s_tB_input->Focus();
+		this->s_tB_input->SelectionStart = this->s_tB_input->Text->Length;
+	}
+	//backspace for s_tB_input
+	else if(!this->s_tB_input->Focused && e->KeyChar == 8){//8 is Backspace
+		this->s_tB_input->Text = "";
+		this->s_tB_input->Focus();
+		this->s_tB_input->SelectionStart = 0;
+	}
+}
+
+void mainForm::mainForm_Load(System::Object^  sender, System::EventArgs^  e){
+	this->s_tB_input->Select();
+}
+
 //*********************************************
 //**********MENU COMPONENTS FUNCTION***********
 //*********************************************
@@ -148,7 +206,7 @@ void mainForm::menu_stat_BSmanu_Click(System::Object^  sender, System::EventArgs
 //Event: when click menu_stat_BSpdCate
 void mainForm::menu_stat_BSpdCate_Click(System::Object^  sender, System::EventArgs^  e){
 	inputForm^ inputDlg = gcnew inputForm();
-	inputDlg->set_inputForm(" Report the Best-Selling product", "Please type the category name", "Category: ", "");
+	inputDlg->set_inputForm(" Report the Best-Selling product", "Please type the category name ", "Category:  ", "");
 	inputDlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 	inputDlg->set_formType(STRING);
 	
@@ -173,7 +231,7 @@ void mainForm::menu_stat_BSpdCate_Click(System::Object^  sender, System::EventAr
 //Event: when click menu_stat_topXpd_Click item, open the inputForm to take in a number X, then open MessageBox window to show the result of Top X Selling products
 void mainForm::menu_stat_topXpd_Click(System::Object^  sender, System::EventArgs^  e){
 	inputForm^ inputDlg = gcnew inputForm();
-	inputDlg->set_inputForm(" The Top X Selling products", "Please input a number for X.", "X is equal to", "5");
+	inputDlg->set_inputForm(" The Top X Selling products", "Please input a number for X.      ", "X is equal to", "5");
 	inputDlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 	inputDlg->set_formType(NUMBER);
 	inputDlg->TOP_X_filter(true);
@@ -202,7 +260,7 @@ void mainForm::menu_about_Click(System::Object^  sender, System::EventArgs^  e) 
 }
 //Fuction: create a addPdForm window, and let logic/handler part handle the input
 void mainForm::Create_addPdForms(){
-	int num = (int) Create_inputForm(" Add products", "How many products to add?", "Number:", "1");
+	int num = (int) Create_inputForm(" Add products", "How many products to add?     ", "Number:", "1");
 	for( int i = 0; i < num; i++){
 		addPdForm^ dlg = gcnew addPdForm();
 		dlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
@@ -240,22 +298,6 @@ void mainForm::s_rB_CheckedChanged(System::Object^  sender, System::EventArgs^  
 	this->Submit_search();//search here
 	this->s_tB_input->SelectAll();
 	this->SelectAll_toggle = false;
-}
-//Event: when there is keypress in s_tB_input component
-void mainForm::s_tB_input_KeyPress(Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e){
-	if(!this->s_tB_input->Focused && ((e->KeyChar >= 'a' && e->KeyChar <= 'z') || 
-		(e->KeyChar >= 'A' && e->KeyChar <= 'Z') || 
-		(e->KeyChar >= '0' && e->KeyChar <= '9') ||
-		e->KeyChar == ' ')){
-		this->s_tB_input->Text = System::Convert::ToString(e->KeyChar);
-		this->s_tB_input->Focus();
-		this->s_tB_input->SelectionStart = this->s_tB_input->Text->Length;
-	}
-	if(!this->s_tB_input->Focused && e->KeyChar == 8){
-		this->s_tB_input->Text = "";
-		this->s_tB_input->Focus();
-		this->s_tB_input->SelectionStart = 0;
-	}
 }
 //Event: when s_tB_input is clicked
 void mainForm::s_tB_input_Click(System::Object^  sender, System::EventArgs^  e){
@@ -348,7 +390,7 @@ double mainForm::Create_inputForm(System::String^ formTitle, System::String^ pdD
 }
 void mainForm::Create_sellForm(){
 	for(int i = 0; i < this->list_lv->SelectedItems->Count; i++){
-		unsigned num = (unsigned) this->Create_inputForm(" Sell a product", this->Get_sName(i) + " - " + this->Get_sBarcode(i), "Sell:", "1");
+		unsigned num = (unsigned) this->Create_inputForm(" Sell a product", this->Get_sName(i) + " (" + this->Get_sCategory(i) + ") - " + this->Get_sBarcode(i), "Sell:", "1");
 		if(num == 0)//if cancel the MessageBox
 			break;
 		else if(Bridging->Sell(this->list_lv->SelectedItems[i], num)){
@@ -361,7 +403,7 @@ void mainForm::Create_sellForm(){
 }
 void mainForm::Create_restockForm(){
 	for(int i = 0; i < this->list_lv->SelectedItems->Count; i++){
-		unsigned num = (unsigned) this->Create_inputForm(" Restock a product", this->Get_sName(i) + " - " + this->Get_sBarcode(i), "Restock:", "1");
+		unsigned num = (unsigned) this->Create_inputForm(" Restock a product", this->Get_sName(i) + " (" + this->Get_sCategory(i) + ") - " + this->Get_sBarcode(i), "Restock:", "1");
 		if(num == 0)//if cancel the MessageBox
 			break;
 		else if(Bridging->Restock(this->list_lv->SelectedItems[i], num)){
@@ -394,8 +436,7 @@ void mainForm::Create_deleteForm(){
 	}
 	for(int i = 0; i < this->list_lv->SelectedItems->Count; i++){
 		if(case_tooMany == Yes_Yes || (System::Windows::Forms::MessageBox::Show("Are you sure that you would like \nto delete this product, " +
-			this->Get_sName(i) + " - " + 
-			this->Get_sBarcode(i) +
+			this->Get_sName(i) + " (" + this->Get_sCategory(i) + ") - " + this->Get_sBarcode(i) +
 			"?", " Delete Product",
 		System::Windows::Forms::MessageBoxButtons::YesNo,
 		System::Windows::Forms::MessageBoxIcon::Warning)) == System::Windows::Forms::DialogResult::Yes){
@@ -422,6 +463,10 @@ void mainForm::Toggle_list_b(bool tof){
 //Event: when select an item in the list, update all pd_tB textBoxes by using this item's properties.
 void mainForm::list_lv_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
 	this->list_lv->SelectedItems->Count != 0 ? this->Toggle_list_b(true): this->Toggle_list_b(false);
+	if(this->list_lv->SelectedItems->Count == this->list_lv->Items->Count)// selected all liao
+		this->CA_in_List_lv_toggle = false;
+	else
+		this->CA_in_List_lv_toggle = true;
 }
 //Event: when click the column in the list, sort it
 void mainForm::list_lv_ColumnClick(System::Object^, System::Windows::Forms::ColumnClickEventArgs^ e){
@@ -470,9 +515,15 @@ System::String^ mainForm::Get_sBarcode(int index){
 }
 //Function: get selected item's name
 System::String^ mainForm::Get_sName(int index){
-	if(this->list_lv->SelectedItems[index]->SubItems[0]->Text->Length > 15)
-		return this->list_lv->SelectedItems[index]->SubItems[0]->Text->Substring(0,15) + "...";
+	if(this->list_lv->SelectedItems[index]->SubItems[0]->Text->Length > 21)
+		return this->list_lv->SelectedItems[index]->SubItems[0]->Text->Substring(0,21) + "...";
 	return this->list_lv->SelectedItems[index]->SubItems[0]->Text;
+}
+//Function: get selected item's category
+System::String^ mainForm::Get_sCategory(int index){
+	if(this->list_lv->SelectedItems[index]->SubItems[1]->Text->Length > 21)
+		return this->list_lv->SelectedItems[index]->SubItems[1]->Text->Substring(0,21) + "...";
+	return this->list_lv->SelectedItems[index]->SubItems[1]->Text;
 }
 
 //**************************************************
@@ -566,19 +617,19 @@ void mainForm::InitializeComponent()
 	// menu_f_addNewProducts
 	// 
 	this->menu_f_addNewProducts->Name = L"menu_f_addNewProducts";
-	this->menu_f_addNewProducts->Size = System::Drawing::Size(166, 22);
-	this->menu_f_addNewProducts->Text = L"Add new products";
+	this->menu_f_addNewProducts->Size = System::Drawing::Size(211, 22);
+	this->menu_f_addNewProducts->Text = L"Add new products (Ctrl+N)";
 	this->menu_f_addNewProducts->Click += gcnew System::EventHandler(this, &mainForm::menu_f_addNewProducts_Click);
 	// 
 	// toolStripSeparator1
 	// 
 	this->toolStripSeparator1->Name = L"toolStripSeparator1";
-	this->toolStripSeparator1->Size = System::Drawing::Size(163, 6);
+	this->toolStripSeparator1->Size = System::Drawing::Size(207, 6);
 	// 
 	// menu_f_quit
 	// 
 	this->menu_f_quit->Name = L"menu_f_quit";
-	this->menu_f_quit->Size = System::Drawing::Size(166, 22);
+	this->menu_f_quit->Size = System::Drawing::Size(210, 22);
 	this->menu_f_quit->Text = L"Quit";
 	this->menu_f_quit->Click += gcnew System::EventHandler(this, &mainForm::menu_f_quit_Click);
 	// 
@@ -849,7 +900,9 @@ void mainForm::InitializeComponent()
 	this->MaximizeBox = false;
 	this->Name = L"mainForm";
 	this->Text = L" CICMS";
-	this->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &mainForm::s_tB_input_KeyPress);
+	this->Load += gcnew System::EventHandler(this, &mainForm::mainForm_Load);
+	this->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &mainForm::mainForm_KeyDown);
+	this->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &mainForm::mainForm_KeyPress);
 	this->menu->ResumeLayout(false);
 	this->menu->PerformLayout();
 	this->s_grp->ResumeLayout(false);

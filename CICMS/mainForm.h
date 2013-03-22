@@ -95,6 +95,7 @@ namespace CICMS_UI {
 			SelectAll_toggle = true;
 			Bridging = new Bridge;
 			default_IComparer = this->list_lv->ListViewItemSorter;
+			CA_in_List_lv_toggle = true;
 		}
 
 		~mainForm(){
@@ -103,6 +104,9 @@ namespace CICMS_UI {
 	//********************************************************
 	//*************MEMBER FUNCTION DECLEARATION***************
 	//********************************************************
+	private: void mainForm_KeyDown(Object^ sender, System::Windows::Forms::KeyEventArgs^ e);
+	private: void mainForm_KeyPress(Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e);
+	private: void mainForm_Load(System::Object^  sender, System::EventArgs^  e);
 
 	//**********MENU COMPONENTS FUNCTION***********
 	private: void menu_f_addNewProducts_Click(System::Object^  sender, System::EventArgs^  e);
@@ -118,7 +122,6 @@ namespace CICMS_UI {
 	private: void s_tB_input_TextChanged(System::Object^  sender, System::EventArgs^  e);
 	private: void s_tB_input_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void s_tB_input_LostFocus(System::Object^  sender, System::EventArgs^  e);
-	private: void s_tB_input_KeyPress(Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e);
 	private: void s_rB_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 	private: void Submit_search();
 	private: int Get_byMethod();
@@ -140,9 +143,11 @@ namespace CICMS_UI {
 	private: void Sort_list_lv(System::Windows::Forms::ColumnClickEventArgs^ e, bool t, bool is_num);
 	private: System::String^ Get_sBarcode(int index);
 	private: System::String^ Get_sName(int index);
+	private: System::String^ Get_sCategory(int index);
 	private: void Update_selectedItem_sell(int index, unsigned num);
 	private: void Update_selectedItem_restock(int index, unsigned num);
 	private: System::Collections::IComparer^ default_IComparer;
+	private: bool CA_in_List_lv_toggle;
 
 	//**********STATUSBAR COMPONENTS FUNCTION***********
 	void Update_statusBar(int i);
@@ -161,6 +166,12 @@ namespace CICMS_UI {
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_f_quit;
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_about;
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_f_addNewProducts;
+	private: System::Windows::Forms::ToolStripMenuItem^  menu_stat;
+	private: System::Windows::Forms::ToolStripMenuItem^  menu_stat_BSpd;
+	private: System::Windows::Forms::ToolStripMenuItem^  menu_stat_BSmanu;
+	private: System::Windows::Forms::ToolStripMenuItem^  menu_stat_topXpd;
+	private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
+	private: System::Windows::Forms::ToolStripMenuItem^  menu_stat_BSpdCate;
 
 	//**********SEARCH COMPONENTS DECLEARATION***********
 	private: System::Windows::Forms::TextBox^  s_tB_input;
@@ -193,20 +204,6 @@ namespace CICMS_UI {
 	//**********STATUS COMPONENTS DECLEARATION***********
 	private: System::Windows::Forms::StatusStrip^  statusStrip1;
 	private: System::Windows::Forms::ToolStripStatusLabel^  toolStripStatusLabel1;
-	private: System::Windows::Forms::ToolStripMenuItem^  menu_stat;
-
-	private: System::Windows::Forms::ToolStripMenuItem^  menu_stat_BSpd;
-	private: System::Windows::Forms::ToolStripMenuItem^  menu_stat_BSmanu;
-	private: System::Windows::Forms::ToolStripMenuItem^  menu_stat_topXpd;
-
-	private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
-private: System::Windows::Forms::ToolStripMenuItem^  menu_stat_BSpdCate;
-
-
-
-
-
-
 
 	//**********BRIDGE HANDLER DECLEARATION***********
 	private: Bridge *Bridging;
