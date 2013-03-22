@@ -215,14 +215,14 @@ vector<Product>* search::searchByBarcode(string query)
 	while(iss>>word)
 		count++;
 	
-	vector<vector<Product>> substring_matches(count, vector<Product>()), edit_distance_matches(3, vector<Product>());
+	vector<vector<Product>> substring_matches(count, vector<Product>()), edit_distance_matches(1, vector<Product>());
 	vector<Product> close_results;
 	bool edit_req = true;
 
 	for(unsigned i = 0; i < _db->size(); i++)
 	{
 		string barcode = convertToLower(to_string((*_db)[i].getBarcode()));
-		smartSearch((*_db)[i], barcode, _query, results, close_results, substring_matches, edit_distance_matches, edit_req, 3);
+		smartSearch((*_db)[i], barcode, _query, results, close_results, substring_matches, edit_distance_matches, edit_req, 1);
 	}
 	getConsolidatedResults(results, close_results, substring_matches, edit_distance_matches, count);
 	return results;
