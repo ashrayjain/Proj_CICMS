@@ -43,8 +43,12 @@ public:
 	double getPrice();
 	bool updateSale(unsigned);
 	void updateStock(unsigned);
-	inline bool operator==(Product& rhs) { return this->getBarcode()==rhs.getBarcode(); }
-	inline bool operator!=(Product& rhs){return !(this->operator==(rhs));}
+	inline bool operator==(Product& rhs){ return this->_barcode == rhs._barcode; }
+	inline bool operator!=(Product& rhs){ return !(this->operator==(rhs)); }
+	inline bool operator< (Product& rhs){ return this->_barcode < rhs._barcode; } 
+	inline bool operator> (Product& rhs){return  rhs.operator<(*this);} 
+	inline bool operator<=(Product& rhs){return !(this->operator> (rhs));} 
+	inline bool operator>=(Product& rhs){return !(this->operator< (rhs));}
 };
 
 #endif

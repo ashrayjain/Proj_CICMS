@@ -4,7 +4,7 @@
 
 #include "stdafx.h"
 #include "Product.h"
-#include "List_v1.h"
+#include "List_v3.h"
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -26,7 +26,7 @@ public:
 private:
 	list_adt<Product>* _db;
 	string convertToLower(string);
-	void smartSearch(Product, string, string, vector<Product>* &, vector<Product> &, vector<vector<Product>> &, vector<vector<Product>> &, bool &, int);
+	void smartSearch(Product, string, string, vector<Product>* &, vector<Product> &, vector<vector<Product>> &, vector<vector<Product>> &, int);
 	void search::getConsolidatedResults(vector<Product>* &, vector<Product> &, vector<vector<Product>> &, vector<vector<Product>> &, int);
 	int substring_search(string, string);
 	int editDistance(string a, string b, int k);

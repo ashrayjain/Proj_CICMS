@@ -111,7 +111,7 @@ void search::getConsolidatedResults(vector<Product>* &results,
 
 void search::smartSearch(Product p, string str_p, string _query, vector<Product>* &results, 
 	vector<Product> &close_results, vector<vector<Product>> &substring_matches,
-	vector<vector<Product>> &edit_distance_matches, bool &edit_req, int threshold)
+	vector<vector<Product>> &edit_distance_matches, int threshold)
 {
 
 	if(str_p.find(_query) == 0)
@@ -146,12 +146,12 @@ vector<Product>* search::searchByName(string query)
 
 	vector<vector<Product>> substring_matches(count, vector<Product>()), edit_distance_matches(2, vector<Product>());
 	vector<Product> close_results;
-	bool edit_req = true;
+	
 
 	for(unsigned i = 0; i < _db->size(); i++)
 	{
 		string name = convertToLower((*_db)[i].getName());
-		smartSearch((*_db)[i], name, _query, results, close_results, substring_matches, edit_distance_matches, edit_req, 2);
+		smartSearch((*_db)[i], name, _query, results, close_results, substring_matches, edit_distance_matches, 2);
 	}
 
 	getConsolidatedResults(results, close_results, substring_matches, edit_distance_matches, count);
@@ -170,12 +170,12 @@ vector<Product>* search::searchByCategory(string query)
 	
 	vector<vector<Product>> substring_matches(count, vector<Product>()), edit_distance_matches(2, vector<Product>());
 	vector<Product> close_results;
-	bool edit_req = true;
+	
 
 	for(unsigned i = 0; i < _db->size(); i++)
 	{
 		string cat = convertToLower((*_db)[i].getCategory());
-		smartSearch((*_db)[i], cat, _query, results, close_results, substring_matches, edit_distance_matches, edit_req, 2);
+		smartSearch((*_db)[i], cat, _query, results, close_results, substring_matches, edit_distance_matches, 2);
 	}
 	getConsolidatedResults(results, close_results, substring_matches, edit_distance_matches, count);
 	return results;
@@ -194,12 +194,12 @@ vector<Product>* search::searchByManufacturer(string query)
 	
 	vector<vector<Product>> substring_matches(count, vector<Product>()), edit_distance_matches(2, vector<Product>());
 	vector<Product> close_results;
-	bool edit_req = true;
+	
 
 	for(unsigned i = 0; i < _db->size(); i++)
 	{
 		string manu = convertToLower((*_db)[i].getManufacturer());
-		smartSearch((*_db)[i], manu, _query, results, close_results, substring_matches, edit_distance_matches, edit_req, 2);
+		smartSearch((*_db)[i], manu, _query, results, close_results, substring_matches, edit_distance_matches, 2);
 	}
 	getConsolidatedResults(results, close_results, substring_matches, edit_distance_matches, count);
 	return results;
@@ -217,12 +217,11 @@ vector<Product>* search::searchByBarcode(string query)
 	
 	vector<vector<Product>> substring_matches(count, vector<Product>()), edit_distance_matches(1, vector<Product>());
 	vector<Product> close_results;
-	bool edit_req = true;
 
 	for(unsigned i = 0; i < _db->size(); i++)
 	{
 		string barcode = convertToLower(to_string((*_db)[i].getBarcode()));
-		smartSearch((*_db)[i], barcode, _query, results, close_results, substring_matches, edit_distance_matches, edit_req, 1);
+		smartSearch((*_db)[i], barcode, _query, results, close_results, substring_matches, edit_distance_matches, 1);
 	}
 	getConsolidatedResults(results, close_results, substring_matches, edit_distance_matches, count);
 	return results;
