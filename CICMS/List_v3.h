@@ -9,8 +9,14 @@ class list_adt
 private:
 	struct Node
 	{
-		T item;
+		T* item;
 		Node *next;
+		Node::Node(T _item, Node* _next)
+		{
+			item = new T(_item);
+			next = _next;
+		}
+
 	};
 
 	Node* _head;
@@ -33,23 +39,17 @@ public:
 	//overload operator =
 	bool operator=(T &a);
 
-	//add to a specific index
-	//in this class will add to the head 
+	//add to a specific index in accending order
 	bool add(T a);
-
-	//remove at a specific index
-	bool remove(int index = 0);
 
 	//return the size of the list
 	unsigned int size();
 
-		 //return if the function is empty
-	 bool isempty();
+	//return if the function is empty
+	bool isEmpty();
 
-	 //delete a product
-	 bool del(T a);
-
-
+	//delete a product
+	bool del(T a);
 };
 
 template <typename T>
@@ -70,6 +70,7 @@ list_adt <T>::~list_adt()
 		Node *curr;
 		curr = _head;
 		_head = _head->next;
+		delete curr->item;
 		delete curr;
 	}
 }
@@ -77,7 +78,7 @@ list_adt <T>::~list_adt()
 template <typename T>
 bool list_adt<T>::operator=(T &a)
 {
-	_curr->item = a;
+	*(_curr->item) = a;
 	return true;
 }
 
@@ -88,16 +89,14 @@ T& list_adt<T>::operator[] (int index)
 	{
 		if(index == _last)
 		{
-			return _curr->item;
+			return *(_curr->item);
 		}
 		else if(index>_last)
 		{
 			for(int i=0;i<(index-_last);i++)
-			{
 				_curr=_curr->next;
-				_last=index;
-				return _curr->item;
-			}
+			_last=index;
+			return *(_curr->item);
 		}
 		else
 		{
@@ -106,7 +105,7 @@ T& list_adt<T>::operator[] (int index)
 				temp=temp->next;
 			_last=index;
 			_curr=temp;
-			return temp->item;
+			return *(temp->item);
 		}
 	}
 	else
@@ -116,7 +115,7 @@ T& list_adt<T>::operator[] (int index)
 			temp=temp->next;
 		_last=index;
 		_curr=temp;
-		return temp->item;
+		return *(temp->item);
 	}
 }
 
@@ -124,51 +123,65 @@ T& list_adt<T>::operator[] (int index)
 template <typename T>
 bool list_adt<T>::add(T a)
 {
-	if(_size==0||a.getName()<_head->item.getName())
+	try
 	{
-		Node* temp = new Node;
-		temp->item = a;
-		temp->next = _head;
-		_head = temp;
-		_size++;
-	}
-	else
-	{
-		Node* temp=_head;
-		Node* curr = _head;
-		Node* temp2 = new Node;
-		temp2->item = a;
-		while(temp!=NULL&&a.getName()>((temp->item).getName()))
+		if(_size==0)
 		{
-			curr=temp;
-			temp=temp->next;
+			Node* temp = NULL;
+			temp = new Node (a, NULL);
+			_head = temp;
+			_size++;
 		}
-		temp2->next=temp;
-		curr->next=temp2;
-		_size++;
+		else if(a<=*(_head->item))
+		{
+
+			Node* temp = NULL;
+			temp = new Node (a, _head);
+			_head = temp;
+			_size++;
+		}
+		else
+		{
+			Node* temp=_head;
+			Node* curr = _head;
+			Node* temp2 = NULL;
+			temp2 = new Node (a, NULL);
+			while(temp!=NULL&&(a>*(temp->item)))
+			{
+				curr=temp;
+				temp=temp->next;
+			}
+			temp2->next=temp;
+			curr->next=temp2;
+			_size++;
+		}
+
+		return true;
 	}
-
-	return true;
-
+	catch(std::bad_alloc)
+	{
+		return false;
+	}
 }
 
-//this part we need to take care of _last
 template <typename T>
 bool list_adt<T>::del (T a)
 {
 	bool flag = false;
 	Node *temp=_head;
 	Node *prev=NULL;
-	while(temp!=NULL&&!flag)
+
+	while(!flag&&temp!=NULL)
 	{
-		if(temp->item == a)
+		if(*(temp->item) == a)
 		{
 			flag = true;
-			if(temp==_head)
+			if(prev==NULL)
 			{
 				Node *curr = _head;
 				_head=_head->next;
 				_size--;
+				delete curr->item;
 				delete curr;
 			}
 			else
@@ -176,6 +189,7 @@ bool list_adt<T>::del (T a)
 				Node *curr = temp;
 				prev->next = temp->next;
 				_size--;
+				delete curr->item;
 				delete curr;
 			}
 		}
@@ -187,7 +201,6 @@ bool list_adt<T>::del (T a)
 	return flag;
 }
 
-
 template <typename T>
 unsigned int list_adt<T>::size()
 {
@@ -195,7 +208,7 @@ unsigned int list_adt<T>::size()
 }
 
 template <typename T>
-bool list_adt<T>::isempty()
+bool list_adt<T>::isEmpty()
 {
 	return _size==0;
 }
