@@ -27,6 +27,10 @@ void inputForm::InitializeComponent()
 	this->input_b_no = (gcnew System::Windows::Forms::Button());
 	this->input_tB_input = (gcnew System::Windows::Forms::TextBox());
 	this->input_l_pd = (gcnew System::Windows::Forms::Label());
+	this->panel1 = (gcnew System::Windows::Forms::Panel());
+	this->panel2 = (gcnew System::Windows::Forms::Panel());
+	this->panel1->SuspendLayout();
+	this->panel2->SuspendLayout();
 	this->SuspendLayout();
 	// 
 	// input_l_descript
@@ -34,7 +38,7 @@ void inputForm::InitializeComponent()
 	this->input_l_descript->AutoSize = true;
 	this->input_l_descript->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 8.25F, System::Drawing::FontStyle::Regular, 
 		System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(134)));
-	this->input_l_descript->Location = System::Drawing::Point(12, 42);
+	this->input_l_descript->Location = System::Drawing::Point(4, 3);
 	this->input_l_descript->Name = L"input_l_descript";
 	this->input_l_descript->Size = System::Drawing::Size(69, 13);
 	this->input_l_descript->TabIndex = 0;
@@ -42,7 +46,7 @@ void inputForm::InitializeComponent()
 	// 
 	// input_b_yes
 	// 
-	this->input_b_yes->Location = System::Drawing::Point(13, 73);
+	this->input_b_yes->Location = System::Drawing::Point(3, 3);
 	this->input_b_yes->Name = L"input_b_yes";
 	this->input_b_yes->Size = System::Drawing::Size(75, 23);
 	this->input_b_yes->TabIndex = 2;
@@ -53,7 +57,7 @@ void inputForm::InitializeComponent()
 	// input_b_no
 	// 
 	this->input_b_no->DialogResult = System::Windows::Forms::DialogResult::Cancel;
-	this->input_b_no->Location = System::Drawing::Point(94, 73);
+	this->input_b_no->Location = System::Drawing::Point(84, 3);
 	this->input_b_no->Name = L"input_b_no";
 	this->input_b_no->Size = System::Drawing::Size(75, 23);
 	this->input_b_no->TabIndex = 3;
@@ -62,8 +66,8 @@ void inputForm::InitializeComponent()
 	// 
 	// input_tB_input
 	// 
-	this->input_tB_input->Location = System::Drawing::Point(82, 39);
-	this->input_tB_input->MaxLength = 21;
+	this->input_tB_input->Location = System::Drawing::Point(74, 0);
+	this->input_tB_input->MaxLength = 42;
 	this->input_tB_input->Name = L"input_tB_input";
 	this->input_tB_input->Size = System::Drawing::Size(85, 20);
 	this->input_tB_input->TabIndex = 1;
@@ -73,30 +77,51 @@ void inputForm::InitializeComponent()
 	// 
 	this->input_l_pd->AutoSize = true;
 	this->input_l_pd->Location = System::Drawing::Point(12, 17);
+	this->input_l_pd->Margin = System::Windows::Forms::Padding(3);
 	this->input_l_pd->Name = L"input_l_pd";
 	this->input_l_pd->Size = System::Drawing::Size(58, 13);
 	this->input_l_pd->TabIndex = 4;
 	this->input_l_pd->Text = L"pdDescript";
+	// 
+	// panel1
+	// 
+	this->panel1->Controls->Add(this->input_b_yes);
+	this->panel1->Controls->Add(this->input_b_no);
+	this->panel1->Location = System::Drawing::Point(10, 74);
+	this->panel1->Name = L"panel1";
+	this->panel1->Size = System::Drawing::Size(162, 29);
+	this->panel1->TabIndex = 5;
+	// 
+	// panel2
+	// 
+	this->panel2->Controls->Add(this->input_tB_input);
+	this->panel2->Controls->Add(this->input_l_descript);
+	this->panel2->Location = System::Drawing::Point(10, 39);
+	this->panel2->Name = L"panel2";
+	this->panel2->Size = System::Drawing::Size(162, 22);
+	this->panel2->TabIndex = 6;
 	// 
 	// inputForm
 	// 
 	this->AcceptButton = this->input_b_yes;
 	this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 	this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+	this->AutoSize = true;
 	this->BackColor = System::Drawing::SystemColors::ControlLight;
 	this->CancelButton = this->input_b_no;
 	this->ClientSize = System::Drawing::Size(182, 115);
+	this->Controls->Add(this->panel2);
+	this->Controls->Add(this->panel1);
 	this->Controls->Add(this->input_l_pd);
-	this->Controls->Add(this->input_tB_input);
-	this->Controls->Add(this->input_b_no);
-	this->Controls->Add(this->input_b_yes);
-	this->Controls->Add(this->input_l_descript);
 	this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedDialog;
 	this->MaximizeBox = false;
 	this->MinimizeBox = false;
 	this->Name = L"inputForm";
 	this->Text = L"formTitle";
 	this->Load += gcnew System::EventHandler(this, &inputForm::inputForm_Load);
+	this->panel1->ResumeLayout(false);
+	this->panel2->ResumeLayout(false);
+	this->panel2->PerformLayout();
 	this->ResumeLayout(false);
 	this->PerformLayout();
 
@@ -111,7 +136,7 @@ void inputForm::input_b_yes_Click(System::Object^  sender, System::EventArgs^  e
 	else if(this->formType == NUMBER && InputCheck::lessThan_zero(this->input_tB_input->Text))
 		System::Windows::Forms::MessageBox::Show("Please input an integer larger than zero.");
 	else if(this->formType == NUMBER && this->TOP_X == true && InputCheck::is_large(this->input_tB_input->Text))
-		System::Windows::Forms::MessageBox::Show("The number for X shall be not greater than 100.");
+		System::Windows::Forms::MessageBox::Show("The number for X must be not greater than 100.");
 	else{
 		this->DialogResult = System::Windows::Forms::DialogResult::OK;
 		this->Close();
@@ -123,11 +148,15 @@ void inputForm::set_inputForm(System::String^ title, System::String^ pdDescript,
 	this->input_l_pd->Text = pdDescript;
 	this->input_l_descript->Text = descript;
 	this->input_tB_input->Text = stringInTB;
+	this->input_l_pd->Location = System::Drawing::Point((int) (this->Width - this->input_l_pd->Width) / 2 - 2, 17);
+	this->panel2->Location = System::Drawing::Point((int) (this->Width - this->panel2->Width) / 2 - 3, 39);
+	this->panel1->Location = System::Drawing::Point((int) (this->Width - this->panel1->Width) / 2 - 3, 74);
 }
 
 void inputForm::inputForm_Load(System::Object^  sender, System::EventArgs^  e){
 	if(formType == NUMBER)
 		this->input_tB_input->MaxLength = 7;
 	else if(formType == STRING)
-		this->input_tB_input->MaxLength = 21;
+		this->input_tB_input->MaxLength = 42;
+	this->input_tB_input->Select();
 }

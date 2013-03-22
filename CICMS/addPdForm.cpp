@@ -62,7 +62,7 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	// npd_tB_name
 	// 
 	this->npd_tB_name->Location = System::Drawing::Point(88, 24);
-	this->npd_tB_name->MaxLength = 21;
+	this->npd_tB_name->MaxLength = 42;
 	this->npd_tB_name->Name = L"npd_tB_name";
 	this->npd_tB_name->Size = System::Drawing::Size(138, 20);
 	this->npd_tB_name->TabIndex = 5;
@@ -70,7 +70,7 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	// npd_tB_category
 	// 
 	this->npd_tB_category->Location = System::Drawing::Point(87, 50);
-	this->npd_tB_category->MaxLength = 21;
+	this->npd_tB_category->MaxLength = 42;
 	this->npd_tB_category->Name = L"npd_tB_category";
 	this->npd_tB_category->Size = System::Drawing::Size(138, 20);
 	this->npd_tB_category->TabIndex = 6;
@@ -94,7 +94,7 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	// npd_tB_manuf
 	// 
 	this->npd_tB_manuf->Location = System::Drawing::Point(87, 128);
-	this->npd_tB_manuf->MaxLength = 21;
+	this->npd_tB_manuf->MaxLength = 42;
 	this->npd_tB_manuf->Name = L"npd_tB_manuf";
 	this->npd_tB_manuf->Size = System::Drawing::Size(138, 20);
 	this->npd_tB_manuf->TabIndex = 9;
@@ -217,4 +217,8 @@ System::Windows::Forms::ListViewItem^ addPdForm::get_product_details(){
 		this->npd_tB_price->Text, 
 		this->npd_tB_manuf->Text
 	});
+}
+
+void addPdForm::set_npd_grp_text(System::String^ s){
+	this->npd_grp->Text = s;
 }

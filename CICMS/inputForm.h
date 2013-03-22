@@ -37,7 +37,9 @@ namespace CICMS_UI {
 		System::Windows::Forms::Label^  input_l_pd;
 		System::Windows::Forms::TextBox^  input_tB_input;
 		int formType;
-		bool TOP_X;
+	private: System::Windows::Forms::Panel^  panel1;
+	private: System::Windows::Forms::Panel^  panel2;
+			 bool TOP_X;
 
 		//********************************************************
 		//*************MEMBER FUNCTION DECLEARATION***************
