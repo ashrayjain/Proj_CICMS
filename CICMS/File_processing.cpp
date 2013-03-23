@@ -1,11 +1,30 @@
+/******************************************************************************************************/
+//
+//  class File_Processing
+//
+//  Description: File_Proceesing implements features related to data persistence, like loading products
+//  from a text file into the database and saving the current state of the database into a text file.
+//
+//  API:
+//  File_processing(list_adt<Product>& db);
+//  bool load();
+//	bool save();
+//
+//  Main authors: ASHRAY (A0105199B)
+//
+/******************************************************************************************************/
+
 #include "stdafx.h"
 #include "File_Processing.h"
 
 bool File_processing::load()
 {
 	ifstream fin(filename);
+	if(!fin)
+		return false;
 	
 	string temp, noProducts;
+
 	getline(fin, noProducts);
 	getline(fin, temp);
 	
@@ -31,6 +50,9 @@ bool File_processing::load()
 bool File_processing::save()
 {
 	ofstream fout(filename);
+	if(!fout)
+		return false;
+
 	fout<<to_string(_db->size())+"\n\n";
 	for(unsigned i = 0; i < _db->size(); i++)
 	{
@@ -44,5 +66,5 @@ bool File_processing::save()
 		fout<<"\n";
 	}
 	fout.close();
-	return false;
+	return true;
 }

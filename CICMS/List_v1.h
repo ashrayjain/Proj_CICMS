@@ -1,8 +1,31 @@
+/*************************************************************************************************/
+//
+//  class list_adt : List_v1
+//
+//  Description: List_v1 implements class list_adt using an STL vector as the basis for storing
+//  the data. It has been made compatible with all data types (user-defined or otherwise) using
+//  templates. The class provides basic functionality like addition and deletion from the list.
+//  It also provides access to elements by their index in the list by overloading the array 
+//  subscript operator [].
+//
+//  API:
+//  bool add(T newItem);
+//	bool del(T delItem);
+//	T& operator[](int idx);
+//	unsigned size();
+//	bool isempty();
+//
+//  Main authors: ASHRAY JAIN (A0105199B)
+//
+/*************************************************************************************************/
+
+
+
 #ifndef _list_adt_H_
 #define _list_adt_H_
 
+#include "stdafx.h"
 #include <vector>
-#include "Product.h"
 
 using namespace std;
 
@@ -49,7 +72,7 @@ bool list_adt<T>::del(T delItem)
 template <class T>
 T& list_adt<T>::operator[](int idx)
 {
-	return _database[idx];
+	return _database.at(idx);
 }
 
 #endif

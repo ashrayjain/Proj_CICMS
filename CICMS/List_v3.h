@@ -1,7 +1,7 @@
 #ifndef _list_adt_H_
 #define _list_adt_H_
 
-#include "Product.h"
+#include "stdafx.h"
 
 template <typename T>
 class list_adt
@@ -11,7 +11,7 @@ private:
 	{
 		T* item;
 		Node *next;
-		Node::Node(T _item, Node* _next)
+		Node(T _item, Node* _next)
 		{
 			item = new T(_item);
 			next = _next;
@@ -46,7 +46,7 @@ public:
 	unsigned int size();
 
 	//return if the function is empty
-	bool isEmpty();
+	bool isempty();
 
 	//delete a product
 	bool del(T a);
@@ -208,7 +208,7 @@ unsigned int list_adt<T>::size()
 }
 
 template <typename T>
-bool list_adt<T>::isEmpty()
+bool list_adt<T>::isempty()
 {
 	return _size==0;
 }

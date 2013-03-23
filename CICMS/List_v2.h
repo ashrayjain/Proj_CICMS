@@ -1,7 +1,7 @@
 #ifndef _list_adt_H_
 #define _list_adt_H_
 
-#include "Product.h"
+#include "stdafx.h"
 
 template <typename T>
 class list_adt
@@ -59,7 +59,6 @@ list_adt <T>::list_adt()
 	_head = NULL;
 	_size=0;
 	_curr=_head;
-	//_tail=NULL;
 	_last=0;
 }
 

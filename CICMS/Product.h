@@ -1,20 +1,29 @@
 /***************************************************************************************
 //
-//  class logic: Product.h
+//  class Product
 //
-//  Description: Product.h containg the specification of the class Product. class Product
-//  defines a Product in CICMS, with all its attributes. It also provides the API for
-//  accessing various attributes of a given Product for further processing.
+//  Description: The Product class defines a Product in CICMS, with all its attributes. It also provides the API for
+//  accessing various attributes of a given Product for further processing and updating the sale value and the stock
+//  value. Furthermore, it also allows comparison of two Product objects using overloaded relational operators that 
+//  compare the objects' barcodes.
 //  
 //  API:
-//  Product(std::string, std::string, std::string, unsigned, unsigned, unsigned, double);
-//	std::string getName();
+//  Product(std::string, std::string, std::string, unsigned, double, unsigned _no_in_stock = 0, unsigned _no_sold = 0);
+//  std::string getName();
 //  std::string getCategory();
 //  std::string getManufacturer();
 //  unsigned getBarcode();
 //  unsigned getNoInStock();
 //  unsigned getNoSold();
 //  double getPrice();
+//  bool updateSale(unsigned);
+//  void updateStock(unsigned);
+//  bool operator==(Product& rhs);
+//  bool operator!=(Product& rhs);
+//  bool operator< (Product& rhs);
+//  bool operator> (Product& rhs);
+//  bool operator<=(Product& rhs);
+//  bool operator>=(Product& rhs);
 //
 //  Main authors: ASHRAY JAIN(A0105199B)
 //

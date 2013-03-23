@@ -1,3 +1,21 @@
+/******************************************************************************************************/
+//
+//  class search
+//
+//  Description: The search class implements all the search related features, like searching products
+//  from the database with respect to their name, barcode, category or manufacturer.
+//
+//  API:
+//  search(list_adt<Product> * db);
+//	vector<Product>* searchByName(string);
+//	vector<Product>* searchByCategory(string);
+//	vector<Product>* searchByManufacturer(string);
+//	vector<Product>* searchByBarcode(string);
+//
+//  Main authors: ASHRAY (A0105199B)
+//
+/******************************************************************************************************/
+
 #include "stdafx.h"
 #include "Search.h"
 

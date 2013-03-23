@@ -82,8 +82,6 @@
 #include "statForm.h"
 #include "ListViewItemComparer.h"
 #include "InputCheck.h"
-//#include <vector>
-//#include <string>
 
 using namespace CICMS_UI;
 
