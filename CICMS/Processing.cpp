@@ -18,23 +18,12 @@
 
 #include "stdafx.h"
 #include "Processing.h"
-#include <ctime> // to use C library function clock()
-
 
 Processing::Processing()
 {
 	file = new File_processing(_database);
 	db = new DB_Processing(_database);
-	ofstream fout("log.txt", ios::app);
-	int start, end;
-	start = clock(); // record starting time
-
 	file->load(); 
-
-	end = clock(); // record ending time
-	fout << "Elapsed time:" << (end-start) << " ms" << endl;
-	fout.close();
-
 }
 
 Processing::~Processing()
