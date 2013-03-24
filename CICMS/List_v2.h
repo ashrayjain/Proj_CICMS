@@ -87,6 +87,8 @@ list_adt <T>::~list_adt()
 		Node *curr;
 		curr = _head;
 		_head = _head->next;
+		_curr=_head;
+		_last=0;
 		delete curr->item;
 		delete curr;
 	}
@@ -112,8 +114,8 @@ T& list_adt<T>::operator[] (int index)
 		{
 			for(int i=0;i<(index-_last);i++)
 				_curr=_curr->next;
-				_last=index;
-				return *(_curr->item);
+			_last=index;
+			return *(_curr->item);
 		}
 		else
 		{
@@ -148,6 +150,8 @@ bool list_adt<T>::add(T a)
 			temp = new Node (a, NULL);
 			_head = temp;
 			_size++;
+			_curr=_head;
+			_last=0;
 			return true;
 		}
 		else
@@ -156,6 +160,8 @@ bool list_adt<T>::add(T a)
 			temp = new Node (a, _head);
 			_head = temp;
 			_size++;
+			_curr=_head;
+			_last=0;
 			return true;
 		}
 	}
@@ -172,7 +178,7 @@ bool list_adt<T>::del (T a)
 	Node *temp=_head;
 	Node *prev=NULL;
 
-    while(!flag&&temp!=NULL)
+	while(!flag&&temp!=NULL)
 	{
 		if(*(temp->item) == a)
 		{
@@ -198,7 +204,8 @@ bool list_adt<T>::del (T a)
 		prev=temp;
 		temp=temp->next;
 	}
-
+	_curr=_head;
+	_last=0;
 	return flag;
 }
 

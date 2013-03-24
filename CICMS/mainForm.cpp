@@ -430,8 +430,9 @@ void mainForm::Create_deleteForm(){
 		if(r == System::Windows::Forms::DialogResult::Yes)
 			;//del all
 		else if(r == System::Windows::Forms::DialogResult::No)
-			return;//quit the loop directly
+			return;//quit the deletion directly
 	}
+	this->list_lv->BeginUpdate();
 	for(int i = 0; i < this->list_lv->SelectedItems->Count; i++){
 		if(case_tooMany == Yes_Yes || (System::Windows::Forms::MessageBox::Show("Are you sure that you would like \nto delete this product, " +
 			this->Get_sName(i) + " (" + this->Get_sCategory(i) + ") - " + this->Get_sBarcode(i) +
@@ -446,10 +447,18 @@ void mainForm::Create_deleteForm(){
 				else
 					this->Update_statusBar(deleteF);
 		}
-		else
+		else{
+			//quit the deletion
+			this->list_lv->EndUpdate();//must!
 			return;
+		}
 	}
-	this->Toggle_list_b(false);
+	//aft deletion
+	this->list_lv->EndUpdate();
+	if(this->list_lv->Items->Count > 0)
+		this->list_lv->Items[0]->Selected = true;
+	else
+		this->Toggle_list_b(false);
 }
 //Function: toggle 'enabled' properties for pd_b_delete, pd_b_sell, pd_b_restock buttons
 void mainForm::Toggle_list_b(bool tof){
