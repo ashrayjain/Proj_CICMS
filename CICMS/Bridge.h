@@ -1,4 +1,32 @@
-//middle layer between GUI and Processing
+/*************************************************************************************************/
+//
+//  class Bridge: Bridge.h
+//
+//  Description: A middle layer between GUI and Processing (logic) that only converts the data type
+//	(C++\CLI <-----> std C++)
+//
+//  API:
+//	*** search according to a keyword and a method (int) ***
+//  array<System::Windows::Forms::ListViewItem^>^ Search(System::String^, int);
+//	*** add a new product ***
+//	bool Add(System::Windows::Forms::ListViewItem^);
+//	*** restock a product ***
+//	bool Restock(System::Windows::Forms::ListViewItem^, unsigned);
+//	*** specify the sale for a product ***
+//	bool Sell(System::Windows::Forms::ListViewItem^, unsigned);
+//  *** scrap/delete a product ***
+//	bool Del(System::Windows::Forms::ListViewItem^);
+//	*** generate the report for the Best-Selling manufacturer(s) ***
+//	System::String^ Bridge::Gen_BSmanu();
+//	*** generate the report for the Top X products ***
+//	*** generate the report for the Best-Selling product(s), when x = 1 ***
+//	array<System::Windows::Forms::ListViewItem^>^ Bridge::Gen_TopXpd(int x);
+//	*** generate the report for the Best-Selling product(s) in a given category (string)
+//	array<System::Windows::Forms::ListViewItem^>^ Bridge::Gen_BSpdCate(System::String^ s);
+//
+//  Main authors: XIE KAI(A0102016E)
+//
+/*************************************************************************************************/
 #ifndef _GUARD_Bridge
 #define _GUARD_Bridge
 

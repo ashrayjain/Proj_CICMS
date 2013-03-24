@@ -4,15 +4,17 @@
 //
 //  Description: inputForm.h contains the implementation part of class inputForm.
 //
-//  API:
-//  CICMS_UI::inputForm::inputForm();     //create a inputForm object
-//  CICMS_UI::inputForm::get_input();     //Called to return double datatype of value entered in this object
-//  CICMS_UI::inputForm::set_inputForm(); //Called to set the default starting value and name/content of this object
 //
-//  Main authors: XIE KAI(A0102016E), HUI HUI (A0105566E)
+//  API:
+//  CICMS_UI::inputForm::inputForm(); //create a inputForm object
+//  CICMS_UI::inputForm::get_input(); // Called to return double datatype of value entered in this object
+//  CICMS_UI::inputForm::set_inputForm(); //Called to set the default starting value and name/content of this object
+//	CICMS_UI::inputForm::set_formType(int i) //set an inputForm for number or string
+//	CICMS_UI::inputForm::TOP_X_filter(bool c) //set a threshold (100) for inputForm (formType: NUMBER)
+//
+//  Main authors: XIE KAI(A0102016E), HUI HUI(A0105566E)
 //
 /*************************************************************************************************/
-
 
 #include "stdafx.h"
 #include "inputForm.h"

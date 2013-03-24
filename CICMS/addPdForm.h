@@ -4,7 +4,7 @@
 //
 //  Description: addPdForm.h contains the specification part of class addPdForm. class addPdForm is 
 //  the window which opens to add products to the database for CICMS. In our top-down design, addPdForm 
-//  is directly below the top. It contains 7 textboxes for data entry when adding a new product,
+//  is directly below the top. It contains 5 textboxes for data entry when adding a new product,
 //  as well as a public function, get_product_details(), which will be called by mainForm's function,
 //  Create_addPdForms(), in order to pass this data to the logic object. 
 //  to 

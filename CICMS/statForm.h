@@ -1,4 +1,24 @@
-#pragma once
+/*************************************************************************************************/
+//
+//  class statForm: statForm.h
+//
+//  Description: a form that displays the statistics report
+//
+//  API:
+//	*** constructor ***
+//	statForm(void)
+//	*** set the group title ***
+//  void Set_grpTitle(System::String^ s)
+//	*** send in the report data ***
+//	void Set_listData(array<System::Windows::Forms::ListViewItem^>^ r)
+//
+//  Main authors: XIE KAI(A0102016E), BOB WONG(A0094718U)
+//
+/*************************************************************************************************/
+
+#ifndef _GUARD_UI_statForm
+#define _GUARD_UI_statForm
+
 #include "stdafx.h"
 #include "InputCheck.h"
 #include "ListViewItemComparer.h"
@@ -52,7 +72,6 @@ namespace CICMS_UI {
 		/// </summary>
 		System::ComponentModel::Container ^components;
 
-#pragma region Windows Form Designer generated code
 		/// <summary>
 		/// Required method for Designer support - do not modify
 		/// the contents of this method with the code editor.
@@ -197,9 +216,11 @@ namespace CICMS_UI {
 					this->list_lv->Items[0]->Selected = true;
 				}
 			}
-#pragma endregion
+
 	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
 				 this->Close();
 			 }
 	};
 }
+
+#endif

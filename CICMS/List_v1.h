@@ -1,8 +1,8 @@
 /*************************************************************************************************/
 //
-//  class list_adt : List_v1
+//  class list_adt : version 1
 //
-//  Description: List_v1 implements class list_adt using an STL vector as the basis for storing
+//  Description: list_adt v1 implements class list_adt using an STL vector as the basis for storing
 //  the data. It has been made compatible with all data types (user-defined or otherwise) using
 //  templates. The class provides basic functionality like addition and deletion from the list.
 //  It also provides access to elements by their index in the list by overloading the array 

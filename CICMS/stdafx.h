@@ -3,7 +3,10 @@
 // are changed infrequently
 //
 
-#pragma once
+#ifndef _GUARD_stdafx
+#define _GUARD_stdafx
 
 // TODO: reference additional headers your program requires here
 #define NULL 0
+
+#endif

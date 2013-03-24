@@ -1,3 +1,20 @@
+/*************************************************************************************************/
+//
+//  class list_adt : version 3
+//
+//  Description: Sorted linked list.
+//
+//  API:
+//  bool add(T newItem);
+//	bool del(T delItem);
+//	T& operator[](int idx);
+//	unsigned size();
+//	bool isempty();
+//
+//  Main authors: HUI HUI(A0105566E)
+//
+/*************************************************************************************************/
+
 #ifndef _list_adt_H_
 #define _list_adt_H_
 
