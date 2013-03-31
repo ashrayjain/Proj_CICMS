@@ -39,7 +39,7 @@
 array<System::Windows::Forms::ListViewItem^>^ Bridge::Search(System::String^ s, int i)
 {
 	enum BYMETHOD { byName, byBarcode, byCategory, byStock, byManuf };
-	vector<Product> *r = Handler.db->search(toStdString(s), i);
+	vector<Product> *r = Handler->db->search(toStdString(s), i);
 	array<System::Windows::Forms::ListViewItem^>^ items = gcnew array<System::Windows::Forms::ListViewItem^>(r->size());
 	for(unsigned i = 0; i < r->size(); i++)
 		items[i] = toLvItem((*r)[i]);
@@ -48,30 +48,30 @@ array<System::Windows::Forms::ListViewItem^>^ Bridge::Search(System::String^ s, 
 }
 bool Bridge::Add(System::Windows::Forms::ListViewItem^ item)
 {
-	if(Handler.db->addProduct(toProduct(item)))
+	if(Handler->db->addProduct(toProduct(item)))
 		return true;
 	return false;
 }
 bool Bridge::Restock(System::Windows::Forms::ListViewItem^ item, unsigned i)
 {
-	if(Handler.db->updateStock(toProduct(item), i))
+	if(Handler->db->updateStock(toProduct(item), i))
 		return true;
 	return false;
 }
 bool Bridge::Sell(System::Windows::Forms::ListViewItem^ item, unsigned i)
 {
-	if(Handler.db->updateSale(toProduct(item), i))
+	if(Handler->db->updateSale(toProduct(item), i))
 		return true;
 	return false;
 }
 bool Bridge::Del(System::Windows::Forms::ListViewItem^ item)
 {
-	if(Handler.db->delProduct(toProduct(item)))
+	if(Handler->db->delProduct(toProduct(item)))
 		return true;
 	return false;
 }
 System::String^ Bridge::Gen_BSmanu(){
-	vector<std::string> *r = Handler.db->generateManu();
+	vector<std::string> *r = Handler->db->generateManu();
 	System::String^ s = "";
 	for(unsigned i = 0; i < r->size(); i++)
 		s += toSysString((*r)[i]) + "\n";
@@ -79,7 +79,7 @@ System::String^ Bridge::Gen_BSmanu(){
 	return s;
 }
 array<System::Windows::Forms::ListViewItem^>^ Bridge::Gen_BSpdCate(System::String^ s){
-	vector<Product> *r = Handler.db->generatePrd(toStdString(s));
+	vector<Product> *r = Handler->db->generatePrd(toStdString(s));
 	array<System::Windows::Forms::ListViewItem^>^ items = gcnew array<System::Windows::Forms::ListViewItem^>(r->size());
 	for(unsigned i = 0; i < r->size(); i++)
 		items[i] = toLvItem((*r)[i]);
@@ -88,7 +88,7 @@ array<System::Windows::Forms::ListViewItem^>^ Bridge::Gen_BSpdCate(System::Strin
 }
 //combine Gen_TopXpd and Gen_BSpd
 array<System::Windows::Forms::ListViewItem^>^ Bridge::Gen_TopXpd(int x){
-	vector<Product> *r = Handler.db->generatePrd(x);
+	vector<Product> *r = Handler->db->generatePrd(x);
 	array<System::Windows::Forms::ListViewItem^>^ items = gcnew array<System::Windows::Forms::ListViewItem^>(r->size());
 	for(unsigned i = 0; i < r->size(); i++)
 		items[i] = toLvItem((*r)[i]);
