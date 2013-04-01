@@ -280,14 +280,6 @@ void addPdForm::npd_b_ok_Click(System::Object^  sender, System::EventArgs^  e) {
 		System::Windows::Forms::MessageBox::Show("Please fill in all the fields.");
 		this->npd_tB_barcode->Focus();
 	}
-	else if(InputCheck::is_empty(this->npd_tB_price->Text)){
-		System::Windows::Forms::MessageBox::Show("Please fill in all the fields.");
-		this->npd_tB_price->Focus();
-	}
-	else if(InputCheck::is_empty(this->npd_tB_manuf->Text)){
-		System::Windows::Forms::MessageBox::Show("Please fill in all the fields.");
-		this->npd_tB_manuf->Focus();
-	}
 	else if(!InputCheck::is_int(this->npd_tB_barcode->Text)){
 		System::Windows::Forms::MessageBox::Show("Please input an integer in the barcode field.");
 		this->npd_tB_barcode->Focus();
@@ -298,6 +290,10 @@ void addPdForm::npd_b_ok_Click(System::Object^  sender, System::EventArgs^  e) {
 		this->npd_tB_barcode->Focus();
 		this->npd_tB_barcode->SelectAll();
 	}
+	else if(InputCheck::is_empty(this->npd_tB_price->Text)){
+		System::Windows::Forms::MessageBox::Show("Please fill in all the fields.");
+		this->npd_tB_price->Focus();
+	}
 	else if(!InputCheck::is_number(this->npd_tB_price->Text)){
 		System::Windows::Forms::MessageBox::Show("Please input a number in the price field.");
 		this->npd_tB_price->Focus();
@@ -307,6 +303,10 @@ void addPdForm::npd_b_ok_Click(System::Object^  sender, System::EventArgs^  e) {
 		System::Windows::Forms::MessageBox::Show("Please input a number larger than zero in the price field.");
 		this->npd_tB_price->Focus();
 		this->npd_tB_price->SelectAll();
+	}
+	else if(InputCheck::is_empty(this->npd_tB_manuf->Text)){
+		System::Windows::Forms::MessageBox::Show("Please fill in all the fields.");
+		this->npd_tB_manuf->Focus();
 	}
 	else{
 		this->DialogResult = System::Windows::Forms::DialogResult::OK;
