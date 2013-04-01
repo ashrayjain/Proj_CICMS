@@ -12,7 +12,7 @@
 //	vector<Product>* searchByManufacturer(string);
 //	vector<Product>* searchByBarcode(string);
 //
-//  Main authors: ASHRAY (A0105199B)
+//  Main authors: ASHRAY JAIN (A0105199B)
 //
 /******************************************************************************************************/
 

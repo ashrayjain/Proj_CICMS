@@ -12,7 +12,7 @@
 //	vector<Product>* searchByManufacturer(string);
 //	vector<Product>* searchByBarcode(string);
 //
-//  Main authors: ASHRAY (A0105199B)
+//  Main authors: ASHRAY JAIN (A0105199B)
 //
 /******************************************************************************************************/
 
@@ -22,9 +22,9 @@
 
 #include "stdafx.h"
 #include "Product.h"
-//#include "List_v1.h"
+#include "List_v1.h"
 //#include "List_v2.h"
-#include "List_v3.h"
+//#include "List_v1.h"
 #include <fstream>
 #include <sstream>
 #include <string>

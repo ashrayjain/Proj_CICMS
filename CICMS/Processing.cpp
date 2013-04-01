@@ -9,19 +9,28 @@
 //  API:
 //  Processing();
 //	~Processing();
-//	DB_Processing *db;
 //	inline int size() { return _database.size(); }
+//  inline bool Processing::addProduct(Product t);
+//  inline bool Processing::delProduct(Product t);
+//  inline vector<Product>* Processing::search(string s, int i);
+//  inline bool Processing::updateStock(Product t, int i);
+//  inline bool Processing::updateSale(Product t, unsigned i);
+//  inline vector<Product>* Processing::generatePrd(int X);
+//  inline vector<Product>* Processing::generatePrd(string s);
+//  inline vector<string>* Processing::generateManu();
 //
-//  Main authors: ASHRAY (A0105199B)
+//  Main authors: ASHRAY JAIN (A0105199B)
 //
 /******************************************************************************************************/
 
 #include "stdafx.h"
 #include "Processing.h"
+#include <fstream>
+#include <time.h>
 
 Processing::Processing()
 {
-	file = new File_processing(_database);
+	file = new File_processing(_database, "product.txt", "$temp.cicms");
 	db = new DB_Processing(_database);
 	file->load(); 
 }

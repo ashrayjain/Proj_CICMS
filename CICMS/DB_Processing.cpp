@@ -19,7 +19,7 @@
 //	vector<Product>* generatePrd(string);
 //	vector<string>* generateManu();
 //
-//  Main authors: ASHRAY (A0105199B)
+//  Main authors: ASHRAY JAIN (A0105199B)
 //
 /*************************************************************************************************/
 

@@ -10,7 +10,7 @@
 //  bool load();
 //	bool save();
 //
-//  Main authors: ASHRAY (A0105199B)
+//  Main authors: ASHRAY JAIN (A0105199B)
 //
 /******************************************************************************************************/
 
@@ -18,21 +18,22 @@
 #define _FILE_PROCESSING_H_
 
 #include "Product.h"
-//#include "List_v1.h"
+#include "List_v1.h"
 //#include "List_v2.h"
-#include "List_v3.h"
+//#include "List_v1.h"
 #include <fstream>
 #include <string>
+#include <cstdio>
 
 using namespace std;
 
 class File_processing
 {
 private:
-	string filename;
+	string filename, tempfile;
 	list_adt<Product>* _db;
 public:
-	File_processing(list_adt<Product>& db) : filename("product.txt") { _db = &db; }
+	File_processing(list_adt<Product>& db, string name, string temp) : filename(name), tempfile(temp) { _db = &db; }
 	bool load();
 	bool save();
 };
