@@ -566,10 +566,10 @@ System::String^ mainForm::Get_sCategory(int index){
 //Function: update statusBar's Text and BackColor
 void mainForm::Update_statusBar(int i){
 	array<System::String^>^ text = gcnew array<System::String^>{
-		"Product(s) added successfully", "Product(s) added unsuccessfully", //addS , addF
+		"Product(s) added successfully", "Product(s) added unsuccessfully. The barcode already exists", //addS , addF
 			"Data loaded successfully", "Data loaded unsuccessfully", //loadS, loadF
 			"Data saved successfully", "Data saved unsuccessfully", //saveS, saveF
-			"Product(s) sold successfully", "Product(s) sold unsuccessfully", //sellS, sellF
+			"Product(s) sold successfully", "Product(s) sold unsuccessfully. Please check the stock", //sellS, sellF
 			"Product(s) restocked successfully", "Product(s) restocked unsuccessfully", //restockS, restockF
 			"Product(s) deleted successfully", "Product(s) deleted unsuccessfully", //deleteS, deleteF
 			"Price discounted successfully", "Price discounted unsuccessfully", //discountS, discountF
