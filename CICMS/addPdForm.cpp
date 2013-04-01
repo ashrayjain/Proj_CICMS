@@ -19,6 +19,7 @@ using namespace CICMS_UI;
 addPdForm::addPdForm(void)
 {
 	InitializeComponent();
+	this->DefaultColor = this->npd_tB_name->BackColor;
 }
 
 void addPdForm::InitializeComponent(void) //Initializes every single component on the form
@@ -66,6 +67,8 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	this->npd_tB_name->Name = L"npd_tB_name";
 	this->npd_tB_name->Size = System::Drawing::Size(138, 20);
 	this->npd_tB_name->TabIndex = 5;
+	this->npd_tB_name->TextChanged += gcnew System::EventHandler(this, &addPdForm::npd_tB_name_TextChanged);
+	this->npd_tB_name->LostFocus += gcnew System::EventHandler(this, &addPdForm::npd_tB_name_LostFocus);
 	// 
 	// npd_tB_category
 	// 
@@ -74,6 +77,8 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	this->npd_tB_category->Name = L"npd_tB_category";
 	this->npd_tB_category->Size = System::Drawing::Size(138, 20);
 	this->npd_tB_category->TabIndex = 6;
+	this->npd_tB_category->TextChanged += gcnew System::EventHandler(this, &addPdForm::npd_tB_category_TextChanged);
+	this->npd_tB_category->LostFocus += gcnew System::EventHandler(this, &addPdForm::npd_tB_category_LostFocus);
 	// 
 	// npd_tB_barcode
 	// 
@@ -82,6 +87,8 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	this->npd_tB_barcode->Name = L"npd_tB_barcode";
 	this->npd_tB_barcode->Size = System::Drawing::Size(138, 20);
 	this->npd_tB_barcode->TabIndex = 7;
+	this->npd_tB_barcode->TextChanged += gcnew System::EventHandler(this, &addPdForm::npd_tB_barcode_TextChanged);
+	this->npd_tB_barcode->LostFocus += gcnew System::EventHandler(this, &addPdForm::npd_tB_barcode_LostFocus);
 	// 
 	// npd_tB_price
 	// 
@@ -90,6 +97,8 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	this->npd_tB_price->Name = L"npd_tB_price";
 	this->npd_tB_price->Size = System::Drawing::Size(138, 20);
 	this->npd_tB_price->TabIndex = 8;
+	this->npd_tB_price->TextChanged += gcnew System::EventHandler(this, &addPdForm::npd_tB_price_TextChanged);
+	this->npd_tB_price->LostFocus += gcnew System::EventHandler(this, &addPdForm::npd_tB_price_LostFocus);
 	// 
 	// npd_tB_manuf
 	// 
@@ -98,6 +107,8 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	this->npd_tB_manuf->Name = L"npd_tB_manuf";
 	this->npd_tB_manuf->Size = System::Drawing::Size(138, 20);
 	this->npd_tB_manuf->TabIndex = 9;
+	this->npd_tB_manuf->TextChanged += gcnew System::EventHandler(this, &addPdForm::npd_tB_manuf_TextChanged);
+	this->npd_tB_manuf->LostFocus += gcnew System::EventHandler(this, &addPdForm::npd_tB_manuf_LostFocus);
 	// 
 	// npd_l_price
 	// 
@@ -185,23 +196,118 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 
 }
 
+//instant Checking for npd_tB_name
+void addPdForm::npd_tB_name_TextChanged(System::Object^  sender, System::EventArgs^  e){
+	if(InputCheck::is_empty(this->npd_tB_name->Text))
+		this->npd_tB_name->BackColor = System::Drawing::Color::LightSalmon;
+	else
+		this->npd_tB_name->BackColor = this->DefaultColor;
+}
+void addPdForm::npd_tB_name_LostFocus(System::Object^  sender, System::EventArgs^  e){
+	if(InputCheck::is_empty(this->npd_tB_name->Text))
+		this->npd_tB_name->BackColor = System::Drawing::Color::LightSalmon;
+}
+//instant Checking for npd_tB_category
+void addPdForm::npd_tB_category_TextChanged(System::Object^  sender, System::EventArgs^  e){
+	if(InputCheck::is_empty(this->npd_tB_category->Text))
+		this->npd_tB_category->BackColor = System::Drawing::Color::LightSalmon;
+	else
+		this->npd_tB_category->BackColor = this->DefaultColor;
+}
+void addPdForm::npd_tB_category_LostFocus(System::Object^  sender, System::EventArgs^  e){
+	if(InputCheck::is_empty(this->npd_tB_category->Text))
+		this->npd_tB_category->BackColor = System::Drawing::Color::LightSalmon;
+}
+//instant Checking for npd_tB_barcode
+void addPdForm::npd_tB_barcode_TextChanged(System::Object^  sender, System::EventArgs^  e){
+	if(!InputCheck::is_int(this->npd_tB_barcode->Text))
+		this->npd_tB_barcode->BackColor = System::Drawing::Color::LightSalmon;
+	else if(InputCheck::lessThan_zero(this->npd_tB_barcode->Text))
+		this->npd_tB_barcode->BackColor = System::Drawing::Color::LightSalmon;
+	else
+		this->npd_tB_barcode->BackColor = this->DefaultColor;
+}
+void addPdForm::npd_tB_barcode_LostFocus(System::Object^  sender, System::EventArgs^  e){
+	if(InputCheck::is_empty(this->npd_tB_barcode->Text))
+		this->npd_tB_barcode->BackColor = System::Drawing::Color::LightSalmon;
+}
+//instant Checking for npd_tB_price
+void addPdForm::npd_tB_price_TextChanged(System::Object^  sender, System::EventArgs^  e){
+	if(!InputCheck::is_number(this->npd_tB_price->Text))
+		this->npd_tB_price->BackColor = System::Drawing::Color::LightSalmon;
+	else if(InputCheck::lessThan_zero(this->npd_tB_price->Text))
+		this->npd_tB_price->BackColor = System::Drawing::Color::LightSalmon;
+	else
+		this->npd_tB_price->BackColor = this->DefaultColor;
+}
+void addPdForm::npd_tB_price_LostFocus(System::Object^  sender, System::EventArgs^  e){
+	if(InputCheck::is_empty(this->npd_tB_price->Text))
+		this->npd_tB_price->BackColor = System::Drawing::Color::LightSalmon;
+}
+//instant Checking for npd_tB_manuf
+void addPdForm::npd_tB_manuf_TextChanged(System::Object^  sender, System::EventArgs^  e){
+	if(InputCheck::is_empty(this->npd_tB_manuf->Text))
+		this->npd_tB_manuf->BackColor = System::Drawing::Color::LightSalmon;
+	else
+		this->npd_tB_manuf->BackColor = this->DefaultColor;
+}
+void addPdForm::npd_tB_manuf_LostFocus(System::Object^  sender, System::EventArgs^  e){
+	if(InputCheck::is_empty(this->npd_tB_manuf->Text))
+		this->npd_tB_manuf->BackColor = System::Drawing::Color::LightSalmon;
+}
+
 // Upon clicking the OK button, stuff happens here
 // possibly notifying the logic classes to call get_product_details()
 void addPdForm::npd_b_ok_Click(System::Object^  sender, System::EventArgs^  e) {
-	if(InputCheck::is_empty(this->npd_tB_name->Text) ||
-		InputCheck::is_empty(this->npd_tB_category->Text) ||
-		InputCheck::is_empty(this->npd_tB_manuf->Text) ||
-		InputCheck::is_empty(this->npd_tB_barcode->Text) ||
-		InputCheck::is_empty(this->npd_tB_price->Text))
+	//unfocus every textbox to check whether they are empty or not
+	this->npd_tB_name->Focus();
+	this->npd_tB_category->Focus();
+	this->npd_tB_manuf->Focus();
+	this->npd_tB_barcode->Focus();
+	this->npd_tB_price->Focus();
+	this->npd_b_ok->Focus();
+
+	//start input checking
+	if(InputCheck::is_empty(this->npd_tB_name->Text)){
 		System::Windows::Forms::MessageBox::Show("Please fill in all the fields.");
-	else if(!InputCheck::is_int(this->npd_tB_barcode->Text))
+		this->npd_tB_name->Focus();
+	}
+	else if(InputCheck::is_empty(this->npd_tB_category->Text)){
+		System::Windows::Forms::MessageBox::Show("Please fill in all the fields.");
+		this->npd_tB_category->Focus();
+	}
+	else if(InputCheck::is_empty(this->npd_tB_barcode->Text)){
+		System::Windows::Forms::MessageBox::Show("Please fill in all the fields.");
+		this->npd_tB_barcode->Focus();
+	}
+	else if(!InputCheck::is_int(this->npd_tB_barcode->Text)){
 		System::Windows::Forms::MessageBox::Show("Please input an integer in the barcode field.");
-	else if(InputCheck::lessThan_zero(this->npd_tB_barcode->Text))
+		this->npd_tB_barcode->Focus();
+		this->npd_tB_barcode->SelectAll();
+	}
+	else if(InputCheck::lessThan_zero(this->npd_tB_barcode->Text)){
 		System::Windows::Forms::MessageBox::Show("Please input an integer larger than zero in the barcode field.");
-	else if(!InputCheck::is_number(this->npd_tB_price->Text))
+		this->npd_tB_barcode->Focus();
+		this->npd_tB_barcode->SelectAll();
+	}
+	else if(InputCheck::is_empty(this->npd_tB_price->Text)){
+		System::Windows::Forms::MessageBox::Show("Please fill in all the fields.");
+		this->npd_tB_price->Focus();
+	}
+	else if(!InputCheck::is_number(this->npd_tB_price->Text)){
 		System::Windows::Forms::MessageBox::Show("Please input a number in the price field.");
-	else if(InputCheck::lessThan_zero(this->npd_tB_price->Text))
+		this->npd_tB_price->Focus();
+		this->npd_tB_price->SelectAll();
+	}
+	else if(InputCheck::lessThan_zero(this->npd_tB_price->Text)){
 		System::Windows::Forms::MessageBox::Show("Please input a number larger than zero in the price field.");
+		this->npd_tB_price->Focus();
+		this->npd_tB_price->SelectAll();
+	}
+	else if(InputCheck::is_empty(this->npd_tB_manuf->Text)){
+		System::Windows::Forms::MessageBox::Show("Please fill in all the fields.");
+		this->npd_tB_manuf->Focus();
+	}
 	else{
 		this->DialogResult = System::Windows::Forms::DialogResult::OK;
 		this->Close();

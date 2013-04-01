@@ -43,22 +43,30 @@ namespace CICMS_UI {
 	 System::Windows::Forms::Label^  npd_l_name;
 	 System::Windows::Forms::Button^  npd_b_cancel;
 	 System::Windows::Forms::Button^  npd_b_ok;
+	 System::Drawing::Color DefaultColor;
 
 	//********************************************************
 	//*************MEMBER FUNCTION DECLARATION***************
 	//********************************************************
 	void InitializeComponent(void); //Creates the GUI
-	
 	void npd_b_ok_Click(System::Object^  sender, System::EventArgs^  e); //Stuff that happens when OK button is clicked
-	
 	System::Void npd_grp_Enter(System::Object^  sender, System::EventArgs^  e) {}
-
 	public:
 		addPdForm(void);  //Constructor: Calls InitializeComponent to create GUI
 	public:
 		void set_npd_grp_text(System::String^ s);
-		
 		System::Windows::Forms::ListViewItem^ get_product_details(); //Is called by mainForm object to obtain product details from the form
+	//text changed event
+	private: void npd_tB_name_TextChanged(System::Object^  sender, System::EventArgs^  e);
+	private: void npd_tB_category_TextChanged(System::Object^  sender, System::EventArgs^  e);
+	private: void npd_tB_barcode_TextChanged(System::Object^  sender, System::EventArgs^  e);
+	private: void npd_tB_price_TextChanged(System::Object^  sender, System::EventArgs^  e);
+	private: void npd_tB_manuf_TextChanged(System::Object^  sender, System::EventArgs^  e);
+	private: void npd_tB_name_LostFocus(System::Object^  sender, System::EventArgs^  e);
+	private: void npd_tB_category_LostFocus(System::Object^  sender, System::EventArgs^  e);
+	private: void npd_tB_barcode_LostFocus(System::Object^  sender, System::EventArgs^  e);
+	private: void npd_tB_price_LostFocus(System::Object^  sender, System::EventArgs^  e);
+	private: void npd_tB_manuf_LostFocus(System::Object^  sender, System::EventArgs^  e);
 	};
 }
 #endif

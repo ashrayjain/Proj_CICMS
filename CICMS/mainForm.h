@@ -91,13 +91,11 @@ namespace CICMS_UI {
 		mainForm()
 		{
 			InitializeComponent();
-			SelectAll_toggle = true;
-			Bridging = new Bridge;
-			default_IComparer = this->list_lv->ListViewItemSorter;
-			CA_in_List_lv_toggle = true;
+			Ini_settings();
 		}
 
 		~mainForm(){
+			//in order to specifically trigger the auto-save function
 			delete Bridging;
 		}
 	//********************************************************
@@ -106,6 +104,7 @@ namespace CICMS_UI {
 	private: void mainForm_KeyDown(Object^ sender, System::Windows::Forms::KeyEventArgs^ e);
 	private: void mainForm_KeyPress(Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e);
 	private: void mainForm_Load(System::Object^  sender, System::EventArgs^  e);
+	private: void Ini_settings();
 
 	//**********MENU COMPONENTS FUNCTION***********
 	private: void menu_f_addNewProducts_Click(System::Object^  sender, System::EventArgs^  e);
@@ -116,6 +115,10 @@ namespace CICMS_UI {
 	private: void menu_stat_BSpdCate_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void menu_about_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void Create_addPdForms();
+	private: void Create_BSpdForm();
+	private: void Create_BSmanuForm();
+	private: void Create_BSpdCateForm();
+	private: void Create_topXpdForm();
 
 	//**********SEARCH COMPONENTS FUNCTION***********
 	private: void s_tB_input_TextChanged(System::Object^  sender, System::EventArgs^  e);
@@ -204,8 +207,8 @@ namespace CICMS_UI {
 	private: System::Windows::Forms::StatusStrip^  statusStrip1;
 	private: System::Windows::Forms::ToolStripStatusLabel^  toolStripStatusLabel1;
 
-	//**********BRIDGE HANDLER DECLEARATION***********
-	private: Bridge *Bridging;
+	//**********WRAPPER HANDLER DECLEARATION***********
+	private: Bridge^ Bridging;
 
 };
 }

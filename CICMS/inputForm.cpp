@@ -74,6 +74,8 @@ void inputForm::InitializeComponent()
 	this->input_tB_input->Size = System::Drawing::Size(85, 20);
 	this->input_tB_input->TabIndex = 1;
 	this->input_tB_input->Text = L"stringInTB";
+	this->input_tB_input->TextChanged += gcnew System::EventHandler(this, &inputForm::input_tB_input_TextChanged);
+	this->input_tB_input->LostFocus += gcnew System::EventHandler(this, &inputForm::input_tB_input_LostFocus);
 	// 
 	// input_l_pd
 	// 
@@ -128,37 +130,67 @@ void inputForm::InitializeComponent()
 	this->PerformLayout();
 
 }
-
+//Event: when input_b_yes is click
 void inputForm::input_b_yes_Click(System::Object^  sender, System::EventArgs^  e) {
 
-	if(InputCheck::is_empty(this->input_tB_input->Text))
+	if(InputCheck::is_empty(this->input_tB_input->Text)){
 		System::Windows::Forms::MessageBox::Show("Please fill in the field.");
-	else if(this->formType == NUMBER && !InputCheck::is_int(this->input_tB_input->Text))
+		this->input_tB_input->Focus();
+		this->input_tB_input->SelectAll();
+	}
+	else if(this->formType == NUMBER && !InputCheck::is_int(this->input_tB_input->Text)){
 		System::Windows::Forms::MessageBox::Show("Please input an integer");
-	else if(this->formType == NUMBER && InputCheck::lessThan_zero(this->input_tB_input->Text))
+		this->input_tB_input->Focus();
+		this->input_tB_input->SelectAll();
+	}
+	else if(this->formType == NUMBER && InputCheck::lessThan_zero(this->input_tB_input->Text)){
 		System::Windows::Forms::MessageBox::Show("Please input an integer larger than zero.");
-	else if(this->formType == NUMBER && this->TOP_X == true && InputCheck::is_large(this->input_tB_input->Text))
+		this->input_tB_input->Focus();
+		this->input_tB_input->SelectAll();
+	}
+	else if(this->formType == NUMBER && this->TOP_X == true && InputCheck::is_large(this->input_tB_input->Text)){
 		System::Windows::Forms::MessageBox::Show("The number for X must be not greater than 100.");
+		this->input_tB_input->Focus();
+		this->input_tB_input->SelectAll();
+	}
 	else{
 		this->DialogResult = System::Windows::Forms::DialogResult::OK;
 		this->Close();
 	}
 }
-
+//Function: set the inputForm's title, 2 descriptions, and the value in the textBox
 void inputForm::set_inputForm(System::String^ title, System::String^ pdDescript, System::String^ descript, System::String^ stringInTB){
 	this->Text = title;
 	this->input_l_pd->Text = pdDescript;
 	this->input_l_descript->Text = descript;
 	this->input_tB_input->Text = stringInTB;
+	this->input_tB_input->BackColor = this->DefaultColor;
 	this->input_l_pd->Location = System::Drawing::Point((int) (this->Width - this->input_l_pd->Width) / 2 - 2, 17);
 	this->panel2->Location = System::Drawing::Point((int) (this->Width - this->panel2->Width) / 2 - 3, 39);
 	this->panel1->Location = System::Drawing::Point((int) (this->Width - this->panel1->Width) / 2 - 3, 74);
 }
-
+//Event: triggered when the inputForm is loaded
 void inputForm::inputForm_Load(System::Object^  sender, System::EventArgs^  e){
 	if(formType == NUMBER)
 		this->input_tB_input->MaxLength = 7;
 	else if(formType == STRING)
 		this->input_tB_input->MaxLength = 42;
 	this->input_tB_input->Select();
+}
+//instant checking
+void inputForm::input_tB_input_TextChanged(System::Object^  sender, System::EventArgs^  e){
+	if(InputCheck::is_empty(this->input_tB_input->Text))
+		this->input_tB_input->BackColor = System::Drawing::Color::LightSalmon;
+	else if(this->formType == NUMBER && !InputCheck::is_int(this->input_tB_input->Text))
+		this->input_tB_input->BackColor = System::Drawing::Color::LightSalmon;
+	else if(this->formType == NUMBER && InputCheck::lessThan_zero(this->input_tB_input->Text))
+		this->input_tB_input->BackColor = System::Drawing::Color::LightSalmon;
+	else if(this->formType == NUMBER && this->TOP_X == true && InputCheck::is_large(this->input_tB_input->Text))
+		this->input_tB_input->BackColor = System::Drawing::Color::LightSalmon;
+	else
+		this->input_tB_input->BackColor = this->DefaultColor;
+}
+void inputForm::input_tB_input_LostFocus(System::Object^  sender, System::EventArgs^  e){
+	if(InputCheck::is_empty(this->input_tB_input->Text))
+		this->input_tB_input->BackColor = System::Drawing::Color::LightSalmon;
 }

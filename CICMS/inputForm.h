@@ -42,6 +42,7 @@ namespace CICMS_UI {
 	private: System::Windows::Forms::Panel^  panel1;
 	private: System::Windows::Forms::Panel^  panel2;
 			 bool TOP_X;
+			 System::Drawing::Color DefaultColor;
 
 		//********************************************************
 		//*************MEMBER FUNCTION DECLEARATION***************
@@ -56,6 +57,7 @@ namespace CICMS_UI {
 			InitializeComponent();
 			formType = NUMBER;
 			TOP_X = false;
+			DefaultColor = this->input_tB_input->BackColor;
 		}
 
 		//API Function: get the input from inputForm
@@ -71,6 +73,8 @@ namespace CICMS_UI {
 		void set_inputForm(System::String^ title, System::String^ pdDescript, System::String^ descript, System::String^ stringInTB);
 
 	private: void inputForm_Load(System::Object^  sender, System::EventArgs^  e);
+	private: void input_tB_input_TextChanged(System::Object^  sender, System::EventArgs^  e);
+	private: void input_tB_input_LostFocus(System::Object^  sender, System::EventArgs^  e);
 	public: void TOP_X_filter(bool c){
 				 this->TOP_X = c;
 		 }

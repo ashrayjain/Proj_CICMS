@@ -107,7 +107,7 @@ enum SORT_ORDER{Descending = false, Ascending = true};
 //*************                            ***************
 //********************************************************
 
-//Event: when there is keypress in s_tB_input component
+//Event: when there is keyDown in mainForm (KeyDown is for hotkey)
 void mainForm::mainForm_KeyDown(Object^ sender, System::Windows::Forms::KeyEventArgs^ e){
 	//Enter: will be handled by s_b_Enter_Click
 	//
@@ -139,12 +139,13 @@ void mainForm::mainForm_KeyDown(Object^ sender, System::Windows::Forms::KeyEvent
 	else if(e->KeyCode == System::Windows::Forms::Keys::Delete/* || (e->Control && e->KeyCode == System::Windows::Forms::Keys::D)*/){
 		this->list_b_delete->PerformClick();
 	}
-	//Ctrl+A for Add New Product button
+	//Ctrl+N for Add New Product button
 	else if(e->Control && e->KeyCode == System::Windows::Forms::Keys::N)
 		this->Create_addPdForms();
 	else
 		e->SuppressKeyPress = false;
 }
+//Event: when there is keyPress in mainForm (keyPress can differentiate the keyChar specifically)
 void mainForm::mainForm_KeyPress(Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e){
 	//num, character, space for s_tB_input
 	if(!this->s_tB_input->Focused && (System::Char::IsLetterOrDigit(e->KeyChar) ||
@@ -160,9 +161,16 @@ void mainForm::mainForm_KeyPress(Object^ sender, System::Windows::Forms::KeyPres
 		this->s_tB_input->SelectionStart = 0;
 	}
 }
-
+//Event: when mainForm is loaded
 void mainForm::mainForm_Load(System::Object^  sender, System::EventArgs^  e){
 	this->s_tB_input->Select();
+}
+//Initialize the settings before mainForm is loaded
+void mainForm::Ini_settings(){
+	this->SelectAll_toggle = true;
+	this->Bridging = gcnew Bridge;
+	this->default_IComparer = this->list_lv->ListViewItemSorter;
+	this->CA_in_List_lv_toggle = true;
 }
 
 //*********************************************
@@ -179,6 +187,46 @@ void mainForm::menu_f_addNewProducts_Click(System::Object^  sender, System::Even
 }
 //Event: when click menu_stat_BSpd_Click item, open the MessageBox window to show the result of Best-Selling product(s)
 void mainForm::menu_stat_BSpd_Click(System::Object^  sender, System::EventArgs^  e){
+	this->Create_BSpdForm();
+}
+//Event: when click menu_stat_BSmanu_Click item, open the MessageBox window to show the result of Best-Selling manufacturer(s)
+void mainForm::menu_stat_BSmanu_Click(System::Object^  sender, System::EventArgs^  e){
+	this->Create_BSmanuForm();
+}
+//Event: when click menu_stat_BSpdCate
+void mainForm::menu_stat_BSpdCate_Click(System::Object^  sender, System::EventArgs^  e){
+	this->Create_BSpdCateForm();
+}
+//Event: when click menu_stat_topXpd_Click item, open the inputForm to take in a number X, then open MessageBox window to show the result of Top X Selling products
+void mainForm::menu_stat_topXpd_Click(System::Object^  sender, System::EventArgs^  e){
+	this->Create_topXpdForm();
+}
+//Event: when click menu_about item, open a messageBox that contains our team's description
+void mainForm::menu_about_Click(System::Object^  sender, System::EventArgs^  e) {
+	System::Windows::Forms::MessageBox::Show("Hello! Our team, C07-2: Ashray, Bob, Hui and Kai!", " About");
+}
+//Function: create a addPdForm window, and let logic/handler part handle the input
+void mainForm::Create_addPdForms(){
+	int num = (int) Create_inputForm(" Add products", "How many products to add?     ", "Number:", "1");
+	for( int i = 0; i < num; i++){
+		addPdForm^ dlg = gcnew addPdForm();
+		dlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
+		dlg->set_npd_grp_text("New product " + System::Convert::ToString(i+1) + "/" + System::Convert::ToString(num));
+		System::Windows::Forms::DialogResult r = dlg->ShowDialog();
+		if (r == System::Windows::Forms::DialogResult::OK){
+			if(Bridging->Add(dlg->get_product_details())){
+				this->Submit_search();// refresh the search result
+				this->Update_statusBar(addS);
+			}
+			else
+				this->Update_statusBar(addF);
+		}
+		else if(r == System::Windows::Forms::DialogResult::Cancel)
+			break;
+	}
+}
+//Function: create a window to display the Best-Selling product(s)
+void mainForm::Create_BSpdForm(){
 	array<System::Windows::Forms::ListViewItem^>^ r = Bridging->Gen_TopXpd(1);
 	if(r->Length == 0){
 		System::Windows::Forms::MessageBox::Show("Report not available.");
@@ -191,8 +239,8 @@ void mainForm::menu_stat_BSpd_Click(System::Object^  sender, System::EventArgs^ 
 	dlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 	dlg->ShowDialog();
 }
-//Event: when click menu_stat_BSmanu_Click item, open the MessageBox window to show the result of Best-Selling manufacturer(s)
-void mainForm::menu_stat_BSmanu_Click(System::Object^  sender, System::EventArgs^  e){
+//Function: create a window to display the Best-Selling manufacturer(s)
+void mainForm::Create_BSmanuForm(){
 	System::String^ output = Bridging->Gen_BSmanu();
 	if(output->Length != 0)
 		System::Windows::Forms::MessageBox::Show("The Best-Selling manufacturer(s): \n"
@@ -201,8 +249,8 @@ void mainForm::menu_stat_BSmanu_Click(System::Object^  sender, System::EventArgs
 	else
 		System::Windows::Forms::MessageBox::Show("Report not available.");
 }
-//Event: when click menu_stat_BSpdCate
-void mainForm::menu_stat_BSpdCate_Click(System::Object^  sender, System::EventArgs^  e){
+//Function: create a window to display the Best-Selling product(s) in a given category
+void mainForm::Create_BSpdCateForm(){
 	inputForm^ inputDlg = gcnew inputForm();
 	inputDlg->set_inputForm(" Report the Best-Selling product", "Please type the category name ", "Category:  ", "");
 	inputDlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
@@ -226,8 +274,8 @@ void mainForm::menu_stat_BSpdCate_Click(System::Object^  sender, System::EventAr
 	dlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 	dlg->ShowDialog();
 }
-//Event: when click menu_stat_topXpd_Click item, open the inputForm to take in a number X, then open MessageBox window to show the result of Top X Selling products
-void mainForm::menu_stat_topXpd_Click(System::Object^  sender, System::EventArgs^  e){
+//Function: create a window to display the Top X products
+void mainForm::Create_topXpdForm(){
 	inputForm^ inputDlg = gcnew inputForm();
 	inputDlg->set_inputForm(" The Top X Selling products", "Please input a number for X.      ", "X is equal to", "5");
 	inputDlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
@@ -252,40 +300,16 @@ void mainForm::menu_stat_topXpd_Click(System::Object^  sender, System::EventArgs
 	dlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 	dlg->ShowDialog();
 }
-//Event: when click menu_about item, open a messageBox that contains our team's description
-void mainForm::menu_about_Click(System::Object^  sender, System::EventArgs^  e) {
-	System::Windows::Forms::MessageBox::Show("Hello! Our team, C07-2: Ashray, Bob, Hui and Kai!", " About");
-}
-//Fuction: create a addPdForm window, and let logic/handler part handle the input
-void mainForm::Create_addPdForms(){
-	int num = (int) Create_inputForm(" Add products", "How many products to add?     ", "Number:", "1");
-	for( int i = 0; i < num; i++){
-		addPdForm^ dlg = gcnew addPdForm();
-		dlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
-		dlg->set_npd_grp_text("New product " + System::Convert::ToString(i+1) + "/" + System::Convert::ToString(num));
-		System::Windows::Forms::DialogResult r = dlg->ShowDialog();
-		if (r == System::Windows::Forms::DialogResult::OK){
-			if(Bridging->Add(dlg->get_product_details())){
-				this->Submit_search();// refresh the search result
-				this->Update_statusBar(addS);
-			}
-			else
-				this->Update_statusBar(addF);
-		}
-		else if(r == System::Windows::Forms::DialogResult::Cancel)
-			break;
-	}
-}
 
 //***********************************************
 //**********SEARCH COMPONENTS FUNCTION***********
 //***********************************************
 
-//Event: when Text in s_tB_input is changed, used for Search Instant
+//Event: when Text in s_tB_input is changed, used to achieve Search Instant
 void mainForm::s_tB_input_TextChanged(System::Object^  sender, System::EventArgs^  e){
 	this->Submit_search();//search here
 }
-//Event: triggered when CR is pressed
+//Event: triggered when ENTER is pressed
 void mainForm::s_b_Enter_Click(System::Object^  sender, System::EventArgs^  e) {
 		this->s_tB_input->Focus();
 		this->s_tB_input->SelectAll();
@@ -386,6 +410,7 @@ double mainForm::Create_inputForm(System::String^ formTitle, System::String^ pdD
 	else
 		return 0;// 0 is unique, as user cannot input zero
 }
+//Function: create a window to specify the sale of a product
 void mainForm::Create_sellForm(){
 	for(int i = 0; i < this->list_lv->SelectedItems->Count; i++){
 		unsigned num = (unsigned) this->Create_inputForm(" Sell a product", this->Get_sName(i) + " (" + this->Get_sCategory(i) + ") - " + this->Get_sBarcode(i), "Sell:", "1");
@@ -399,6 +424,7 @@ void mainForm::Create_sellForm(){
 			this->Update_statusBar(sellF);
 	}
 }
+//Function: create a window to restock a product
 void mainForm::Create_restockForm(){
 	for(int i = 0; i < this->list_lv->SelectedItems->Count; i++){
 		unsigned num = (unsigned) this->Create_inputForm(" Restock a product", this->Get_sName(i) + " (" + this->Get_sCategory(i) + ") - " + this->Get_sBarcode(i), "Restock:", "1");
@@ -412,7 +438,7 @@ void mainForm::Create_restockForm(){
 			this->Update_statusBar(restockF);
 	}
 }
-
+//Function: create a window to check whether the user want to delete a product or not
 void mainForm::Create_deleteForm(){
 	enum { No_No, Yes_Yes, tooMany = 1};
 	int case_tooMany = No_No;
@@ -467,7 +493,7 @@ void mainForm::Toggle_list_b(bool tof){
 	this->list_b_restock->Enabled = tof;
 	
 }
-//Event: when select an item in the list, update all pd_tB textBoxes by using this item's properties.
+//Event: when select an item in the list, turn on/off some toggles
 void mainForm::list_lv_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
 	this->list_lv->SelectedItems->Count != 0 ? this->Toggle_list_b(true): this->Toggle_list_b(false);
 	if(this->list_lv->SelectedItems->Count == this->list_lv->Items->Count)// selected all liao
@@ -504,14 +530,14 @@ void mainForm::Sort_list_lv(System::Windows::Forms::ColumnClickEventArgs^ e, boo
 void mainForm::Clear_selectedItem(int index){
 	this->list_lv->SelectedItems[index]->Remove();
 }
-//
+//Function: update the selected item's sale number
 void mainForm::Update_selectedItem_sell(int index, unsigned num){
 	int no_stock = System::Convert::ToInt32(this->list_lv->SelectedItems[index]->SubItems[5]->Text) - num,
 		no_sold = System::Convert::ToInt32(this->list_lv->SelectedItems[index]->SubItems[6]->Text) + num;
 	this->list_lv->SelectedItems[index]->SubItems[5]->Text = no_stock.ToString();
 	this->list_lv->SelectedItems[index]->SubItems[6]->Text = no_sold.ToString();
 }
-//
+//Function: update the selected item's stock numer
 void mainForm::Update_selectedItem_restock(int index, unsigned num){
 	int no_stock = System::Convert::ToInt32(this->list_lv->SelectedItems[index]->SubItems[5]->Text) + num;
 	this->list_lv->SelectedItems[index]->SubItems[5]->Text = no_stock.ToString();
@@ -540,10 +566,10 @@ System::String^ mainForm::Get_sCategory(int index){
 //Function: update statusBar's Text and BackColor
 void mainForm::Update_statusBar(int i){
 	array<System::String^>^ text = gcnew array<System::String^>{
-		"Product(s) added successfully", "Product(s) added unsuccessfully", //addS , addF
+		"Product(s) added successfully", "Product(s) added unsuccessfully. The barcode already exists", //addS , addF
 			"Data loaded successfully", "Data loaded unsuccessfully", //loadS, loadF
 			"Data saved successfully", "Data saved unsuccessfully", //saveS, saveF
-			"Product(s) sold successfully", "Product(s) sold unsuccessfully", //sellS, sellF
+			"Product(s) sold successfully", "Product(s) sold unsuccessfully. Please check the stock", //sellS, sellF
 			"Product(s) restocked successfully", "Product(s) restocked unsuccessfully", //restockS, restockF
 			"Product(s) deleted successfully", "Product(s) deleted unsuccessfully", //deleteS, deleteF
 			"Price discounted successfully", "Price discounted unsuccessfully", //discountS, discountF

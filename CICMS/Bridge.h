@@ -2,7 +2,7 @@
 //
 //  class Bridge: Bridge.h
 //
-//  Description: A middle layer between GUI and Processing (logic) that only converts the data type
+//  Description: A wrapper class (managed class) for the native class Processing (logic) that only converts the data type
 //	(C++\CLI <-----> std C++)
 //
 //  API:
@@ -35,9 +35,9 @@
 #include <string>
 #include "Processing.h"
 
-class Bridge{
+ref class Bridge{
 private:
-	Processing Handler;
+	Processing* Handler;
 	//Type converting
 	static Product toProduct(System::Windows::Forms::ListViewItem^);
 	static System::Windows::Forms::ListViewItem^ toLvItem(Product);
@@ -47,8 +47,20 @@ private:
 	static System::String^ toSysString(double);
 	static System::String^ toSysString(unsigned);
 	static System::String^ toSysString(std::string);
+	//Finalizer: deallocate the unmanaged class here
+	!Bridge(){
+		delete this->Handler;
+		this->Handler = NULL;
+	}
 
 public:
+	Bridge(){
+		this->Handler = new Processing;
+	}
+	//Destructor: deallocate both unmanaged and managed class (if have)
+	~Bridge(){
+		this->!Bridge();
+	}
 	//Communication to class Processing
 	array<System::Windows::Forms::ListViewItem^>^ Search(System::String^, int);//return type shall be an array of ListViewItem
 	bool Add(System::Windows::Forms::ListViewItem^);
