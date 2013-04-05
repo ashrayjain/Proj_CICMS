@@ -942,28 +942,32 @@ void mainForm::InitializeComponent()
 	// menu_stat_BSpd
 	// 
 	this->menu_stat_BSpd->Name = L"menu_stat_BSpd";
-	this->menu_stat_BSpd->Size = System::Drawing::Size(334, 22);
+	this->menu_stat_BSpd->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::D1));
+	this->menu_stat_BSpd->Size = System::Drawing::Size(373, 22);
 	this->menu_stat_BSpd->Text = L"Report the Best-Selling product";
 	this->menu_stat_BSpd->Click += gcnew System::EventHandler(this, &mainForm::menu_stat_BSpd_Click);
 	// 
 	// menu_stat_BSmanu
 	// 
 	this->menu_stat_BSmanu->Name = L"menu_stat_BSmanu";
-	this->menu_stat_BSmanu->Size = System::Drawing::Size(334, 22);
+	this->menu_stat_BSmanu->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::D2));
+	this->menu_stat_BSmanu->Size = System::Drawing::Size(373, 22);
 	this->menu_stat_BSmanu->Text = L"Report the Best-Selling manufacturer";
 	this->menu_stat_BSmanu->Click += gcnew System::EventHandler(this, &mainForm::menu_stat_BSmanu_Click);
 	// 
 	// menu_stat_BSpdCate
 	// 
 	this->menu_stat_BSpdCate->Name = L"menu_stat_BSpdCate";
-	this->menu_stat_BSpdCate->Size = System::Drawing::Size(334, 22);
+	this->menu_stat_BSpdCate->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::D3));
+	this->menu_stat_BSpdCate->Size = System::Drawing::Size(373, 22);
 	this->menu_stat_BSpdCate->Text = L"Report the Best-Selling product in a given category";
 	this->menu_stat_BSpdCate->Click += gcnew System::EventHandler(this, &mainForm::menu_stat_BSpdCate_Click);
 	// 
 	// menu_stat_topXpd
 	// 
 	this->menu_stat_topXpd->Name = L"menu_stat_topXpd";
-	this->menu_stat_topXpd->Size = System::Drawing::Size(334, 22);
+	this->menu_stat_topXpd->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::D4));
+	this->menu_stat_topXpd->Size = System::Drawing::Size(373, 22);
 	this->menu_stat_topXpd->Text = L"Report the Top X Selling products";
 	this->menu_stat_topXpd->Click += gcnew System::EventHandler(this, &mainForm::menu_stat_topXpd_Click);
 	// 
