@@ -355,6 +355,7 @@ void prdForm::setValue(System::Windows::Forms::ListViewItem^ item){
 	this->npd_tB_manuf->Text = item->SubItems[4]->Text;
 }
 //Modification mode toggle
+//this mode is used by 'Modify' button
 void prdForm::modifyMode_toggle(bool tof){
 	if(tof){
 		this->npd_tB_barcode->Enabled = false;

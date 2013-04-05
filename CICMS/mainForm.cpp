@@ -589,13 +589,15 @@ void mainForm::Create_modifyForm(){
 					this->list_lv->SelectedItems[i]->SubItems[4]->Text = output->SubItems[4]->Text;
 				//Bridging->Modify(this->list_lv->SelectedItems[i]);
 			}
-			//this->Submit_search();// refresh the search result
 			this->list_lv->EndUpdate();
 		}
+		this->list_lv->Focus();
 		Set_statusBar("Product(s) modified successfully",System::Drawing::Color::LightSkyBlue);
 	}
-	else
+	else{
+		this->list_lv->Focus();
 		Set_statusBar("Ready",System::Drawing::Color::LightSkyBlue);
+	}
 }
 //Function: create an inputForm for input; used by pd_b_sell_Click & pd_b_restock_Click events.
 double mainForm::Create_inputForm(System::String^ formTitle, System::String^ pdDescript, System::String^ inputDescript, System::String^ stringInTB){
