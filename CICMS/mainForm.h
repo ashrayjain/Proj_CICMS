@@ -113,7 +113,16 @@ namespace CICMS_UI {
 	private: void menu_stat_BSmanu_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void menu_stat_topXpd_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void menu_stat_BSpdCate_Click(System::Object^  sender, System::EventArgs^  e);
-	private: void menu_about_Click(System::Object^  sender, System::EventArgs^  e);
+	private: void menu_help_abt_Click(System::Object^  sender, System::EventArgs^  e);
+	private: void menu_help_hotkey_Click(System::Object^  sender, System::EventArgs^  e);
+	private: void menu_f_save_Click(System::Object^  sender, System::EventArgs^  e);
+	private: void menu_f_saveAs_Click(System::Object^  sender, System::EventArgs^  e);
+	private: void menu_f_load_Click(System::Object^  sender, System::EventArgs^  e);
+	private: void menu_f_bp_Click(System::Object^  sender, System::EventArgs^  e);
+	private: void Save_curr_prdList();
+	private: void Save_as_ano_prdList();
+	private: void Batch_processing();
+	private: void Load_prdList();
 	private: void Create_addPdForms();
 	private: void Create_BSpdForm();
 	private: void Create_BSmanuForm();
@@ -148,8 +157,6 @@ namespace CICMS_UI {
 	private: System::String^ Get_sCategory(int index);
 	private: void Update_selectedItem_sell(int index, unsigned num);
 	private: void Update_selectedItem_restock(int index, unsigned num);
-	private: System::Collections::IComparer^ default_IComparer;
-	private: bool CA_in_List_lv_toggle;
 
 	//**********STATUSBAR COMPONENTS FUNCTION***********
 	void Update_statusBar(int i);
@@ -166,7 +173,6 @@ namespace CICMS_UI {
 	private: System::Windows::Forms::MenuStrip^  menu;
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_f;
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_f_quit;
-	private: System::Windows::Forms::ToolStripMenuItem^  menu_about;
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_f_addNewProducts;
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_stat;
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_stat_BSpd;
@@ -174,10 +180,18 @@ namespace CICMS_UI {
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_stat_topXpd;
 	private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_stat_BSpdCate;
+	private: System::Windows::Forms::ToolStripMenuItem^  menu_help;
+	private: System::Windows::Forms::ToolStripMenuItem^  menu_help_hotkey;
+	private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator2;
+	private: System::Windows::Forms::ToolStripMenuItem^  menu_help_abt;
+	private: System::Windows::Forms::ToolStripMenuItem^  menu_f_save;
+	private: System::Windows::Forms::ToolStripMenuItem^  menu_f_saveAs;
+	private: System::Windows::Forms::ToolStripMenuItem^  menu_f_load;
+	private: System::Windows::Forms::ToolStripMenuItem^  menu_f_bp;
+	private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator3;
 
 	//**********SEARCH COMPONENTS DECLEARATION***********
 	private: System::Windows::Forms::TextBox^  s_tB_input;
-
 	private: System::Windows::Forms::GroupBox^  s_grp;
 	private: System::Windows::Forms::Label^  s_l_by;
 	private: System::Windows::Forms::RadioButton^  s_rB_byCategory;
@@ -200,8 +214,11 @@ namespace CICMS_UI {
 	private: System::Windows::Forms::Button^  list_b_delete;
 	private: System::Windows::Forms::Button^  list_b_sell;
 	private: System::Windows::Forms::Button^  list_b_restock;
+	private: System::Windows::Forms::Button^  list_b_modify;
 	private: System::Int32 list_sortColumn;
 	private: bool list_sort;
+	private: System::Collections::IComparer^ default_IComparer;
+	private: bool CA_in_List_lv_toggle;
 
 	//**********STATUS COMPONENTS DECLEARATION***********
 	private: System::Windows::Forms::StatusStrip^  statusStrip1;
@@ -209,7 +226,6 @@ namespace CICMS_UI {
 
 	//**********WRAPPER HANDLER DECLEARATION***********
 	private: Bridge^ Bridging;
-
 };
 }
 #endif
