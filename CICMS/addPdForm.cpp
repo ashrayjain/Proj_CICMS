@@ -167,6 +167,7 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	// 
 	// npd_b_ok
 	// 
+	this->npd_b_ok->Enabled = false;
 	this->npd_b_ok->Location = System::Drawing::Point(39, 184);
 	this->npd_b_ok->Name = L"npd_b_ok";
 	this->npd_b_ok->Size = System::Drawing::Size(75, 23);
@@ -198,6 +199,7 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 
 //instant Checking for npd_tB_name
 void addPdForm::npd_tB_name_TextChanged(System::Object^  sender, System::EventArgs^  e){
+	this->submitButton_toggle();
 	if(InputCheck::is_empty(this->npd_tB_name->Text))
 		this->npd_tB_name->BackColor = System::Drawing::Color::LightSalmon;
 	else
@@ -209,6 +211,7 @@ void addPdForm::npd_tB_name_LostFocus(System::Object^  sender, System::EventArgs
 }
 //instant Checking for npd_tB_category
 void addPdForm::npd_tB_category_TextChanged(System::Object^  sender, System::EventArgs^  e){
+	this->submitButton_toggle();
 	if(InputCheck::is_empty(this->npd_tB_category->Text))
 		this->npd_tB_category->BackColor = System::Drawing::Color::LightSalmon;
 	else
@@ -220,6 +223,7 @@ void addPdForm::npd_tB_category_LostFocus(System::Object^  sender, System::Event
 }
 //instant Checking for npd_tB_barcode
 void addPdForm::npd_tB_barcode_TextChanged(System::Object^  sender, System::EventArgs^  e){
+	this->submitButton_toggle();
 	if(!InputCheck::is_int(this->npd_tB_barcode->Text))
 		this->npd_tB_barcode->BackColor = System::Drawing::Color::LightSalmon;
 	else if(InputCheck::lessThan_zero(this->npd_tB_barcode->Text))
@@ -233,6 +237,7 @@ void addPdForm::npd_tB_barcode_LostFocus(System::Object^  sender, System::EventA
 }
 //instant Checking for npd_tB_price
 void addPdForm::npd_tB_price_TextChanged(System::Object^  sender, System::EventArgs^  e){
+	this->submitButton_toggle();
 	if(!InputCheck::is_number(this->npd_tB_price->Text))
 		this->npd_tB_price->BackColor = System::Drawing::Color::LightSalmon;
 	else if(InputCheck::lessThan_zero(this->npd_tB_price->Text))
@@ -246,6 +251,7 @@ void addPdForm::npd_tB_price_LostFocus(System::Object^  sender, System::EventArg
 }
 //instant Checking for npd_tB_manuf
 void addPdForm::npd_tB_manuf_TextChanged(System::Object^  sender, System::EventArgs^  e){
+	this->submitButton_toggle();
 	if(InputCheck::is_empty(this->npd_tB_manuf->Text))
 		this->npd_tB_manuf->BackColor = System::Drawing::Color::LightSalmon;
 	else
@@ -327,4 +333,15 @@ System::Windows::Forms::ListViewItem^ addPdForm::get_product_details(){
 
 void addPdForm::set_npd_grp_text(System::String^ s){
 	this->npd_grp->Text = s;
+}
+
+void addPdForm::submitButton_toggle(){
+	if(InputCheck::is_empty(this->npd_tB_name->Text) &&
+		InputCheck::is_empty(this->npd_tB_barcode->Text) &&
+		InputCheck::is_empty(this->npd_tB_category->Text) &&
+		InputCheck::is_empty(this->npd_tB_price->Text) &&
+		InputCheck::is_empty(this->npd_tB_manuf->Text))
+		this->npd_b_ok->Enabled = false;
+	else
+		this->npd_b_ok->Enabled = true;
 }

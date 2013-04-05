@@ -67,6 +67,7 @@ namespace CICMS_UI {
 	private: void npd_tB_barcode_LostFocus(System::Object^  sender, System::EventArgs^  e);
 	private: void npd_tB_price_LostFocus(System::Object^  sender, System::EventArgs^  e);
 	private: void npd_tB_manuf_LostFocus(System::Object^  sender, System::EventArgs^  e);
+	private: void submitButton_toggle();
 	};
 }
 #endif

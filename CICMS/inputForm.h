@@ -75,6 +75,7 @@ namespace CICMS_UI {
 	private: void inputForm_Load(System::Object^  sender, System::EventArgs^  e);
 	private: void input_tB_input_TextChanged(System::Object^  sender, System::EventArgs^  e);
 	private: void input_tB_input_LostFocus(System::Object^  sender, System::EventArgs^  e);
+	private: void submitButton_toggle();
 	public: void TOP_X_filter(bool c){
 				 this->TOP_X = c;
 		 }

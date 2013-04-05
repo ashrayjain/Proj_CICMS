@@ -48,6 +48,7 @@ void inputForm::InitializeComponent()
 	// 
 	// input_b_yes
 	// 
+	this->input_b_yes->Enabled = false;
 	this->input_b_yes->Location = System::Drawing::Point(3, 3);
 	this->input_b_yes->Name = L"input_b_yes";
 	this->input_b_yes->Size = System::Drawing::Size(75, 23);
@@ -179,6 +180,7 @@ void inputForm::inputForm_Load(System::Object^  sender, System::EventArgs^  e){
 }
 //instant checking
 void inputForm::input_tB_input_TextChanged(System::Object^  sender, System::EventArgs^  e){
+	this->submitButton_toggle();
 	if(InputCheck::is_empty(this->input_tB_input->Text))
 		this->input_tB_input->BackColor = System::Drawing::Color::LightSalmon;
 	else if(this->formType == NUMBER && !InputCheck::is_int(this->input_tB_input->Text))
@@ -193,4 +195,11 @@ void inputForm::input_tB_input_TextChanged(System::Object^  sender, System::Even
 void inputForm::input_tB_input_LostFocus(System::Object^  sender, System::EventArgs^  e){
 	if(!this->input_b_no->Focused && InputCheck::is_empty(this->input_tB_input->Text))
 		this->input_tB_input->BackColor = System::Drawing::Color::LightSalmon;
+}
+
+void inputForm::submitButton_toggle(){
+	if(InputCheck::is_empty(this->input_tB_input->Text))
+		this->input_b_yes->Enabled = false;
+	else
+		this->input_b_yes->Enabled = true;
 }
