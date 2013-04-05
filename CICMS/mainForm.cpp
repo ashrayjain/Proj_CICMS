@@ -276,6 +276,7 @@ void mainForm::Load_prdList(){
 		this->Set_statusBar("Loading...", System::Drawing::Color::Khaki);
 		this->Bridging->Save(curr_filename);
 		if(Bridging->Load(false, of_dlg->FileName)){
+			this->Submit_search();// refresh the search result
 			this->Update_statusBar(loadS); //successful
 			this->curr_filename = of_dlg->FileName;
 		}
@@ -293,6 +294,7 @@ void mainForm::Batch_processing(){
 	if(of_dlg->ShowDialog() == System::Windows::Forms::DialogResult::OK){
 		this->Set_statusBar("Processing...", System::Drawing::Color::Khaki);
 		int i = Bridging->Batch_processing(of_dlg->FileName);
+		this->Submit_search();// refresh the search result
 		if(i == 0)
 			this->Set_statusBar("Batch file processed successfully", System::Drawing::Color::LightSkyBlue);
 		else
@@ -578,10 +580,10 @@ void mainForm::Create_modifyForm(){
 	//get output, then update the database and listView component
 	if(dlg->ShowDialog() == System::Windows::Forms::DialogResult::OK){
 		output = dlg->get_product_details();
-		bool nameChanged = output->SubItems[0]->Text != input->SubItems[0]->Text,
-			categoryChanged = output->SubItems[1]->Text != input->SubItems[1]->Text,
-			priceChanged = output->SubItems[3]->Text != input->SubItems[3]->Text,
-			manufChanged = output->SubItems[4]->Text != input->SubItems[4]->Text;
+		bool nameChanged = output->SubItems[0]->Text != "(...)" && output->SubItems[0]->Text != input->SubItems[0]->Text,
+			categoryChanged = output->SubItems[1]->Text != "(...)" && output->SubItems[1]->Text != input->SubItems[1]->Text,
+			priceChanged = output->SubItems[3]->Text != "(...)" && output->SubItems[3]->Text != input->SubItems[3]->Text,
+			manufChanged = output->SubItems[4]->Text != "(...)" && output->SubItems[4]->Text != input->SubItems[4]->Text;
 		//any changes? update~
 		if(nameChanged || categoryChanged || priceChanged || manufChanged){
 			this->list_lv->BeginUpdate();
