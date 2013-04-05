@@ -94,7 +94,8 @@ enum STATUSBAR {
 	restockS, restockF,
 	deleteS, deleteF,
 	discountS, discountF,
-	searchS, searchF
+	searchS, searchF,
+	recoverS, recoverF
 };
 
 enum BYMETHOD { byName, byBarcode, byCategory, byManuf, byStock };
@@ -190,23 +191,30 @@ void mainForm::Ini_settings(){
 
 	this->Bridging = gcnew Bridge;
 	//loading at start up
-	//if(Bridging->CheckRecovery()){
-	//	if(System::Windows::Forms::MessageBox::Show("... detected, do you want to restore the operation(s) last time?")
-	//		== System::Windows::Forms::DialogResult::OK){
-	//		this->Update_statusBar(); //loading
-	//		if(Bridging->Load(true))
-	//			this->Update_statusBar(); //successful
-	//		else
-	//			this->Update_statusBar();
-	//	}
-	//	else{
-	//		this->Update_statusBar(); //loading
-	//		if(Bridging->Load(false))
-	//			this->Update_statusBar(); //successful
-	//		else
-	//			this->Update_statusBar();
-	//	}
-	//}
+	if(false/*Bridging->CheckRecovery()*/){
+		if(System::Windows::Forms::MessageBox::Show("Application crashes detected, do you want to restore\nthe operation(s) last time?",
+			" CICMS Recovery",
+			System::Windows::Forms::MessageBoxButtons::YesNo,
+			System::Windows::Forms::MessageBoxIcon::Question)
+			== System::Windows::Forms::DialogResult::Yes){
+			if(true/*Bridging->Load(true)*/)
+				this->Update_statusBar(recoverS); //successful
+			else
+				this->Update_statusBar(recoverF); //unsuccessful
+		}
+		else{
+			if(true/*Bridging->Load(false)*/)
+				this->Set_statusBar("Ready", System::Drawing::Color::LightSkyBlue);
+			else
+				this->Update_statusBar(loadF);
+		}
+	}
+	else{
+		if(true/*Bridging->Load(false)*/)
+			this->Set_statusBar("Ready", System::Drawing::Color::LightSkyBlue);
+		else
+			this->Update_statusBar(loadF);
+	}
 }
 
 //*********************************************
@@ -239,12 +247,11 @@ void mainForm::menu_f_bp_Click(System::Object^  sender, System::EventArgs^  e){
 }
 //Save the current product list
 void mainForm::Save_curr_prdList(){
-	System::Windows::Forms::MessageBox::Show("Save current product list");
-	//this->Update_statusBar();//yellow
-	//if(Bridging->Save())
-	//	this->Update_statusBar();//successful
-	//else
-	//	this->Update_statusBar();//unsuccessful
+	this->Set_statusBar("Saving...", System::Drawing::Color::Khaki);
+	if(true/*Bridging->Save()*/)
+		this->Update_statusBar(saveS);//successful
+	else
+		this->Update_statusBar(saveF);//unsuccessful
 }
 //Save as another product list
 void mainForm::Save_as_ano_prdList(){
@@ -254,11 +261,11 @@ void mainForm::Save_as_ano_prdList(){
 	sf_dlg->Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
 	sf_dlg->FilterIndex = 1;
 	if(sf_dlg->ShowDialog() == System::Windows::Forms::DialogResult::OK){
-		//this->Update_statusBar();//yellow saving ...
-		//if(Bridging->Save(sf_dlg->FileName))
-		//	this->Update_statusBar();//successful
-		//else
-		//	this->Update_statusBar();//unsuccessful
+		this->Set_statusBar("Saving...", System::Drawing::Color::Khaki);
+		if(true/*Bridging->Save(sf_dlg->FileName)*/)
+			this->Update_statusBar(saveS);//successful
+		else
+			this->Update_statusBar(saveF);//unsuccessful
 	}
 }
 //Load a product list
@@ -269,11 +276,11 @@ void mainForm::Load_prdList(){
 	of_dlg->Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
     of_dlg->FilterIndex = 1;
 	if(of_dlg->ShowDialog() == System::Windows::Forms::DialogResult::OK){
-		//this->Update_statusBar();//yellow loading...
-		//if(Bridging->Load(of_dlg->FileName))
-		//	this->Update_statusBar(); //successful
-		//else
-		//	this->Update_statusBar();
+		this->Set_statusBar("Loading...", System::Drawing::Color::Khaki);
+		if(true/*Bridging->Load(of_dlg->FileName)*/)
+			this->Update_statusBar(loadS); //successful
+		else
+			this->Update_statusBar(loadF); //unsuccessful
 	}
 }
 //Submit batch file for batch processing
@@ -284,11 +291,13 @@ void mainForm::Batch_processing(){
 	of_dlg->Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
     of_dlg->FilterIndex = 1;
 	if(of_dlg->ShowDialog() == System::Windows::Forms::DialogResult::OK){
-		//this->Update_statusBar();//yellow Processing...
-		//if(Bridging->Batch_processing(of_dlg->FileName))
-		//	this->Update_statusBar(); //successful
-		//else
-		//	this->Update_statusBar();
+		this->Set_statusBar("Processing...", System::Drawing::Color::Khaki);
+		/*int i = Bridging->Batch_processing(of_dlg->FileName)*/
+		int i = 3;//delete this line later
+		if(i == 0)
+			this->Set_statusBar("Batch file processed successfully", System::Drawing::Color::LightSkyBlue);
+		else
+			this->Set_statusBar("Batch file processed successfully, " + i + " errors found" , System::Drawing::Color::LightSkyBlue);
 	}
 }
 //Event: when click menu_stat_BSpd_Click item, open the MessageBox window to show the result of Best-Selling product(s)
@@ -696,7 +705,8 @@ void mainForm::Update_statusBar(int i){
 			"Product(s) restocked successfully", "Product(s) restocked unsuccessfully", //restockS, restockF
 			"Product(s) deleted successfully", "Product(s) deleted unsuccessfully", //deleteS, deleteF
 			"Price discounted successfully", "Price discounted unsuccessfully", //discountS, discountF
-			"Searched successfully", "No results found" //searchS, searchF
+			"Searched successfully", "No results found", //searchS, searchF
+			"Data recovered successfully", "Data recovered unsuccessfully" //recoverS, recoverF
 	};
 	this->Set_statusBar(text[i], i % 2? /*failure*/System::Drawing::Color::RosyBrown: /*success*/System::Drawing::Color::LightSkyBlue);
 }
@@ -1112,7 +1122,7 @@ void mainForm::InitializeComponent()
 	// 
 	this->toolStripStatusLabel1->Name = L"toolStripStatusLabel1";
 	this->toolStripStatusLabel1->Size = System::Drawing::Size(39, 17);
-	this->toolStripStatusLabel1->Text = L"Ready";
+	this->toolStripStatusLabel1->Text = L"status";
 	// 
 	// mainForm
 	// 
