@@ -204,7 +204,7 @@ void addPdForm::npd_tB_name_TextChanged(System::Object^  sender, System::EventAr
 		this->npd_tB_name->BackColor = this->DefaultColor;
 }
 void addPdForm::npd_tB_name_LostFocus(System::Object^  sender, System::EventArgs^  e){
-	if(InputCheck::is_empty(this->npd_tB_name->Text))
+	if(!this->npd_b_cancel->Focused && InputCheck::is_empty(this->npd_tB_name->Text))
 		this->npd_tB_name->BackColor = System::Drawing::Color::LightSalmon;
 }
 //instant Checking for npd_tB_category
@@ -215,7 +215,7 @@ void addPdForm::npd_tB_category_TextChanged(System::Object^  sender, System::Eve
 		this->npd_tB_category->BackColor = this->DefaultColor;
 }
 void addPdForm::npd_tB_category_LostFocus(System::Object^  sender, System::EventArgs^  e){
-	if(InputCheck::is_empty(this->npd_tB_category->Text))
+	if(!this->npd_b_cancel->Focused && InputCheck::is_empty(this->npd_tB_category->Text))
 		this->npd_tB_category->BackColor = System::Drawing::Color::LightSalmon;
 }
 //instant Checking for npd_tB_barcode
@@ -228,7 +228,7 @@ void addPdForm::npd_tB_barcode_TextChanged(System::Object^  sender, System::Even
 		this->npd_tB_barcode->BackColor = this->DefaultColor;
 }
 void addPdForm::npd_tB_barcode_LostFocus(System::Object^  sender, System::EventArgs^  e){
-	if(InputCheck::is_empty(this->npd_tB_barcode->Text))
+	if(!this->npd_b_cancel->Focused && InputCheck::is_empty(this->npd_tB_barcode->Text))
 		this->npd_tB_barcode->BackColor = System::Drawing::Color::LightSalmon;
 }
 //instant Checking for npd_tB_price
@@ -241,7 +241,7 @@ void addPdForm::npd_tB_price_TextChanged(System::Object^  sender, System::EventA
 		this->npd_tB_price->BackColor = this->DefaultColor;
 }
 void addPdForm::npd_tB_price_LostFocus(System::Object^  sender, System::EventArgs^  e){
-	if(InputCheck::is_empty(this->npd_tB_price->Text))
+	if(!this->npd_b_cancel->Focused && InputCheck::is_empty(this->npd_tB_price->Text))
 		this->npd_tB_price->BackColor = System::Drawing::Color::LightSalmon;
 }
 //instant Checking for npd_tB_manuf
@@ -252,7 +252,7 @@ void addPdForm::npd_tB_manuf_TextChanged(System::Object^  sender, System::EventA
 		this->npd_tB_manuf->BackColor = this->DefaultColor;
 }
 void addPdForm::npd_tB_manuf_LostFocus(System::Object^  sender, System::EventArgs^  e){
-	if(InputCheck::is_empty(this->npd_tB_manuf->Text))
+	if(!this->npd_b_cancel->Focused && InputCheck::is_empty(this->npd_tB_manuf->Text))
 		this->npd_tB_manuf->BackColor = System::Drawing::Color::LightSalmon;
 }
 

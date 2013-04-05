@@ -191,6 +191,6 @@ void inputForm::input_tB_input_TextChanged(System::Object^  sender, System::Even
 		this->input_tB_input->BackColor = this->DefaultColor;
 }
 void inputForm::input_tB_input_LostFocus(System::Object^  sender, System::EventArgs^  e){
-	if(InputCheck::is_empty(this->input_tB_input->Text))
+	if(!this->input_b_no->Focused && InputCheck::is_empty(this->input_tB_input->Text))
 		this->input_tB_input->BackColor = System::Drawing::Color::LightSalmon;
 }
