@@ -1,28 +1,29 @@
 /*************************************************************************************************/
 //
-//  class addPdForm: addPdForm.h
+//  class prdForm: prdForm.h
 //
-//  Description: addPdForm.h contains the specification part of class addPdForm. class addPdForm is 
-//  the window which opens to add products to the database for CICMS. In our top-down design, addPdForm 
-//  is directly below the top. It contains 5 textboxes for data entry when adding a new product,
-//  as well as a public function, get_product_details(), which will be called by mainForm's function,
-//  Create_addPdForms(), in order to pass this data to the logic object. 
-//  to 
+//  Description: prdForm.h contains the specification part of class prdForm. Class prdForm is 
+//  the window which opens to add products or modify products. It contains 5 textboxes for data 
+//  entry.
 //
 //  API:
-//  CICMS_UI::addPdForm::addPdForm(); //create a mainForm object
-//  CICMS_UI::addPdForm::System::Windows::Forms::get_product_details() //Allows other objects to retrieve the data gathered by this object
+//  CICMS_UI::prdForm::prdForm(); //create a mainForm object
+//  CICMS_UI::prdForm::get_product_details() //Allows other objects to retrieve the data gathered by this object
+//	set_npd_grp_text() //set the group title
+//	setTitle() //set the form title
+//	setValue() //set the values in the textBoxes
+//	modifyMode_toggle() //toggle for Modification Mode
 //
 //  Main authors: XIE KAI(A0102016E), BOB WONG(A0094718U)
 //
 /*************************************************************************************************/
 
-#ifndef _GUARD_UI_addPdForm
-#define _GUARD_UI_addPdForm
+#ifndef _GUARD_UI_prdForm
+#define _GUARD_UI_prdForm
 
 namespace CICMS_UI {
 
-	public ref class addPdForm : public System::Windows::Forms::Form
+	public ref class prdForm : public System::Windows::Forms::Form
 	{
 	
 	
@@ -44,18 +45,22 @@ namespace CICMS_UI {
 	 System::Windows::Forms::Button^  npd_b_cancel;
 	 System::Windows::Forms::Button^  npd_b_ok;
 	 System::Drawing::Color DefaultColor;
+	 bool modifyMode;
 
 	//********************************************************
 	//*************MEMBER FUNCTION DECLARATION***************
 	//********************************************************
-	void InitializeComponent(void); //Creates the GUI
-	void npd_b_ok_Click(System::Object^  sender, System::EventArgs^  e); //Stuff that happens when OK button is clicked
-	System::Void npd_grp_Enter(System::Object^  sender, System::EventArgs^  e) {}
-	public:
-		addPdForm(void);  //Constructor: Calls InitializeComponent to create GUI
-	public:
-		void set_npd_grp_text(System::String^ s);
-		System::Windows::Forms::ListViewItem^ get_product_details(); //Is called by mainForm object to obtain product details from the form
+	public: prdForm(void);  //Constructor: Calls InitializeComponent to create GUI
+	public: void set_npd_grp_text(System::String^ s);
+	public: System::Windows::Forms::ListViewItem^ get_product_details(); //Is called by mainForm object to obtain product details from the form
+	public: void setValue(System::Windows::Forms::ListViewItem^ item);
+	public: void setTitle(System::String^);
+	public: void modifyMode_toggle(bool tof);
+	//.......
+	private: void InitializeComponent(void); //Creates the GUI
+	private: void npd_b_ok_Click(System::Object^  sender, System::EventArgs^  e); //Stuff that happens when OK button is clicked
+	private: System::Void npd_grp_Enter(System::Object^  sender, System::EventArgs^  e) {}
+	private: bool additional_check(System::String^ s);
 	//text changed event
 	private: void npd_tB_name_TextChanged(System::Object^  sender, System::EventArgs^  e);
 	private: void npd_tB_category_TextChanged(System::Object^  sender, System::EventArgs^  e);
@@ -67,7 +72,9 @@ namespace CICMS_UI {
 	private: void npd_tB_barcode_LostFocus(System::Object^  sender, System::EventArgs^  e);
 	private: void npd_tB_price_LostFocus(System::Object^  sender, System::EventArgs^  e);
 	private: void npd_tB_manuf_LostFocus(System::Object^  sender, System::EventArgs^  e);
+
 	private: void submitButton_toggle();
+	
 	};
 }
 #endif

@@ -1,28 +1,25 @@
 /*************************************************************************************************/
 //
-//  class addPdForm: addPdForm.cpp
+//  class prdForm: prdForm.cpp
 //
-//  Description: addPdForm.cpp contains the implementation part of class addPdForm.
-//
-//  API:
-//  CICMS_UI::addPdForm::addPdForm(); //create a addPdForm object
-//  CICMS_UI::addPdForm::System::Windows::Forms::get_product_details() //Allows other objects to pull the data gathered in this object to them
+//  Description: prdForm.cpp contains the implementation part of class prdForm.
 //
 //  Main authors: XIE KAI(A0102016E), BOB WONG (A0094718U)
 //
 /*************************************************************************************************/
 #include "stdafx.h"
-#include "addPdForm.h"
+#include "prdForm.h"
 #include "InputCheck.h"
 
 using namespace CICMS_UI;
-addPdForm::addPdForm(void)
+prdForm::prdForm(void)
 {
 	InitializeComponent();
 	this->DefaultColor = this->npd_tB_name->BackColor;
+	this->modifyMode = false;
 }
 
-void addPdForm::InitializeComponent(void) //Initializes every single component on the form
+void prdForm::InitializeComponent(void) //Initializes every single component on the form
 {
 	this->npd_grp = (gcnew System::Windows::Forms::GroupBox());
 	this->npd_tB_name = (gcnew System::Windows::Forms::TextBox());
@@ -58,7 +55,7 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	this->npd_grp->TabIndex = 5;
 	this->npd_grp->TabStop = false;
 	this->npd_grp->Text = L"New product details";
-	this->npd_grp->Enter += gcnew System::EventHandler(this, &addPdForm::npd_grp_Enter);
+	this->npd_grp->Enter += gcnew System::EventHandler(this, &prdForm::npd_grp_Enter);
 	// 
 	// npd_tB_name
 	// 
@@ -67,8 +64,8 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	this->npd_tB_name->Name = L"npd_tB_name";
 	this->npd_tB_name->Size = System::Drawing::Size(138, 20);
 	this->npd_tB_name->TabIndex = 5;
-	this->npd_tB_name->TextChanged += gcnew System::EventHandler(this, &addPdForm::npd_tB_name_TextChanged);
-	this->npd_tB_name->LostFocus += gcnew System::EventHandler(this, &addPdForm::npd_tB_name_LostFocus);
+	this->npd_tB_name->TextChanged += gcnew System::EventHandler(this, &prdForm::npd_tB_name_TextChanged);
+	this->npd_tB_name->LostFocus += gcnew System::EventHandler(this, &prdForm::npd_tB_name_LostFocus);
 	// 
 	// npd_tB_category
 	// 
@@ -77,8 +74,8 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	this->npd_tB_category->Name = L"npd_tB_category";
 	this->npd_tB_category->Size = System::Drawing::Size(138, 20);
 	this->npd_tB_category->TabIndex = 6;
-	this->npd_tB_category->TextChanged += gcnew System::EventHandler(this, &addPdForm::npd_tB_category_TextChanged);
-	this->npd_tB_category->LostFocus += gcnew System::EventHandler(this, &addPdForm::npd_tB_category_LostFocus);
+	this->npd_tB_category->TextChanged += gcnew System::EventHandler(this, &prdForm::npd_tB_category_TextChanged);
+	this->npd_tB_category->LostFocus += gcnew System::EventHandler(this, &prdForm::npd_tB_category_LostFocus);
 	// 
 	// npd_tB_barcode
 	// 
@@ -87,8 +84,8 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	this->npd_tB_barcode->Name = L"npd_tB_barcode";
 	this->npd_tB_barcode->Size = System::Drawing::Size(138, 20);
 	this->npd_tB_barcode->TabIndex = 7;
-	this->npd_tB_barcode->TextChanged += gcnew System::EventHandler(this, &addPdForm::npd_tB_barcode_TextChanged);
-	this->npd_tB_barcode->LostFocus += gcnew System::EventHandler(this, &addPdForm::npd_tB_barcode_LostFocus);
+	this->npd_tB_barcode->TextChanged += gcnew System::EventHandler(this, &prdForm::npd_tB_barcode_TextChanged);
+	this->npd_tB_barcode->LostFocus += gcnew System::EventHandler(this, &prdForm::npd_tB_barcode_LostFocus);
 	// 
 	// npd_tB_price
 	// 
@@ -97,8 +94,8 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	this->npd_tB_price->Name = L"npd_tB_price";
 	this->npd_tB_price->Size = System::Drawing::Size(138, 20);
 	this->npd_tB_price->TabIndex = 8;
-	this->npd_tB_price->TextChanged += gcnew System::EventHandler(this, &addPdForm::npd_tB_price_TextChanged);
-	this->npd_tB_price->LostFocus += gcnew System::EventHandler(this, &addPdForm::npd_tB_price_LostFocus);
+	this->npd_tB_price->TextChanged += gcnew System::EventHandler(this, &prdForm::npd_tB_price_TextChanged);
+	this->npd_tB_price->LostFocus += gcnew System::EventHandler(this, &prdForm::npd_tB_price_LostFocus);
 	// 
 	// npd_tB_manuf
 	// 
@@ -107,8 +104,8 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	this->npd_tB_manuf->Name = L"npd_tB_manuf";
 	this->npd_tB_manuf->Size = System::Drawing::Size(138, 20);
 	this->npd_tB_manuf->TabIndex = 9;
-	this->npd_tB_manuf->TextChanged += gcnew System::EventHandler(this, &addPdForm::npd_tB_manuf_TextChanged);
-	this->npd_tB_manuf->LostFocus += gcnew System::EventHandler(this, &addPdForm::npd_tB_manuf_LostFocus);
+	this->npd_tB_manuf->TextChanged += gcnew System::EventHandler(this, &prdForm::npd_tB_manuf_TextChanged);
+	this->npd_tB_manuf->LostFocus += gcnew System::EventHandler(this, &prdForm::npd_tB_manuf_LostFocus);
 	// 
 	// npd_l_price
 	// 
@@ -174,9 +171,9 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	this->npd_b_ok->TabIndex = 6;
 	this->npd_b_ok->Text = L"OK";
 	this->npd_b_ok->UseVisualStyleBackColor = true;
-	this->npd_b_ok->Click += gcnew System::EventHandler(this, &addPdForm::npd_b_ok_Click);
+	this->npd_b_ok->Click += gcnew System::EventHandler(this, &prdForm::npd_b_ok_Click);
 	// 
-	// addPdForm
+	// prdForm
 	// 
 	this->AcceptButton = this->npd_b_ok;
 	this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -189,7 +186,7 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 	this->FormBorderStyle = System::Windows::Forms::FormBorderStyle::FixedDialog;
 	this->MaximizeBox = false;
 	this->MinimizeBox = false;
-	this->Name = L"addPdForm";
+	this->Name = L"prdForm";
 	this->Text = L" Add a new product";
 	this->npd_grp->ResumeLayout(false);
 	this->npd_grp->PerformLayout();
@@ -198,73 +195,73 @@ void addPdForm::InitializeComponent(void) //Initializes every single component o
 }
 
 //instant Checking for npd_tB_name
-void addPdForm::npd_tB_name_TextChanged(System::Object^  sender, System::EventArgs^  e){
+void prdForm::npd_tB_name_TextChanged(System::Object^  sender, System::EventArgs^  e){
 	this->submitButton_toggle();
 	if(InputCheck::is_empty(this->npd_tB_name->Text))
 		this->npd_tB_name->BackColor = System::Drawing::Color::LightSalmon;
 	else
 		this->npd_tB_name->BackColor = this->DefaultColor;
 }
-void addPdForm::npd_tB_name_LostFocus(System::Object^  sender, System::EventArgs^  e){
+void prdForm::npd_tB_name_LostFocus(System::Object^  sender, System::EventArgs^  e){
 	if(!this->npd_b_cancel->Focused && InputCheck::is_empty(this->npd_tB_name->Text))
 		this->npd_tB_name->BackColor = System::Drawing::Color::LightSalmon;
 }
 //instant Checking for npd_tB_category
-void addPdForm::npd_tB_category_TextChanged(System::Object^  sender, System::EventArgs^  e){
+void prdForm::npd_tB_category_TextChanged(System::Object^  sender, System::EventArgs^  e){
 	this->submitButton_toggle();
 	if(InputCheck::is_empty(this->npd_tB_category->Text))
 		this->npd_tB_category->BackColor = System::Drawing::Color::LightSalmon;
 	else
 		this->npd_tB_category->BackColor = this->DefaultColor;
 }
-void addPdForm::npd_tB_category_LostFocus(System::Object^  sender, System::EventArgs^  e){
+void prdForm::npd_tB_category_LostFocus(System::Object^  sender, System::EventArgs^  e){
 	if(!this->npd_b_cancel->Focused && InputCheck::is_empty(this->npd_tB_category->Text))
 		this->npd_tB_category->BackColor = System::Drawing::Color::LightSalmon;
 }
 //instant Checking for npd_tB_barcode
-void addPdForm::npd_tB_barcode_TextChanged(System::Object^  sender, System::EventArgs^  e){
+void prdForm::npd_tB_barcode_TextChanged(System::Object^  sender, System::EventArgs^  e){
 	this->submitButton_toggle();
-	if(!InputCheck::is_int(this->npd_tB_barcode->Text))
+	if(this->additional_check(this->npd_tB_barcode->Text) && !InputCheck::is_int(this->npd_tB_barcode->Text))
 		this->npd_tB_barcode->BackColor = System::Drawing::Color::LightSalmon;
-	else if(InputCheck::lessThan_zero(this->npd_tB_barcode->Text))
+	else if(this->additional_check(this->npd_tB_barcode->Text) && InputCheck::lessThan_zero(this->npd_tB_barcode->Text))
 		this->npd_tB_barcode->BackColor = System::Drawing::Color::LightSalmon;
 	else
 		this->npd_tB_barcode->BackColor = this->DefaultColor;
 }
-void addPdForm::npd_tB_barcode_LostFocus(System::Object^  sender, System::EventArgs^  e){
+void prdForm::npd_tB_barcode_LostFocus(System::Object^  sender, System::EventArgs^  e){
 	if(!this->npd_b_cancel->Focused && InputCheck::is_empty(this->npd_tB_barcode->Text))
 		this->npd_tB_barcode->BackColor = System::Drawing::Color::LightSalmon;
 }
 //instant Checking for npd_tB_price
-void addPdForm::npd_tB_price_TextChanged(System::Object^  sender, System::EventArgs^  e){
+void prdForm::npd_tB_price_TextChanged(System::Object^  sender, System::EventArgs^  e){
 	this->submitButton_toggle();
-	if(!InputCheck::is_number(this->npd_tB_price->Text))
+	if(this->additional_check(this->npd_tB_price->Text) && !InputCheck::is_number(this->npd_tB_price->Text))
 		this->npd_tB_price->BackColor = System::Drawing::Color::LightSalmon;
-	else if(InputCheck::lessThan_zero(this->npd_tB_price->Text))
+	else if(this->additional_check(this->npd_tB_price->Text) && InputCheck::lessThan_zero(this->npd_tB_price->Text))
 		this->npd_tB_price->BackColor = System::Drawing::Color::LightSalmon;
 	else
 		this->npd_tB_price->BackColor = this->DefaultColor;
 }
-void addPdForm::npd_tB_price_LostFocus(System::Object^  sender, System::EventArgs^  e){
+void prdForm::npd_tB_price_LostFocus(System::Object^  sender, System::EventArgs^  e){
 	if(!this->npd_b_cancel->Focused && InputCheck::is_empty(this->npd_tB_price->Text))
 		this->npd_tB_price->BackColor = System::Drawing::Color::LightSalmon;
 }
 //instant Checking for npd_tB_manuf
-void addPdForm::npd_tB_manuf_TextChanged(System::Object^  sender, System::EventArgs^  e){
+void prdForm::npd_tB_manuf_TextChanged(System::Object^  sender, System::EventArgs^  e){
 	this->submitButton_toggle();
 	if(InputCheck::is_empty(this->npd_tB_manuf->Text))
 		this->npd_tB_manuf->BackColor = System::Drawing::Color::LightSalmon;
 	else
 		this->npd_tB_manuf->BackColor = this->DefaultColor;
 }
-void addPdForm::npd_tB_manuf_LostFocus(System::Object^  sender, System::EventArgs^  e){
+void prdForm::npd_tB_manuf_LostFocus(System::Object^  sender, System::EventArgs^  e){
 	if(!this->npd_b_cancel->Focused && InputCheck::is_empty(this->npd_tB_manuf->Text))
 		this->npd_tB_manuf->BackColor = System::Drawing::Color::LightSalmon;
 }
 
 // Upon clicking the OK button, stuff happens here
-// possibly notifying the logic classes to call get_product_details()
-void addPdForm::npd_b_ok_Click(System::Object^  sender, System::EventArgs^  e) {
+// possibly notifying the logic classes to call prdForm()
+void prdForm::npd_b_ok_Click(System::Object^  sender, System::EventArgs^  e) {
 	//unfocus every textbox to check whether they are empty or not
 	this->npd_tB_name->Focus();
 	this->npd_tB_category->Focus();
@@ -286,12 +283,12 @@ void addPdForm::npd_b_ok_Click(System::Object^  sender, System::EventArgs^  e) {
 		System::Windows::Forms::MessageBox::Show("Please fill in all the fields.");
 		this->npd_tB_barcode->Focus();
 	}
-	else if(!InputCheck::is_int(this->npd_tB_barcode->Text)){
+	else if(this->additional_check(this->npd_tB_barcode->Text) && !InputCheck::is_int(this->npd_tB_barcode->Text)){
 		System::Windows::Forms::MessageBox::Show("Please input an integer in the barcode field.");
 		this->npd_tB_barcode->Focus();
 		this->npd_tB_barcode->SelectAll();
 	}
-	else if(InputCheck::lessThan_zero(this->npd_tB_barcode->Text)){
+	else if(this->additional_check(this->npd_tB_barcode->Text) && InputCheck::lessThan_zero(this->npd_tB_barcode->Text)){
 		System::Windows::Forms::MessageBox::Show("Please input an integer larger than zero in the barcode field.");
 		this->npd_tB_barcode->Focus();
 		this->npd_tB_barcode->SelectAll();
@@ -300,12 +297,12 @@ void addPdForm::npd_b_ok_Click(System::Object^  sender, System::EventArgs^  e) {
 		System::Windows::Forms::MessageBox::Show("Please fill in all the fields.");
 		this->npd_tB_price->Focus();
 	}
-	else if(!InputCheck::is_number(this->npd_tB_price->Text)){
+	else if(this->additional_check(this->npd_tB_price->Text) && !InputCheck::is_number(this->npd_tB_price->Text)){
 		System::Windows::Forms::MessageBox::Show("Please input a number in the price field.");
 		this->npd_tB_price->Focus();
 		this->npd_tB_price->SelectAll();
 	}
-	else if(InputCheck::lessThan_zero(this->npd_tB_price->Text)){
+	else if(this->additional_check(this->npd_tB_price->Text) && InputCheck::lessThan_zero(this->npd_tB_price->Text)){
 		System::Windows::Forms::MessageBox::Show("Please input a number larger than zero in the price field.");
 		this->npd_tB_price->Focus();
 		this->npd_tB_price->SelectAll();
@@ -321,7 +318,7 @@ void addPdForm::npd_b_ok_Click(System::Object^  sender, System::EventArgs^  e) {
 }
 
 //Data return in the form of strings
-System::Windows::Forms::ListViewItem^ addPdForm::get_product_details(){
+System::Windows::Forms::ListViewItem^ prdForm::get_product_details(){
 	return gcnew System::Windows::Forms::ListViewItem(gcnew cli::array<System::String^>(7) {
 		this->npd_tB_name->Text, 
 		this->npd_tB_category->Text,
@@ -330,12 +327,16 @@ System::Windows::Forms::ListViewItem^ addPdForm::get_product_details(){
 		this->npd_tB_manuf->Text
 	});
 }
-
-void addPdForm::set_npd_grp_text(System::String^ s){
+//Set form title
+void prdForm::setTitle(System::String^ s){
+	this->Text = s;
+}
+//Set group title
+void prdForm::set_npd_grp_text(System::String^ s){
 	this->npd_grp->Text = s;
 }
-
-void addPdForm::submitButton_toggle(){
+//submit button's toggle function
+void prdForm::submitButton_toggle(){
 	if(InputCheck::is_empty(this->npd_tB_name->Text) &&
 		InputCheck::is_empty(this->npd_tB_barcode->Text) &&
 		InputCheck::is_empty(this->npd_tB_category->Text) &&
@@ -344,4 +345,26 @@ void addPdForm::submitButton_toggle(){
 		this->npd_b_ok->Enabled = false;
 	else
 		this->npd_b_ok->Enabled = true;
+}
+//set value in the textBoxes
+void prdForm::setValue(System::Windows::Forms::ListViewItem^ item){
+	this->npd_tB_name->Text = item->SubItems[0]->Text;
+	this->npd_tB_category->Text = item->SubItems[1]->Text;
+	this->npd_tB_barcode->Text = item->SubItems[2]->Text;
+	this->npd_tB_price->Text = item->SubItems[3]->Text;
+	this->npd_tB_manuf->Text = item->SubItems[4]->Text;
+}
+//Modification mode toggle
+void prdForm::modifyMode_toggle(bool tof){
+	if(tof){
+		this->npd_tB_barcode->Enabled = false;
+		this->modifyMode = true;
+	}
+}
+//Additional checking for modify mode
+bool prdForm::additional_check(System::String^ s){
+	if(this->modifyMode && s == "(...)")
+		return false;
+	else
+		return true;
 }

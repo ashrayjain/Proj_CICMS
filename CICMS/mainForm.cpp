@@ -78,7 +78,7 @@
 #include "stdafx.h"
 #include "mainForm.h"
 #include "inputForm.h"
-#include "addPdForm.h"
+#include "prdForm.h"
 #include "statForm.h"
 #include "ListViewItemComparer.h"
 #include "InputCheck.h"
@@ -115,18 +115,13 @@ void mainForm::mainForm_KeyDown(Object^ sender, System::Windows::Forms::KeyEvent
 	e->SuppressKeyPress = true;//thus keys here will not send to mainForm_KeyPress
 	//Ctrl+A in listView
 	if(this->list_lv->Focused && e->Control && e->KeyCode == System::Windows::Forms::Keys::A){
-		this->list_lv->BeginUpdate();
 		if(this->CA_in_List_lv_toggle == true){
+			this->list_lv->BeginUpdate();
 			for(int i = 0; i < this->list_lv->Items->Count; i++)
 				this->list_lv->Items[i]->Selected = true;
+			this->list_lv->EndUpdate();
 			this->CA_in_List_lv_toggle = false;
 		}
-		else{//toggle == false
-			for(int i = 0; i < this->list_lv->Items->Count; i++)
-				this->list_lv->Items[i]->Selected = false;
-			this->CA_in_List_lv_toggle = true;
-		}
-		this->list_lv->EndUpdate();
 	}
 	//Ctrl+E for Sale button
 	else if(e->Control && e->KeyCode == System::Windows::Forms::Keys::E){
@@ -151,8 +146,10 @@ void mainForm::mainForm_KeyDown(Object^ sender, System::Windows::Forms::KeyEvent
 	else if(e->Control && e->Shift && e->KeyCode == System::Windows::Forms::Keys::S)
 		this->Save_as_ano_prdList();
 	//Ctrl+S for Save
-	else if(e->Control && e->KeyCode == System::Windows::Forms::Keys::S)
-		this->Save_curr_prdList();
+	else if(e->Control && e->KeyCode == System::Windows::Forms::Keys::S){
+		if(this->toolStripStatusLabel1->Text != "Data saved successfully")
+			this->Save_curr_prdList();
+	}
 	//Ctrl+L for Load
 	else if(e->Control && e->KeyCode == System::Windows::Forms::Keys::L)
 		this->Load_prdList();
@@ -168,9 +165,9 @@ void mainForm::mainForm_KeyPress(Object^ sender, System::Windows::Forms::KeyPres
 	//num, character, space for s_tB_input
 	if(!this->s_tB_input->Focused && (System::Char::IsLetterOrDigit(e->KeyChar) ||
 		e->KeyChar == ' ')){
-		this->s_tB_input->Text = System::Convert::ToString(e->KeyChar);
-		this->s_tB_input->Focus();
-		this->s_tB_input->SelectionStart = this->s_tB_input->Text->Length;
+			this->s_tB_input->Text = System::Convert::ToString(e->KeyChar);
+			this->s_tB_input->Focus();
+			this->s_tB_input->SelectionStart = this->s_tB_input->Text->Length;
 	}
 	//backspace for s_tB_input
 	else if(!this->s_tB_input->Focused && e->KeyChar == 8){//8 is Backspace
@@ -197,10 +194,10 @@ void mainForm::Ini_settings(){
 			System::Windows::Forms::MessageBoxButtons::YesNo,
 			System::Windows::Forms::MessageBoxIcon::Question)
 			== System::Windows::Forms::DialogResult::Yes){
-			if(true/*Bridging->Load(true)*/)
-				this->Update_statusBar(recoverS); //successful
-			else
-				this->Update_statusBar(recoverF); //unsuccessful
+				if(true/*Bridging->Load(true)*/)
+					this->Update_statusBar(recoverS); //successful
+				else
+					this->Update_statusBar(recoverF); //unsuccessful
 		}
 		else{
 			if(true/*Bridging->Load(false)*/)
@@ -274,7 +271,7 @@ void mainForm::Load_prdList(){
 	of_dlg->FileName = "product";
 	of_dlg->Title = " Load product list";
 	of_dlg->Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
-    of_dlg->FilterIndex = 1;
+	of_dlg->FilterIndex = 1;
 	if(of_dlg->ShowDialog() == System::Windows::Forms::DialogResult::OK){
 		this->Set_statusBar("Loading...", System::Drawing::Color::Khaki);
 		if(true/*Bridging->Load(of_dlg->FileName)*/)
@@ -289,7 +286,7 @@ void mainForm::Batch_processing(){
 	of_dlg->FileName = "batchjobs";
 	of_dlg->Title = " Load batch file";
 	of_dlg->Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
-    of_dlg->FilterIndex = 1;
+	of_dlg->FilterIndex = 1;
 	if(of_dlg->ShowDialog() == System::Windows::Forms::DialogResult::OK){
 		this->Set_statusBar("Processing...", System::Drawing::Color::Khaki);
 		/*int i = Bridging->Batch_processing(of_dlg->FileName)*/
@@ -340,7 +337,7 @@ void mainForm::menu_help_hotkey_Click(System::Object^  sender, System::EventArgs
 void mainForm::Create_addPdForms(){
 	int num = (int) Create_inputForm(" Add products", "How many products to add?     ", "Number:", "1");
 	for( int i = 0; i < num; i++){
-		addPdForm^ dlg = gcnew addPdForm();
+		prdForm^ dlg = gcnew prdForm();
 		dlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 		dlg->set_npd_grp_text("New product " + System::Convert::ToString(i+1) + "/" + System::Convert::ToString(num));
 		System::Windows::Forms::DialogResult r = dlg->ShowDialog();
@@ -386,13 +383,13 @@ void mainForm::Create_BSpdCateForm(){
 	inputDlg->set_inputForm(" Report the Best-Selling product", "Please type the category name ", "Category:  ", "");
 	inputDlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 	inputDlg->set_formType(STRING);
-	
+
 	System::String^ c;
 	if (inputDlg->ShowDialog() == System::Windows::Forms::DialogResult::OK)
 		c = inputDlg->get_input();
 	else
 		return;
-	
+
 	array<System::Windows::Forms::ListViewItem^>^ r = Bridging->Gen_BSpdCate(c);
 	if(r->Length == 0){
 		System::Windows::Forms::MessageBox::Show("Report not available.");
@@ -412,13 +409,13 @@ void mainForm::Create_topXpdForm(){
 	inputDlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 	inputDlg->set_formType(NUMBER);
 	inputDlg->TOP_X_filter(true);
-	
+
 	int i;
 	if (inputDlg->ShowDialog() == System::Windows::Forms::DialogResult::OK)
 		i = System::Convert::ToInt32(inputDlg->get_input());
 	else
 		return;
-	
+
 	array<System::Windows::Forms::ListViewItem^>^ r = Bridging->Gen_TopXpd(i);
 	if(r->Length == 0){
 		System::Windows::Forms::MessageBox::Show("Report not available.");
@@ -442,9 +439,9 @@ void mainForm::s_tB_input_TextChanged(System::Object^  sender, System::EventArgs
 }
 //Event: triggered when ENTER is pressed
 void mainForm::s_b_Enter_Click(System::Object^  sender, System::EventArgs^  e) {
-		this->s_tB_input->Focus();
-		this->s_tB_input->SelectAll();
-		this->Submit_search();//search here
+	this->s_tB_input->Focus();
+	this->s_tB_input->SelectAll();
+	this->Submit_search();//search here
 }
 //Event: when s_rB_byName, s_rB_byCategory, s_rB_byManufacturer or s_rB_byBarcode is selected
 void mainForm::s_rB_CheckedChanged(System::Object^  sender, System::EventArgs^  e){
@@ -474,9 +471,9 @@ void mainForm::Submit_search(){
 	}
 	else if(this->Get_byMethod() == byBarcode && (this->s_tB_input->Text->Length > 9 || !InputCheck::is_int(this->s_tB_input->Text) || 
 		InputCheck::lessThan_zero(this->s_tB_input->Text))){
-		this->Update_statusBar(searchF);//barcode shall be an integer, larger than zero and its length <= 9
-		this->list_lv->Items->Clear();
-		this->Toggle_list_b(false);
+			this->Update_statusBar(searchF);//barcode shall be an integer, larger than zero and its length <= 9
+			this->list_lv->Items->Clear();
+			this->Toggle_list_b(false);
 	}
 	//if all satisfied
 	else
@@ -518,18 +515,87 @@ void mainForm::Search_product(System::String^ s, int m){
 //**********LIST DETAILS COMPONENTS FUNCTION***********
 //*****************************************************
 
-//Event: when click pd_b_sell button, open an inputForm window for input sale data
+//Event: when click list_b_sell button, open an inputForm window for input sale data
 void mainForm::list_b_sell_Click(System::Object^  sender, System::EventArgs^  e) {
 	Create_sellForm();
 }
-//Event: when click pd_b_restock button, open an inputForm window for input restock data
+//Event: when click list_b_restock button, open an inputForm window for input restock data
 void mainForm::list_b_restock_Click(System::Object^  sender, System::EventArgs^  e) {
 	Create_restockForm();
 }
 
-//Event: when click pd_b_delete button, open a msgBox to check whether delete the selectedItem or not
+//Event: when click list_b_delete button, open a msgBox to check whether delete the selectedItem or not
 void mainForm::list_b_delete_Click(System::Object^  sender, System::EventArgs^  e) {
 	Create_deleteForm();
+}
+//Event: when click list_b_modify button
+void mainForm::list_b_modify_Click(System::Object^  sender, System::EventArgs^  e){
+	Set_statusBar("Processing...",System::Drawing::Color::Khaki);
+	this->statusStrip1->Refresh();
+	this->Create_modifyForm();
+}
+void mainForm::Create_modifyForm(){
+	//create an input data
+	System::String^ name, ^category, ^barcode, ^price, ^manuf;
+	if(this->list_lv->SelectedItems->Count > 0){
+		name = this->list_lv->SelectedItems[0]->SubItems[0]->Text;
+		category = this->list_lv->SelectedItems[0]->SubItems[1]->Text;
+		barcode = this->list_lv->SelectedItems[0]->SubItems[2]->Text;
+		price = this->list_lv->SelectedItems[0]->SubItems[3]->Text;
+		manuf = this->list_lv->SelectedItems[0]->SubItems[4]->Text;
+	}
+	if(this->list_lv->SelectedItems->Count > 1)
+			barcode = "(...)";
+	for(int i = 1; i < this->list_lv->SelectedItems->Count; i++){
+		if(name != "(...)" && name != this->list_lv->SelectedItems[i]->SubItems[0]->Text)
+			name = "(...)";
+		if(category != "(...)" && category != this->list_lv->SelectedItems[i]->SubItems[1]->Text)
+			category = "(...)";
+		if(price != "(...)" && price != this->list_lv->SelectedItems[i]->SubItems[3]->Text)
+			price = "(...)";
+		if(manuf != "(...)" && manuf != this->list_lv->SelectedItems[i]->SubItems[4]->Text)
+			manuf = "(...)";
+	}
+	System::Windows::Forms::ListViewItem^ input = gcnew System::Windows::Forms::ListViewItem(gcnew cli::array<System::String^>(7) {
+		name,category,barcode,price,manuf
+	});
+	//create the window, and send in the input data
+	prdForm^ dlg = gcnew prdForm;
+	//set up for modification mode
+	dlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
+	dlg->modifyMode_toggle(true);
+	dlg->setValue(input);
+	dlg->set_npd_grp_text("Product(s) details");
+	dlg->setTitle(" Modify product(s) details");
+	System::Windows::Forms::ListViewItem^ output;
+	//get output, then update the database and listView component
+	if(dlg->ShowDialog() == System::Windows::Forms::DialogResult::OK){
+		output = dlg->get_product_details();
+		bool nameChanged = output->SubItems[0]->Text != input->SubItems[0]->Text,
+			categoryChanged = output->SubItems[1]->Text != input->SubItems[1]->Text,
+			priceChanged = output->SubItems[3]->Text != input->SubItems[3]->Text,
+			manufChanged = output->SubItems[4]->Text != input->SubItems[4]->Text;
+		//any changes? update~
+		if(nameChanged || categoryChanged || priceChanged || manufChanged){
+			this->list_lv->BeginUpdate();
+			for(int i = 0; i < this->list_lv->SelectedItems->Count; i++){
+				if(nameChanged)
+					this->list_lv->SelectedItems[i]->SubItems[0]->Text = output->SubItems[0]->Text;
+				if(categoryChanged)
+					this->list_lv->SelectedItems[i]->SubItems[1]->Text = output->SubItems[1]->Text;
+				if(priceChanged)
+					this->list_lv->SelectedItems[i]->SubItems[3]->Text = output->SubItems[3]->Text;
+				if(manufChanged)
+					this->list_lv->SelectedItems[i]->SubItems[4]->Text = output->SubItems[4]->Text;
+				//Bridging->Modify(this->list_lv->SelectedItems[i]);
+			}
+			//this->Submit_search();// refresh the search result
+			this->list_lv->EndUpdate();
+		}
+		Set_statusBar("Product(s) modified successfully",System::Drawing::Color::LightSkyBlue);
+	}
+	else
+		Set_statusBar("Ready",System::Drawing::Color::LightSkyBlue);
 }
 //Function: create an inputForm for input; used by pd_b_sell_Click & pd_b_restock_Click events.
 double mainForm::Create_inputForm(System::String^ formTitle, System::String^ pdDescript, System::String^ inputDescript, System::String^ stringInTB){
@@ -578,12 +644,12 @@ void mainForm::Create_deleteForm(){
 		case_tooMany = Yes_Yes;
 		if(this->list_lv->SelectedItems->Count > 2)
 			r = (System::Windows::Forms::MessageBox::Show("Are you sure that you would like \nto delete all the selected products?", " Delete Product",
-		System::Windows::Forms::MessageBoxButtons::YesNo,
-		System::Windows::Forms::MessageBoxIcon::Warning));
+			System::Windows::Forms::MessageBoxButtons::YesNo,
+			System::Windows::Forms::MessageBoxIcon::Warning));
 		else// == 2
 			r = (System::Windows::Forms::MessageBox::Show("Are you sure that you would like \nto delete both of the selected products?", " Delete Product",
-		System::Windows::Forms::MessageBoxButtons::YesNo,
-		System::Windows::Forms::MessageBoxIcon::Warning));
+			System::Windows::Forms::MessageBoxButtons::YesNo,
+			System::Windows::Forms::MessageBoxIcon::Warning));
 		if(r == System::Windows::Forms::DialogResult::Yes)
 			;//del all
 		else if(r == System::Windows::Forms::DialogResult::No)
@@ -594,8 +660,8 @@ void mainForm::Create_deleteForm(){
 		if(case_tooMany == Yes_Yes || (System::Windows::Forms::MessageBox::Show("Are you sure that you would like \nto delete this product, " +
 			this->Get_sName(i) + " (" + this->Get_sCategory(i) + ") - " + this->Get_sBarcode(i) +
 			"?", " Delete Product",
-		System::Windows::Forms::MessageBoxButtons::YesNo,
-		System::Windows::Forms::MessageBoxIcon::Warning)) == System::Windows::Forms::DialogResult::Yes){
+			System::Windows::Forms::MessageBoxButtons::YesNo,
+			System::Windows::Forms::MessageBoxIcon::Warning)) == System::Windows::Forms::DialogResult::Yes){
 				if(Bridging->Del(this->list_lv->SelectedItems[i]))
 				{
 					this->Clear_selectedItem(i--);//if delete an item, selectedItems->Count will decrease, index will change as well
@@ -623,7 +689,7 @@ void mainForm::Toggle_list_b(bool tof){
 	this->list_b_sell->Enabled = tof;
 	this->list_b_restock->Enabled = tof;
 	this->list_b_modify->Enabled = tof;
-	
+
 }
 //Event: when select an item in the list, turn on/off some toggles
 void mainForm::list_lv_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
@@ -1106,6 +1172,7 @@ void mainForm::InitializeComponent()
 	this->list_b_modify->TabIndex = 9;
 	this->list_b_modify->Text = L"Modify";
 	this->list_b_modify->UseVisualStyleBackColor = true;
+	this->list_b_modify->Click += gcnew System::EventHandler(this, &mainForm::list_b_modify_Click);
 	// 
 	// statusStrip1
 	// 
@@ -1122,7 +1189,7 @@ void mainForm::InitializeComponent()
 	// 
 	this->toolStripStatusLabel1->Name = L"toolStripStatusLabel1";
 	this->toolStripStatusLabel1->Size = System::Drawing::Size(39, 17);
-	this->toolStripStatusLabel1->Text = L"status";
+	this->toolStripStatusLabel1->Text = L"Ready";
 	// 
 	// mainForm
 	// 

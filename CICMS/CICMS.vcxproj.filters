@@ -30,9 +30,6 @@
     <ClInclude Include="inputForm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="addPdForm.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ListViewItemComparer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -69,6 +66,9 @@
     <ClInclude Include="statForm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="prdForm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc">
@@ -86,9 +86,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="inputForm.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="addPdForm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ListViewItemComparer.cpp">
@@ -121,6 +118,9 @@
     <ClCompile Include="statForm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="prdForm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="app.ico">
@@ -134,10 +134,10 @@
     <EmbeddedResource Include="inputForm.resx">
       <Filter>Resource Files</Filter>
     </EmbeddedResource>
-    <EmbeddedResource Include="addPdForm.resx">
+    <EmbeddedResource Include="statForm.resx">
       <Filter>Resource Files</Filter>
     </EmbeddedResource>
-    <EmbeddedResource Include="statForm.resx">
+    <EmbeddedResource Include="prdForm.resx">
       <Filter>Resource Files</Filter>
     </EmbeddedResource>
   </ItemGroup>

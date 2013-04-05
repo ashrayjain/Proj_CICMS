@@ -143,11 +143,13 @@ namespace CICMS_UI {
 	private: void list_b_delete_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void list_b_sell_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void list_b_restock_Click(System::Object^  sender, System::EventArgs^  e);
+	private: void list_b_modify_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void list_lv_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e);
 	private: double Create_inputForm(System::String^ formTitle, System::String^ pdDescript, System::String^ inputDescript, System::String^ stringInTB);
 	private: void Create_sellForm();
 	private: void Create_restockForm();
 	private: void Create_deleteForm();
+	private: void Create_modifyForm();
 	private: void Clear_selectedItem(int index);
 	private: void list_lv_ColumnClick(System::Object^, System::Windows::Forms::ColumnClickEventArgs^ e);
 	private: void Toggle_list_b(bool tof);
