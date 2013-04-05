@@ -153,3 +153,27 @@ System::String^ Bridge::toSysString(std::string s)
 {
 	return gcnew System::String(s.c_str());
 }
+//Check whether a recovery is needed
+bool Bridge::CheckRecovery(){
+	//return Handler->chkTmpFile();
+	return false;
+}
+//Load a product list
+bool Bridge::Load(bool tof, System::String^ filename){
+	//return Handler->Load(tof, this->toStdString(filename));
+	return true;
+}
+//Save into a .txt file
+bool Bridge::Save(System::String^ filename){
+	//return Handler->Save(this->toStdString(filename));
+	return true;
+}
+//Execute the batchProcessing
+int Bridge::Batch_processing(System::String^ filename){
+	//return Handler->Batch_processing(this->toStdString(filename));
+	return 3;
+}
+//Modify products details
+void Bridge::Modify(System::Windows::Forms::ListViewItem^ item){
+	//Handler->updatePrd(this->toProduct(item));
+}

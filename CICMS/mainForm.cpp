@@ -184,29 +184,30 @@ void mainForm::Ini_settings(){
 	this->SelectAll_toggle = true;
 	this->default_IComparer = this->list_lv->ListViewItemSorter;
 	this->CA_in_List_lv_toggle = true;
+	this->curr_filename = "product.txt";
 
 	this->Bridging = gcnew Bridge;
 	//loading at start up
-	if(false/*Bridging->CheckRecovery()*/){
+	if(Bridging->CheckRecovery()){
 		if(System::Windows::Forms::MessageBox::Show("Application crashes detected, do you want to restore\nthe operation(s) last time?",
 			" CICMS Recovery",
 			System::Windows::Forms::MessageBoxButtons::YesNo,
 			System::Windows::Forms::MessageBoxIcon::Question)
 			== System::Windows::Forms::DialogResult::Yes){
-				if(true/*Bridging->Load(true)*/)
+				if(Bridging->Load(true, curr_filename))
 					this->Update_statusBar(recoverS); //successful
 				else
 					this->Update_statusBar(recoverF); //unsuccessful
 		}
 		else{
-			if(true/*Bridging->Load(false)*/)
+			if(Bridging->Load(false, curr_filename))
 				this->Set_statusBar("Ready", System::Drawing::Color::LightSkyBlue);
 			else
 				this->Update_statusBar(loadF);
 		}
 	}
 	else{
-		if(true/*Bridging->Load(false)*/)
+		if(Bridging->Load(false, curr_filename))
 			this->Set_statusBar("Ready", System::Drawing::Color::LightSkyBlue);
 		else
 			this->Update_statusBar(loadF);
@@ -244,7 +245,7 @@ void mainForm::menu_f_bp_Click(System::Object^  sender, System::EventArgs^  e){
 //Save the current product list
 void mainForm::Save_curr_prdList(){
 	this->Set_statusBar("Saving...", System::Drawing::Color::Khaki);
-	if(true/*Bridging->Save()*/)
+	if(Bridging->Save(curr_filename))
 		this->Update_statusBar(saveS);//successful
 	else
 		this->Update_statusBar(saveF);//unsuccessful
@@ -258,7 +259,7 @@ void mainForm::Save_as_ano_prdList(){
 	sf_dlg->FilterIndex = 1;
 	if(sf_dlg->ShowDialog() == System::Windows::Forms::DialogResult::OK){
 		this->Set_statusBar("Saving...", System::Drawing::Color::Khaki);
-		if(true/*Bridging->Save(sf_dlg->FileName)*/)
+		if(Bridging->Save(sf_dlg->FileName))
 			this->Update_statusBar(saveS);//successful
 		else
 			this->Update_statusBar(saveF);//unsuccessful
@@ -273,8 +274,11 @@ void mainForm::Load_prdList(){
 	of_dlg->FilterIndex = 1;
 	if(of_dlg->ShowDialog() == System::Windows::Forms::DialogResult::OK){
 		this->Set_statusBar("Loading...", System::Drawing::Color::Khaki);
-		if(true/*Bridging->Load(of_dlg->FileName)*/)
+		this->Bridging->Save(curr_filename);
+		if(Bridging->Load(false, of_dlg->FileName)){
 			this->Update_statusBar(loadS); //successful
+			this->curr_filename = of_dlg->FileName;
+		}
 		else
 			this->Update_statusBar(loadF); //unsuccessful
 	}
@@ -288,8 +292,7 @@ void mainForm::Batch_processing(){
 	of_dlg->FilterIndex = 1;
 	if(of_dlg->ShowDialog() == System::Windows::Forms::DialogResult::OK){
 		this->Set_statusBar("Processing...", System::Drawing::Color::Khaki);
-		/*int i = Bridging->Batch_processing(of_dlg->FileName)*/
-		int i = 3;//delete this line later
+		int i = Bridging->Batch_processing(of_dlg->FileName);
 		if(i == 0)
 			this->Set_statusBar("Batch file processed successfully", System::Drawing::Color::LightSkyBlue);
 		else
@@ -591,7 +594,7 @@ void mainForm::Create_modifyForm(){
 					this->list_lv->SelectedItems[i]->SubItems[3]->Text = output->SubItems[3]->Text;
 				if(manufChanged)
 					this->list_lv->SelectedItems[i]->SubItems[4]->Text = output->SubItems[4]->Text;
-				//Bridging->Modify(this->list_lv->SelectedItems[i]);
+				Bridging->Modify(this->list_lv->SelectedItems[i]);
 			}
 			this->list_lv->EndUpdate();
 		}

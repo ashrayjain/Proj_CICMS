@@ -70,6 +70,11 @@ public:
 	System::String^ Bridge::Gen_BSmanu();
 	array<System::Windows::Forms::ListViewItem^>^ Bridge::Gen_TopXpd(int x);
 	array<System::Windows::Forms::ListViewItem^>^ Bridge::Gen_BSpdCate(System::String^ s);
+	bool CheckRecovery();
+	bool Load(bool, System::String^);
+	bool Save(System::String^);
+	int Batch_processing(System::String^);
+	void Modify(System::Windows::Forms::ListViewItem^);
 };
 
 #endif
