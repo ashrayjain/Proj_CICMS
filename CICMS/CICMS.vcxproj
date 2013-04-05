@@ -10,7 +10,7 @@
     <ProjectGuid>{40EC5004-6811-4836-B624-FCD1B9BE2985}</ProjectGuid>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <Keyword>ManagedCProj</Keyword>
-    <RootNamespace>CICMS</RootNamespace>
+    <RootNamespace>CICMS_UI</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -112,6 +112,8 @@
     </EmbeddedResource>
     <EmbeddedResource Include="mainForm.resx">
       <DependentUpon>mainForm.h</DependentUpon>
+      <LogicalName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="inputForm.resx">
       <DependentUpon>inputForm.h</DependentUpon>

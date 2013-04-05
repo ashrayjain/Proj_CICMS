@@ -156,7 +156,6 @@ void mainForm::mainForm_KeyDown(Object^ sender, System::Windows::Forms::KeyEvent
 	//Ctrl+B for batch processing
 	else if(e->Control && e->KeyCode == System::Windows::Forms::Keys::B)
 		this->Batch_processing();
-	//Ctrl+
 	else
 		e->SuppressKeyPress = false;
 }
@@ -321,6 +320,11 @@ void mainForm::menu_help_abt_Click(System::Object^  sender, System::EventArgs^  
 void mainForm::menu_help_hotkey_Click(System::Object^  sender, System::EventArgs^  e){
 	System::Windows::Forms::MessageBox::Show(
 		//"Menu:\n"
+		"Ctrl + 1		The Best-Selling product(s)\n" +
+		"Ctrl + 2		The Best-Selling manufacturer(s)\n" +
+		"Ctrl + 3		The Best-Selling product(s) in a given category\n" +
+		"Ctrl + 4		The Top X product(s)\n" +
+		"-------------------------------------------------------\n" + 
 		"Ctrl + N		Add new product(s)\n" +
 		"Ctrl + S		Save current product list\n" +
 		"Ctrl + Shift + S	Save as another product list\n" +
@@ -791,6 +795,7 @@ void mainForm::Set_statusBar(System::String^ s, System::Drawing::Color c){
 //Initialize the components & set their properties; run at startup of class mainForm
 void mainForm::InitializeComponent()
 {
+	System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(mainForm::typeid));
 	this->menu = (gcnew System::Windows::Forms::MenuStrip());
 	this->menu_f = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->menu_f_addNewProducts = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -851,67 +856,83 @@ void mainForm::InitializeComponent()
 	// 
 	// menu_f
 	// 
+	this->menu_f->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
 	this->menu_f->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(8) {this->menu_f_addNewProducts, 
 		this->toolStripSeparator1, this->menu_f_save, this->menu_f_saveAs, this->menu_f_load, this->menu_f_bp, this->toolStripSeparator3, 
 		this->menu_f_quit});
 	this->menu_f->Name = L"menu_f";
+	this->menu_f->ShortcutKeyDisplayString = L"";
 	this->menu_f->Size = System::Drawing::Size(37, 20);
 	this->menu_f->Text = L"File";
 	// 
 	// menu_f_addNewProducts
 	// 
+	this->menu_f_addNewProducts->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
+	this->menu_f_addNewProducts->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"menu_f_addNewProducts.Image")));
 	this->menu_f_addNewProducts->Name = L"menu_f_addNewProducts";
-	this->menu_f_addNewProducts->Size = System::Drawing::Size(166, 22);
+	this->menu_f_addNewProducts->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::N));
+	this->menu_f_addNewProducts->Size = System::Drawing::Size(207, 22);
 	this->menu_f_addNewProducts->Text = L"Add new products";
 	this->menu_f_addNewProducts->Click += gcnew System::EventHandler(this, &mainForm::menu_f_addNewProducts_Click);
 	// 
 	// toolStripSeparator1
 	// 
 	this->toolStripSeparator1->Name = L"toolStripSeparator1";
-	this->toolStripSeparator1->Size = System::Drawing::Size(238, 6);
+	this->toolStripSeparator1->Size = System::Drawing::Size(204, 6);
 	// 
 	// menu_f_save
 	// 
+	this->menu_f_save->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
 	this->menu_f_save->Name = L"menu_f_save";
-	this->menu_f_save->Size = System::Drawing::Size(166, 22);
+	this->menu_f_save->ShortcutKeyDisplayString = L"Ctrl+S";
+	this->menu_f_save->Size = System::Drawing::Size(207, 22);
 	this->menu_f_save->Text = L"Save";
 	this->menu_f_save->Click += gcnew System::EventHandler(this, &mainForm::menu_f_save_Click);
 	// 
 	// menu_f_saveAs
 	// 
+	this->menu_f_saveAs->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
 	this->menu_f_saveAs->Name = L"menu_f_saveAs";
-	this->menu_f_saveAs->Size = System::Drawing::Size(166, 22);
+	this->menu_f_saveAs->ShortcutKeys = static_cast<System::Windows::Forms::Keys>(((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::Shift) 
+		| System::Windows::Forms::Keys::S));
+	this->menu_f_saveAs->Size = System::Drawing::Size(207, 22);
 	this->menu_f_saveAs->Text = L"Save as...";
 	this->menu_f_saveAs->Click += gcnew System::EventHandler(this, &mainForm::menu_f_saveAs_Click);
 	// 
 	// menu_f_load
 	// 
+	this->menu_f_load->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
 	this->menu_f_load->Name = L"menu_f_load";
-	this->menu_f_load->Size = System::Drawing::Size(166, 22);
+	this->menu_f_load->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::L));
+	this->menu_f_load->Size = System::Drawing::Size(207, 22);
 	this->menu_f_load->Text = L"Load";
 	this->menu_f_load->Click += gcnew System::EventHandler(this, &mainForm::menu_f_load_Click);
 	// 
 	// menu_f_bp
 	// 
+	this->menu_f_bp->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
 	this->menu_f_bp->Name = L"menu_f_bp";
-	this->menu_f_bp->Size = System::Drawing::Size(166, 22);
+	this->menu_f_bp->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::B));
+	this->menu_f_bp->Size = System::Drawing::Size(207, 22);
 	this->menu_f_bp->Text = L"Batch processing";
 	this->menu_f_bp->Click += gcnew System::EventHandler(this, &mainForm::menu_f_bp_Click);
 	// 
 	// toolStripSeparator3
 	// 
 	this->toolStripSeparator3->Name = L"toolStripSeparator3";
-	this->toolStripSeparator3->Size = System::Drawing::Size(238, 6);
+	this->toolStripSeparator3->Size = System::Drawing::Size(204, 6);
 	// 
 	// menu_f_quit
 	// 
+	this->menu_f_quit->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
 	this->menu_f_quit->Name = L"menu_f_quit";
-	this->menu_f_quit->Size = System::Drawing::Size(241, 22);
+	this->menu_f_quit->Size = System::Drawing::Size(207, 22);
 	this->menu_f_quit->Text = L"Quit";
 	this->menu_f_quit->Click += gcnew System::EventHandler(this, &mainForm::menu_f_quit_Click);
 	// 
 	// menu_stat
 	// 
+	this->menu_stat->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
 	this->menu_stat->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(4) {this->menu_stat_BSpd, 
 		this->menu_stat_BSmanu, this->menu_stat_BSpdCate, this->menu_stat_topXpd});
 	this->menu_stat->Name = L"menu_stat";
@@ -948,6 +969,7 @@ void mainForm::InitializeComponent()
 	// 
 	// menu_help
 	// 
+	this->menu_help->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
 	this->menu_help->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {this->menu_help_hotkey, 
 		this->toolStripSeparator2, this->menu_help_abt});
 	this->menu_help->Name = L"menu_help";
@@ -1106,9 +1128,11 @@ void mainForm::InitializeComponent()
 	// 
 	// list_lv
 	// 
+	this->list_lv->Activation = System::Windows::Forms::ItemActivation::OneClick;
 	this->list_lv->Columns->AddRange(gcnew cli::array< System::Windows::Forms::ColumnHeader^  >(7) {this->list_col_name, this->list_col_category, 
 		this->list_col_barcode, this->list_col_price, this->list_col_manuf, this->list_col_stock, this->list_col_sold});
 	this->list_lv->FullRowSelect = true;
+	this->list_lv->HideSelection = false;
 	this->list_lv->Location = System::Drawing::Point(11, 50);
 	this->list_lv->Name = L"list_lv";
 	this->list_lv->ShowGroups = false;
