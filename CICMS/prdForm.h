@@ -9,7 +9,6 @@
 //  API:
 //  CICMS_UI::prdForm::prdForm(); //create a mainForm object
 //  CICMS_UI::prdForm::get_product_details() //Allows other objects to retrieve the data gathered by this object
-//	set_npd_grp_text() //set the group title
 //	setTitle() //set the form title
 //	setValue() //set the values in the textBoxes
 //	modifyMode_toggle() //toggle for Modification Mode
@@ -51,11 +50,10 @@ namespace CICMS_UI {
 	//*************MEMBER FUNCTION DECLARATION***************
 	//********************************************************
 	public: prdForm(void);  //Constructor: Calls InitializeComponent to create GUI
-	public: void set_npd_grp_text(System::String^ s);
 	public: System::Windows::Forms::ListViewItem^ get_product_details(); //Is called by mainForm object to obtain product details from the form
 	public: void setValue(System::Windows::Forms::ListViewItem^ item);
-	public: void setTitle(System::String^);
-	public: void modifyMode_toggle(bool tof);
+	public: void setTitle(System::String^ formTitle, System::String^ grpTitle);
+	public: void modifyMode_toggle(bool tof, System::Windows::Forms::ListViewItem^ item);
 	//.......
 	private: void InitializeComponent(void); //Creates the GUI
 	private: void npd_b_ok_Click(System::Object^  sender, System::EventArgs^  e); //Stuff that happens when OK button is clicked

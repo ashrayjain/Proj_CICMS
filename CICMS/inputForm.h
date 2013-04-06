@@ -13,7 +13,7 @@
 //  CICMS_UI::inputForm::get_input(); // Called to return double datatype of value entered in this object
 //  CICMS_UI::inputForm::set_inputForm(); //Called to set the default starting value and name/content of this object
 //	CICMS_UI::inputForm::set_formType(int i) //set an inputForm for number or string
-//	CICMS_UI::inputForm::TOP_X_filter(bool c) //set a threshold (100) for inputForm (formType: NUMBER)
+//	CICMS_UI::inputForm::set_formType(int i, bool topXfilter) //a special case for top X feature
 //
 //  Main authors: XIE KAI(A0102016E), HUI HUI(A0105566E)
 //
@@ -64,9 +64,14 @@ namespace CICMS_UI {
 		System::String^ get_input(){
 			return this->input_tB_input->Text;
 		}
-
+		//set formType: String or Number
 		void set_formType(int i){
 			this->formType = i;
+		}
+		//set formType: String or Number. if Number, then can set TOP_X_filter
+		void set_formType(int i, bool TOP_X_filter){
+			if(i == NUMBER)
+				this->TOP_X = TOP_X_filter;
 		}
 
 		//API Function: set the title, description for inputForm class
@@ -76,9 +81,6 @@ namespace CICMS_UI {
 	private: void input_tB_input_TextChanged(System::Object^  sender, System::EventArgs^  e);
 	private: void input_tB_input_LostFocus(System::Object^  sender, System::EventArgs^  e);
 	private: void submitButton_toggle();
-	public: void TOP_X_filter(bool c){
-				 this->TOP_X = c;
-		 }
 	};
 
 }

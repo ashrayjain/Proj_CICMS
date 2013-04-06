@@ -328,12 +328,9 @@ System::Windows::Forms::ListViewItem^ prdForm::get_product_details(){
 	});
 }
 //Set form title
-void prdForm::setTitle(System::String^ s){
-	this->Text = s;
-}
-//Set group title
-void prdForm::set_npd_grp_text(System::String^ s){
-	this->npd_grp->Text = s;
+void prdForm::setTitle(System::String^ formTitle, System::String^ grpTitle){
+	this->Text = formTitle;
+	this->npd_grp->Text = grpTitle;
 }
 //submit button's toggle function
 void prdForm::submitButton_toggle(){
@@ -356,11 +353,12 @@ void prdForm::setValue(System::Windows::Forms::ListViewItem^ item){
 }
 //Modification mode toggle
 //this mode is used by 'Modify' button
-void prdForm::modifyMode_toggle(bool tof){
+void prdForm::modifyMode_toggle(bool tof, System::Windows::Forms::ListViewItem^ item){
 	if(tof){
 		this->npd_tB_barcode->Enabled = false;
 		this->modifyMode = true;
 	}
+	this->setValue(item);
 }
 //Additional checking for modify mode
 bool prdForm::additional_check(System::String^ s){

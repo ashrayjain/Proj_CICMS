@@ -348,7 +348,7 @@ void mainForm::Create_addPdForms(){
 	for( int i = 0; i < num; i++){
 		prdForm^ dlg = gcnew prdForm();
 		dlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
-		dlg->set_npd_grp_text("New product " + System::Convert::ToString(i+1) + "/" + System::Convert::ToString(num));
+		dlg->setTitle(" Add a new product", "New product " + System::Convert::ToString(i+1) + "/" + System::Convert::ToString(num));
 		System::Windows::Forms::DialogResult r = dlg->ShowDialog();
 		if (r == System::Windows::Forms::DialogResult::OK){
 			if(Bridging->Add(dlg->get_product_details())){
@@ -416,8 +416,7 @@ void mainForm::Create_topXpdForm(){
 	inputForm^ inputDlg = gcnew inputForm();
 	inputDlg->set_inputForm(" The Top X Selling products", "Please input a number for X.      ", "X is equal to", "5");
 	inputDlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
-	inputDlg->set_formType(NUMBER);
-	inputDlg->TOP_X_filter(true);
+	inputDlg->set_formType(NUMBER, true);
 
 	int i;
 	if (inputDlg->ShowDialog() == System::Windows::Forms::DialogResult::OK)
@@ -572,10 +571,8 @@ void mainForm::Create_modifyForm(){
 	prdForm^ dlg = gcnew prdForm;
 	//set up for modification mode
 	dlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
-	dlg->modifyMode_toggle(true);
-	dlg->setValue(input);
-	dlg->set_npd_grp_text("Product(s) details");
-	dlg->setTitle(" Modify product(s) details");
+	dlg->modifyMode_toggle(true, input);
+	dlg->setTitle(" Modify product(s) details", "Product(s) details");
 	System::Windows::Forms::ListViewItem^ output;
 	//get output, then update the database and listView component
 	if(dlg->ShowDialog() == System::Windows::Forms::DialogResult::OK){
