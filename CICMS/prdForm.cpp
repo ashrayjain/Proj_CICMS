@@ -51,7 +51,7 @@ void prdForm::InitializeComponent(void) //Initializes every single component on 
 	this->npd_grp->Controls->Add(this->npd_l_name);
 	this->npd_grp->Location = System::Drawing::Point(14, 10);
 	this->npd_grp->Name = L"npd_grp";
-	this->npd_grp->Size = System::Drawing::Size(247, 164);
+	this->npd_grp->Size = System::Drawing::Size(241, 164);
 	this->npd_grp->TabIndex = 5;
 	this->npd_grp->TabStop = false;
 	this->npd_grp->Text = L"New product details";
@@ -179,7 +179,7 @@ void prdForm::InitializeComponent(void) //Initializes every single component on 
 	this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 	this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 	this->CancelButton = this->npd_b_cancel;
-	this->ClientSize = System::Drawing::Size(275, 218);
+	this->ClientSize = System::Drawing::Size(269, 218);
 	this->Controls->Add(this->npd_b_cancel);
 	this->Controls->Add(this->npd_b_ok);
 	this->Controls->Add(this->npd_grp);
