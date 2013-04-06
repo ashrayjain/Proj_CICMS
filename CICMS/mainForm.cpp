@@ -599,9 +599,13 @@ void mainForm::Create_modifyForm(){
 				Bridging->Modify(this->list_lv->SelectedItems[i]);
 			}
 			this->list_lv->EndUpdate();
+			this->list_lv->Focus();
+			Set_statusBar("Product(s) modified successfully",System::Drawing::Color::LightSkyBlue);
 		}
-		this->list_lv->Focus();
-		Set_statusBar("Product(s) modified successfully",System::Drawing::Color::LightSkyBlue);
+		else{
+			this->list_lv->Focus();
+			Set_statusBar("Ready",System::Drawing::Color::LightSkyBlue);
+		}
 	}
 	else{
 		this->list_lv->Focus();
@@ -648,51 +652,45 @@ void mainForm::Create_restockForm(){
 }
 //Function: create a window to check whether the user want to delete a product or not
 void mainForm::Create_deleteForm(){
-	enum { No_No, Yes_Yes, tooMany = 1};
-	int case_tooMany = No_No;
 	System::Windows::Forms::DialogResult r;
-	if(this->list_lv->SelectedItems->Count > tooMany){
-		case_tooMany = Yes_Yes;
-		if(this->list_lv->SelectedItems->Count > 2)
-			r = (System::Windows::Forms::MessageBox::Show("Are you sure that you would like \nto delete all the selected products?", " Delete Product",
-			System::Windows::Forms::MessageBoxButtons::YesNo,
-			System::Windows::Forms::MessageBoxIcon::Warning));
-		else// == 2
-			r = (System::Windows::Forms::MessageBox::Show("Are you sure that you would like \nto delete both of the selected products?", " Delete Product",
-			System::Windows::Forms::MessageBoxButtons::YesNo,
-			System::Windows::Forms::MessageBoxIcon::Warning));
-		if(r == System::Windows::Forms::DialogResult::Yes)
-			;//del all
-		else if(r == System::Windows::Forms::DialogResult::No)
-			return;//quit the deletion directly
-	}
-	this->list_lv->BeginUpdate();
-	for(int i = 0; i < this->list_lv->SelectedItems->Count; i++){
-		if(case_tooMany == Yes_Yes || (System::Windows::Forms::MessageBox::Show("Are you sure that you would like \nto delete this product, " +
-			this->Get_sName(i) + " (" + this->Get_sCategory(i) + ") - " + this->Get_sBarcode(i) +
-			"?", " Delete Product",
-			System::Windows::Forms::MessageBoxButtons::YesNo,
-			System::Windows::Forms::MessageBoxIcon::Warning)) == System::Windows::Forms::DialogResult::Yes){
-				if(Bridging->Del(this->list_lv->SelectedItems[i]))
-				{
-					this->Clear_selectedItem(i--);//if delete an item, selectedItems->Count will decrease, index will change as well
-					this->Update_statusBar(deleteS);
-				}
-				else
-					this->Update_statusBar(deleteF);
+	bool deleteFlag = false;
+
+	if(this->list_lv->SelectedItems->Count > 2)
+		r = (System::Windows::Forms::MessageBox::Show("Are you sure that you would like \nto delete all the selected products?", " Delete Product",
+		System::Windows::Forms::MessageBoxButtons::YesNo,
+		System::Windows::Forms::MessageBoxIcon::Warning));
+	else if(this->list_lv->SelectedItems->Count == 2)
+		r = (System::Windows::Forms::MessageBox::Show("Are you sure that you would like \nto delete both of the selected products?", " Delete Product",
+		System::Windows::Forms::MessageBoxButtons::YesNo,
+		System::Windows::Forms::MessageBoxIcon::Warning));
+	else if(this->list_lv->SelectedItems->Count == 1)
+		r = (System::Windows::Forms::MessageBox::Show("Are you sure that you would like \nto delete this product, " +
+		this->Get_sName(0) + " (" + this->Get_sCategory(0) + ") - " + this->Get_sBarcode(0) +
+		"?", " Delete Product",
+		System::Windows::Forms::MessageBoxButtons::YesNo,
+		System::Windows::Forms::MessageBoxIcon::Warning));
+
+	deleteFlag = (r == System::Windows::Forms::DialogResult::Yes);
+	if(deleteFlag){
+		this->list_lv->BeginUpdate();
+		for(int i = 0; i < this->list_lv->SelectedItems->Count;){
+			if(Bridging->Del(this->list_lv->SelectedItems[i]))
+			{
+				this->Clear_selectedItem(i);
+				this->Update_statusBar(deleteS);
+			}
+			else{
+				i++;
+				this->Update_statusBar(deleteF);
+			}
 		}
-		else{
-			//quit the deletion
-			this->list_lv->EndUpdate();//must!
-			return;
-		}
+		//aft deletion
+		this->list_lv->EndUpdate();
+		if(this->list_lv->Items->Count > 0)
+			this->list_lv->Items[0]->Selected = true;
+		else
+			this->Toggle_list_b(false);
 	}
-	//aft deletion
-	this->list_lv->EndUpdate();
-	if(this->list_lv->Items->Count > 0)
-		this->list_lv->Items[0]->Selected = true;
-	else
-		this->Toggle_list_b(false);
 }
 //Function: toggle 'enabled' properties for pd_b_delete, pd_b_sell, pd_b_restock buttons
 void mainForm::Toggle_list_b(bool tof){
