@@ -61,7 +61,7 @@ bool DB_Processing::delProduct(Product p)
 	return _db->del(p);
 }
 
-bool DB_Processing::updateStock(Product p, int stock)
+bool DB_Processing::updateStock(Product p, unsigned stock)
 {
 	Product* result = getProduct(p.getBarcode());
 	if(!result)
@@ -79,6 +79,16 @@ bool DB_Processing::updateSale(Product p, unsigned sale)
 }
 
 
+bool DB_Processing::updateProduct(Product newPrd)
+{
+	Product* temp = getProduct(newPrd.getBarcode());
+	if(temp)
+	{
+		*temp = newPrd;
+		return true;
+	}
+	return false;
+}
 
 void DB_Processing::ins_sort(list<pair<int, list<Product>>>* arr, Product p, int x)
 {

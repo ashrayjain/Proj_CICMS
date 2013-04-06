@@ -20,7 +20,7 @@
 #include "Product.h"
 #include "List_v1.h"
 //#include "List_v2.h"
-//#include "List_v1.h"
+//#include "List_v3.h"
 #include <fstream>
 #include <string>
 #include <cstdio>
@@ -30,12 +30,14 @@ using namespace std;
 class File_processing
 {
 private:
-	string filename, tempfile;
-	list_adt<Product>* _db;
+	string filename, tempfile, logfile;
+	ofstream tempOut;
 public:
-	File_processing(list_adt<Product>& db, string name, string temp) : filename(name), tempfile(temp) { _db = &db; }
+	File_processing(string name, string temp, string log) : filename(name), tempfile(temp), logfile(log) {ifstream fin(tempfile); (!fin)?tempOut.open(tempfile):failedPreviously = true; fin.close();}
+	~File_processing() { tempOut.close();remove(tempfile.c_str()); }
 	bool load();
 	bool save();
+	bool writeTemp(Product t, string function, int i = 0);
 };
 
 #endif

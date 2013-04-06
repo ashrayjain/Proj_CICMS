@@ -29,7 +29,7 @@
 
 #include "List_v1.h"
 //#include "List_v2.h"
-//#include "List_v1.h"
+//#include "List_v3.h"
 #include "File_processing.h"
 #include "DB_Processing.h"
 
@@ -44,11 +44,11 @@ private:
 public:
 	Processing();
 	~Processing();
-	inline bool Processing::addProduct(Product t) { return db->addProduct(t); }
-	inline bool Processing::delProduct(Product t) { return db->delProduct(t); }
+	inline bool Processing::addProduct(Product t) { return db->addProduct(t)&&file->writeTemp(t, "ADD"); }
+	inline bool Processing::delProduct(Product t) { return db->delProduct(t)&&file->writeTemp(t, "DELETE"); }
 	inline vector<Product>* Processing::search(string s, int i) { return db->search(s, i); }
-	inline bool Processing::updateStock(Product t, int i) { return db->updateStock(t, i); }
-	inline bool Processing::updateSale(Product t, unsigned i) { return db->updateSale(t, i); }
+	inline bool Processing::updateStock(Product t, unsigned i) { return db->updateStock(t, i)&&file->writeTemp(t, "RESTOCK", i); }
+	inline bool Processing::updateSale(Product t, unsigned i) { return db->updateSale(t, i)&&file->writeTemp(t, "SALE", i); }
 	inline vector<Product>* Processing::generatePrd(int X) { return db->generatePrd(X); }
 	inline vector<Product>* Processing::generatePrd(string s) { return db->generatePrd(s); }
 	inline vector<string>* Processing::generateManu() { return db->generateManu(); }

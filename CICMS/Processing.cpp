@@ -30,14 +30,14 @@
 
 Processing::Processing()
 {
-	file = new File_processing(_database, "product.txt", "$temp.cicms");
+	file = new File_processing(_database, "product.txt", "$temp.cicms", "log.txt");
 	db = new DB_Processing(_database);
-	file->load(); 
+	file->load(_database); 
 }
 
 Processing::~Processing()
 {
-	file->save();
+	file->save(_database);
 	delete file;
 	delete db;
 }

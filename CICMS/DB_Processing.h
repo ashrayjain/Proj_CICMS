@@ -28,7 +28,7 @@
 
 #include "List_v1.h"
 //#include "List_v2.h"
-//#include "List_v1.h"
+//#include "List_v3.h"
 #include "Search.h"
 #include <list>
 #include <xutility>
@@ -49,7 +49,8 @@ public:
 	bool addProduct(Product);
 	bool delProduct(Product);
 	vector<Product>* search(string, int);
-	bool updateStock(Product, int);
+	bool updateProduct(Product);
+	bool updateStock(Product, unsigned);
 	bool updateSale(Product, unsigned);
 	vector<Product>* generatePrd(int X = 1);
 	vector<Product>* generatePrd(string cat);

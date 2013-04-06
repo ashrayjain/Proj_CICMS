@@ -18,6 +18,26 @@
 #include "File_Processing.h"
 
 
+bool File_processing::writeTemp(Product t, string function, int i)
+{	
+	if(!tempOut)
+		return false;
+	tempOut<<function<<"\n";
+	if(function == "ADD")
+		tempOut<<t.getName()<<"\n"
+			<<t.getCategory()<<"\n"
+			<<to_string(t.getBarcode())<<"\n"
+			<<to_string(t.getPrice())<<"\n"
+			<<t.getManufacturer()<<"\n"
+			<<to_string(t.getNoInStock())<<"\n";
+	else
+		tempOut<<to_string(t.getBarcode())<<"\n";
+
+	if(i)
+		tempOut<<to_string(i)<<"\n";
+	tempOut<<"\n";
+	return true;
+}
 bool File_processing::load()
 {
 	ifstream fin(filename);
