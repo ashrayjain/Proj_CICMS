@@ -297,8 +297,10 @@ void mainForm::Load_prdList(){
 					System::Windows::Forms::MessageBoxButtons::YesNo,
 					System::Windows::Forms::MessageBoxIcon::Question)
 					== System::Windows::Forms::DialogResult::Yes){
-						Bridging->Recover();
+						Bridging->Recover(true);
 				}
+				else
+					Bridging->Recover(false);
 			}
 			this->Submit_search();// refresh the search result
 			this->Update_statusBar(loadS); //successful

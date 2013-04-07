@@ -160,8 +160,8 @@ bool Bridge::CheckRecovery(){
 	return true;//can recover
 }
 //Recover the product list operations
-void Bridge::Recover(){
-	//Handler->recover();
+void Bridge::Recover(bool yesOrNo){
+	//Handler->recover(yesOrNo);
 }
 //Load a product list
 bool Bridge::Load(System::String^ filename){

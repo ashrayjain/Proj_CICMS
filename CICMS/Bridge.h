@@ -72,7 +72,7 @@ public:
 	array<System::Windows::Forms::ListViewItem^>^ Bridge::Gen_BSpdCate(System::String^ s);
 	//new staff in phase 3
 	bool CheckRecovery();
-	void Recover();
+	void Recover(bool yesOrNo);
 	bool Load(System::String^);
 	bool Save();
 	bool SaveAs(System::String^);
