@@ -70,11 +70,17 @@ public:
 	System::String^ Bridge::Gen_BSmanu();
 	array<System::Windows::Forms::ListViewItem^>^ Bridge::Gen_TopXpd(int x);
 	array<System::Windows::Forms::ListViewItem^>^ Bridge::Gen_BSpdCate(System::String^ s);
+	//new staff in phase 3
 	bool CheckRecovery();
-	bool Load(bool, System::String^);
-	bool Save(System::String^);
+	void Recover();
+	bool Load(System::String^);
+	bool Save();
+	bool SaveAs(System::String^);
 	int Batch_processing(System::String^);
 	void Modify(System::Windows::Forms::ListViewItem^);
+	void Create_newPrdList();
+	bool isSaved();
+	bool isEmptyFilename();
 };
 
 #endif

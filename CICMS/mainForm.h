@@ -95,6 +95,7 @@ namespace CICMS_UI {
 		}
 
 		~mainForm(){
+			this->DoYouWantToSave();
 			//in order to specifically trigger the auto-save function
 			delete Bridging;
 		}
@@ -119,6 +120,7 @@ namespace CICMS_UI {
 	private: void menu_f_saveAs_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void menu_f_load_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void menu_f_bp_Click(System::Object^  sender, System::EventArgs^  e);
+	private: void menu_f_newprdlist_Click(System::Object^  sender, System::EventArgs^  e);
 	private: void Save_curr_prdList();
 	private: void Save_as_ano_prdList();
 	private: void Batch_processing();
@@ -128,6 +130,7 @@ namespace CICMS_UI {
 	private: void Create_BSmanuForm();
 	private: void Create_BSpdCateForm();
 	private: void Create_topXpdForm();
+	private: void DoYouWantToSave();
 
 	//**********SEARCH COMPONENTS FUNCTION***********
 	private: void s_tB_input_TextChanged(System::Object^  sender, System::EventArgs^  e);
@@ -190,6 +193,7 @@ namespace CICMS_UI {
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_f_saveAs;
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_f_load;
 	private: System::Windows::Forms::ToolStripMenuItem^  menu_f_bp;
+	private: System::Windows::Forms::ToolStripMenuItem^  menu_f_newprdlist;
 	private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator3;
 
 	//**********SEARCH COMPONENTS DECLEARATION***********
@@ -225,10 +229,11 @@ namespace CICMS_UI {
 	//**********STATUS COMPONENTS DECLEARATION***********
 	private: System::Windows::Forms::StatusStrip^  statusStrip1;
 	private: System::Windows::Forms::ToolStripStatusLabel^  toolStripStatusLabel1;
-	private: System::String^ curr_filename;
+	//private: System::String^ curr_filename; // no auto load anymore
 
 	//**********WRAPPER HANDLER DECLEARATION***********
 	private: Bridge^ Bridging;
+
 };
 }
 #endif
