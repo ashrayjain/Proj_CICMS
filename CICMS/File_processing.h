@@ -21,6 +21,7 @@
 #include "List_v1.h"
 //#include "List_v2.h"
 //#include "List_v3.h"
+
 #include <fstream>
 #include <string>
 #include <cstdio>
@@ -31,13 +32,19 @@ class File_processing
 {
 private:
 	string filename, tempfile, logfile;
+	list_adt<Product> &_db;
 	ofstream tempOut;
+	bool failedPreviously;
+	void init();
 public:
-	File_processing(string name, string temp, string log) : filename(name), tempfile(temp), logfile(log) {ifstream fin(tempfile); (!fin)?tempOut.open(tempfile):failedPreviously = true; fin.close();}
-	~File_processing() { tempOut.close();remove(tempfile.c_str()); }
-	bool load();
-	bool save();
+	File_processing(string file, list_adt<Product> db): filename(file), tempfile(file.substr(0, file.size()-3)+"cicms"),
+		logfile("log.txt"), failedPreviously(false), _db(db)
+	{ init(); }
+	bool loadPrds();
+	bool savePrds();
 	bool writeTemp(Product t, string function, int i = 0);
+	bool tempExists();
+	void initializeTemp();
 };
 
 #endif

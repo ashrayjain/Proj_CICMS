@@ -15,8 +15,30 @@
 /******************************************************************************************************/
 
 #include "stdafx.h"
+#include <Windows.h>
 #include "File_Processing.h"
 
+void File_processing::init()
+{
+	ifstream fin(tempfile);
+	if(fin)
+		failedPreviously = true;
+	else
+		initializeTemp();
+	fin.close();
+}
+
+bool File_processing::tempExists() { return failedPreviously; }
+
+void File_processing::initializeTemp()
+{
+	
+	tempOut.open(tempfile);
+	SetFileAttributes(wstring(tempfile.begin(), tempfile.end()).c_str(), FILE_ATTRIBUTE_HIDDEN);
+	tempOut<<to_string(1)<<endl;
+	tempOut<<endl;
+	tempOut<<"Recovery\n";
+}
 
 bool File_processing::writeTemp(Product t, string function, int i)
 {	
@@ -35,10 +57,10 @@ bool File_processing::writeTemp(Product t, string function, int i)
 
 	if(i)
 		tempOut<<to_string(i)<<"\n";
-	tempOut<<"\n";
+	tempOut<<"\n\n";
 	return true;
 }
-bool File_processing::load()
+bool File_processing::loadPrds()
 {
 	ifstream fin(filename);
 	if(!fin)
@@ -59,7 +81,7 @@ bool File_processing::load()
 		getline(fin, manufacturer);
 		getline(fin, noInStock);
 		getline(fin, noSold);
-		_db->add(Product(name, category, manufacturer, atoi(barcode.c_str()),
+		_db.add(Product(name, category, manufacturer, atoi(barcode.c_str()),
 			atof(price.c_str()), atoi(noInStock.c_str()), atoi(noSold.c_str())));
 		getline(fin, temp);
 	}
@@ -68,24 +90,25 @@ bool File_processing::load()
 	return true;
 }
 
-bool File_processing::save()
+bool File_processing::savePrds()
 {
 	ofstream fout(filename);
 	if(!fout)
 		return false;
 
-	fout<<to_string(_db->size())+"\n\n";
-	for(unsigned i = 0; i < _db->size(); i++)
+	fout<<to_string(_db.size())+"\n\n";
+	for(unsigned i = 0; i < _db.size(); i++)
 	{
-		fout<<(*_db)[i].getName()+"\n";
-		fout<<(*_db)[i].getCategory()+"\n";
-		fout<<to_string((*_db)[i].getBarcode())+"\n";
-		fout<<to_string((*_db)[i].getPrice())+"\n";
-		fout<<(*_db)[i].getManufacturer()+"\n";
-		fout<<to_string((*_db)[i].getNoInStock())+"\n";
-		fout<<to_string((*_db)[i].getNoSold())+"\n";
+		fout<<_db[i].getName()+"\n";
+		fout<<_db[i].getCategory()+"\n";
+		fout<<to_string(_db[i].getBarcode())+"\n";
+		fout<<to_string(_db[i].getPrice())+"\n";
+		fout<<_db[i].getManufacturer()+"\n";
+		fout<<to_string(_db[i].getNoInStock())+"\n";
+		fout<<to_string(_db[i].getNoSold())+"\n";
 		fout<<"\n";
 	}
 	fout.close();
+	remove(tempfile.c_str());
 	return true;
 }

@@ -5,8 +5,8 @@ Stationary
 1000000
 97.100000
 Parker
-954
-296
+21063
+46840
 
 Pork
 Meat

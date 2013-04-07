@@ -10,7 +10,7 @@
     <ProjectGuid>{40EC5004-6811-4836-B624-FCD1B9BE2985}</ProjectGuid>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <Keyword>ManagedCProj</Keyword>
-    <RootNamespace>CICMS</RootNamespace>
+    <RootNamespace>CICMS_UI</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -54,7 +54,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="addPdForm.h">
+    <ClInclude Include="prdForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="DB_Processing.h" />
@@ -84,7 +84,7 @@
     <ResourceCompile Include="app.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="addPdForm.cpp" />
+    <ClCompile Include="prdForm.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="DB_Processing.cpp" />
     <ClCompile Include="File_Processing.cpp" />
@@ -106,12 +106,14 @@
     <Image Include="app.ico" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="addPdForm.resx">
-      <DependentUpon>addPdForm.h</DependentUpon>
+    <EmbeddedResource Include="prdForm.resx">
+      <DependentUpon>prdForm.h</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="mainForm.resx">
       <DependentUpon>mainForm.h</DependentUpon>
+      <LogicalName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="inputForm.resx">
       <DependentUpon>inputForm.h</DependentUpon>

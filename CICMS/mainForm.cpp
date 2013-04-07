@@ -78,7 +78,7 @@
 #include "stdafx.h"
 #include "mainForm.h"
 #include "inputForm.h"
-#include "addPdForm.h"
+#include "prdForm.h"
 #include "statForm.h"
 #include "ListViewItemComparer.h"
 #include "InputCheck.h"
@@ -94,7 +94,8 @@ enum STATUSBAR {
 	restockS, restockF,
 	deleteS, deleteF,
 	discountS, discountF,
-	searchS, searchF
+	searchS, searchF,
+	recoverS, recoverF
 };
 
 enum BYMETHOD { byName, byBarcode, byCategory, byManuf, byStock };
@@ -114,26 +115,25 @@ void mainForm::mainForm_KeyDown(Object^ sender, System::Windows::Forms::KeyEvent
 	e->SuppressKeyPress = true;//thus keys here will not send to mainForm_KeyPress
 	//Ctrl+A in listView
 	if(this->list_lv->Focused && e->Control && e->KeyCode == System::Windows::Forms::Keys::A){
-		this->list_lv->BeginUpdate();
 		if(this->CA_in_List_lv_toggle == true){
+			this->list_lv->BeginUpdate();
 			for(int i = 0; i < this->list_lv->Items->Count; i++)
 				this->list_lv->Items[i]->Selected = true;
+			this->list_lv->EndUpdate();
 			this->CA_in_List_lv_toggle = false;
 		}
-		else{//toggle == false
-			for(int i = 0; i < this->list_lv->Items->Count; i++)
-				this->list_lv->Items[i]->Selected = false;
-			this->CA_in_List_lv_toggle = true;
-		}
-		this->list_lv->EndUpdate();
 	}
-	//Ctrl+S for Sale button
-	else if(e->Control && e->KeyCode == System::Windows::Forms::Keys::S){
+	//Ctrl+E for Sale button
+	else if(e->Control && e->KeyCode == System::Windows::Forms::Keys::E){
 		this->list_b_sell->PerformClick();
 	}
 	//Ctrl+R for Restock button
 	else if(e->Control && e->KeyCode == System::Windows::Forms::Keys::R){
 		this->list_b_restock->PerformClick();
+	}
+	//Ctrl+M for Modify button
+	else if(e->Control && e->KeyCode == System::Windows::Forms::Keys::M){
+		this->list_b_modify->PerformClick();
 	}
 	//Del for Delete button
 	else if(e->KeyCode == System::Windows::Forms::Keys::Delete/* || (e->Control && e->KeyCode == System::Windows::Forms::Keys::D)*/){
@@ -142,6 +142,20 @@ void mainForm::mainForm_KeyDown(Object^ sender, System::Windows::Forms::KeyEvent
 	//Ctrl+N for Add New Product button
 	else if(e->Control && e->KeyCode == System::Windows::Forms::Keys::N)
 		this->Create_addPdForms();
+	//Ctrl+Shift+S for Save as...
+	else if(e->Control && e->Shift && e->KeyCode == System::Windows::Forms::Keys::S)
+		this->Save_as_ano_prdList();
+	//Ctrl+S for Save
+	else if(e->Control && e->KeyCode == System::Windows::Forms::Keys::S){
+		if(this->toolStripStatusLabel1->Text != "Data saved successfully")
+			this->Save_curr_prdList();
+	}
+	//Ctrl+L for Load
+	else if(e->Control && e->KeyCode == System::Windows::Forms::Keys::L)
+		this->Load_prdList();
+	//Ctrl+B for batch processing
+	else if(e->Control && e->KeyCode == System::Windows::Forms::Keys::B)
+		this->Batch_processing();
 	else
 		e->SuppressKeyPress = false;
 }
@@ -150,9 +164,9 @@ void mainForm::mainForm_KeyPress(Object^ sender, System::Windows::Forms::KeyPres
 	//num, character, space for s_tB_input
 	if(!this->s_tB_input->Focused && (System::Char::IsLetterOrDigit(e->KeyChar) ||
 		e->KeyChar == ' ')){
-		this->s_tB_input->Text = System::Convert::ToString(e->KeyChar);
-		this->s_tB_input->Focus();
-		this->s_tB_input->SelectionStart = this->s_tB_input->Text->Length;
+			this->s_tB_input->Text = System::Convert::ToString(e->KeyChar);
+			this->s_tB_input->Focus();
+			this->s_tB_input->SelectionStart = this->s_tB_input->Text->Length;
 	}
 	//backspace for s_tB_input
 	else if(!this->s_tB_input->Focused && e->KeyChar == 8){//8 is Backspace
@@ -168,9 +182,36 @@ void mainForm::mainForm_Load(System::Object^  sender, System::EventArgs^  e){
 //Initialize the settings before mainForm is loaded
 void mainForm::Ini_settings(){
 	this->SelectAll_toggle = true;
-	this->Bridging = gcnew Bridge;
 	this->default_IComparer = this->list_lv->ListViewItemSorter;
 	this->CA_in_List_lv_toggle = true;
+	this->curr_filename = "product.txt";
+
+	this->Bridging = gcnew Bridge;
+	//loading at start up
+	if(Bridging->CheckRecovery()){
+		if(System::Windows::Forms::MessageBox::Show("Application crashes detected, do you want to restore\nthe operation(s) last time?",
+			" CICMS Recovery",
+			System::Windows::Forms::MessageBoxButtons::YesNo,
+			System::Windows::Forms::MessageBoxIcon::Question)
+			== System::Windows::Forms::DialogResult::Yes){
+				if(Bridging->Load(true, curr_filename))
+					this->Update_statusBar(recoverS); //successful
+				else
+					this->Update_statusBar(recoverF); //unsuccessful
+		}
+		else{
+			if(Bridging->Load(false, curr_filename))
+				this->Set_statusBar("Ready", System::Drawing::Color::LightSkyBlue);
+			else
+				this->Update_statusBar(loadF);
+		}
+	}
+	else{
+		if(Bridging->Load(false, curr_filename))
+			this->Set_statusBar("Ready", System::Drawing::Color::LightSkyBlue);
+		else
+			this->Update_statusBar(loadF);
+	}
 }
 
 //*********************************************
@@ -184,6 +225,81 @@ void mainForm::menu_f_quit_Click(System::Object^  sender, System::EventArgs^  e)
 //Event: when click menu_f_addNewProducts item, open the addPdForm window to add new products
 void mainForm::menu_f_addNewProducts_Click(System::Object^  sender, System::EventArgs^  e) {
 	this->Create_addPdForms();
+}
+//Event: when click menu_f_save item, Save the current product list
+void mainForm::menu_f_save_Click(System::Object^  sender, System::EventArgs^  e){
+	this->Save_curr_prdList();
+}
+//Event: when click menu_f_saveAs item, Save as another product list
+void mainForm::menu_f_saveAs_Click(System::Object^  sender, System::EventArgs^  e){
+	this->Save_as_ano_prdList();
+}
+//Event: when click menu_f_load item, Load a product list
+void mainForm::menu_f_load_Click(System::Object^  sender, System::EventArgs^  e){
+	this->Load_prdList();
+}
+//Event: when click menu_f_bp item, Submit batch file for batch processing
+void mainForm::menu_f_bp_Click(System::Object^  sender, System::EventArgs^  e){
+	this->Batch_processing();
+}
+//Save the current product list
+void mainForm::Save_curr_prdList(){
+	this->Set_statusBar("Saving...", System::Drawing::Color::Khaki);
+	if(Bridging->Save(curr_filename))
+		this->Update_statusBar(saveS);//successful
+	else
+		this->Update_statusBar(saveF);//unsuccessful
+}
+//Save as another product list
+void mainForm::Save_as_ano_prdList(){
+	System::Windows::Forms::SaveFileDialog^ sf_dlg = gcnew System::Windows::Forms::SaveFileDialog;
+	sf_dlg->FileName = "product";
+	sf_dlg->Title = " Save as another product list";
+	sf_dlg->Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+	sf_dlg->FilterIndex = 1;
+	if(sf_dlg->ShowDialog() == System::Windows::Forms::DialogResult::OK){
+		this->Set_statusBar("Saving...", System::Drawing::Color::Khaki);
+		if(Bridging->Save(sf_dlg->FileName))
+			this->Update_statusBar(saveS);//successful
+		else
+			this->Update_statusBar(saveF);//unsuccessful
+	}
+}
+//Load a product list
+void mainForm::Load_prdList(){
+	System::Windows::Forms::OpenFileDialog^ of_dlg = gcnew System::Windows::Forms::OpenFileDialog;
+	of_dlg->FileName = "product";
+	of_dlg->Title = " Load product list";
+	of_dlg->Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+	of_dlg->FilterIndex = 1;
+	if(of_dlg->ShowDialog() == System::Windows::Forms::DialogResult::OK){
+		this->Set_statusBar("Loading...", System::Drawing::Color::Khaki);
+		this->Bridging->Save(curr_filename);
+		if(Bridging->Load(false, of_dlg->FileName)){
+			this->Submit_search();// refresh the search result
+			this->Update_statusBar(loadS); //successful
+			this->curr_filename = of_dlg->FileName;
+		}
+		else
+			this->Update_statusBar(loadF); //unsuccessful
+	}
+}
+//Submit batch file for batch processing
+void mainForm::Batch_processing(){
+	System::Windows::Forms::OpenFileDialog^ of_dlg = gcnew System::Windows::Forms::OpenFileDialog;
+	of_dlg->FileName = "batchjobs";
+	of_dlg->Title = " Load batch file";
+	of_dlg->Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+	of_dlg->FilterIndex = 1;
+	if(of_dlg->ShowDialog() == System::Windows::Forms::DialogResult::OK){
+		this->Set_statusBar("Processing...", System::Drawing::Color::Khaki);
+		int i = Bridging->Batch_processing(of_dlg->FileName);
+		this->Submit_search();// refresh the search result
+		if(i == 0)
+			this->Set_statusBar("Batch file processed successfully", System::Drawing::Color::LightSkyBlue);
+		else
+			this->Set_statusBar("Batch file processed successfully, " + i + " errors found" , System::Drawing::Color::LightSkyBlue);
+	}
 }
 //Event: when click menu_stat_BSpd_Click item, open the MessageBox window to show the result of Best-Selling product(s)
 void mainForm::menu_stat_BSpd_Click(System::Object^  sender, System::EventArgs^  e){
@@ -201,17 +317,38 @@ void mainForm::menu_stat_BSpdCate_Click(System::Object^  sender, System::EventAr
 void mainForm::menu_stat_topXpd_Click(System::Object^  sender, System::EventArgs^  e){
 	this->Create_topXpdForm();
 }
-//Event: when click menu_about item, open a messageBox that contains our team's description
-void mainForm::menu_about_Click(System::Object^  sender, System::EventArgs^  e) {
+//Event: when click menu_help_abt item, open a messageBox that contains our team's description
+void mainForm::menu_help_abt_Click(System::Object^  sender, System::EventArgs^  e) {
 	System::Windows::Forms::MessageBox::Show("Hello! Our team, C07-2: Ashray, Bob, Hui and Kai!", " About");
+}
+//Event: when click menu_help_hotkey, show a msgbox to display a list of hotkeys supported
+void mainForm::menu_help_hotkey_Click(System::Object^  sender, System::EventArgs^  e){
+	System::Windows::Forms::MessageBox::Show(
+		//"Menu:\n"
+		"Ctrl + 1		The Best-Selling product(s)\n" +
+		"Ctrl + 2		The Best-Selling manufacturer(s)\n" +
+		"Ctrl + 3		The Best-Selling product(s) in a given category\n" +
+		"Ctrl + 4		The Top X product(s)\n" +
+		"-------------------------------------------------------\n" + 
+		"Ctrl + N		Add new product(s)\n" +
+		"Ctrl + S		Save current product list\n" +
+		"Ctrl + Shift + S	Save as another product list\n" +
+		"Ctrl + L		Load product list\n" +
+		"Ctrl + B		Submit batch processing\n" +
+		"-------------------------------------------------------\n" + 
+		"After selecting some products\n" +
+		"Ctrl + E		Specify a sale for product(s)\n" +
+		"Ctrl + R		Restock product(s)\n" +
+		"Ctrl + M		Modify product(s) details\n" +
+		"Del		Delete product(s)", " Keyboard shortcuts");
 }
 //Function: create a addPdForm window, and let logic/handler part handle the input
 void mainForm::Create_addPdForms(){
 	int num = (int) Create_inputForm(" Add products", "How many products to add?     ", "Number:", "1");
 	for( int i = 0; i < num; i++){
-		addPdForm^ dlg = gcnew addPdForm();
+		prdForm^ dlg = gcnew prdForm();
 		dlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
-		dlg->set_npd_grp_text("New product " + System::Convert::ToString(i+1) + "/" + System::Convert::ToString(num));
+		dlg->setTitle(" Add a new product", "New product " + System::Convert::ToString(i+1) + "/" + System::Convert::ToString(num));
 		System::Windows::Forms::DialogResult r = dlg->ShowDialog();
 		if (r == System::Windows::Forms::DialogResult::OK){
 			if(Bridging->Add(dlg->get_product_details())){
@@ -255,13 +392,13 @@ void mainForm::Create_BSpdCateForm(){
 	inputDlg->set_inputForm(" Report the Best-Selling product", "Please type the category name ", "Category:  ", "");
 	inputDlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 	inputDlg->set_formType(STRING);
-	
+
 	System::String^ c;
 	if (inputDlg->ShowDialog() == System::Windows::Forms::DialogResult::OK)
 		c = inputDlg->get_input();
 	else
 		return;
-	
+
 	array<System::Windows::Forms::ListViewItem^>^ r = Bridging->Gen_BSpdCate(c);
 	if(r->Length == 0){
 		System::Windows::Forms::MessageBox::Show("Report not available.");
@@ -279,15 +416,14 @@ void mainForm::Create_topXpdForm(){
 	inputForm^ inputDlg = gcnew inputForm();
 	inputDlg->set_inputForm(" The Top X Selling products", "Please input a number for X.      ", "X is equal to", "5");
 	inputDlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
-	inputDlg->set_formType(NUMBER);
-	inputDlg->TOP_X_filter(true);
-	
+	inputDlg->set_formType(NUMBER, true);
+
 	int i;
 	if (inputDlg->ShowDialog() == System::Windows::Forms::DialogResult::OK)
 		i = System::Convert::ToInt32(inputDlg->get_input());
 	else
 		return;
-	
+
 	array<System::Windows::Forms::ListViewItem^>^ r = Bridging->Gen_TopXpd(i);
 	if(r->Length == 0){
 		System::Windows::Forms::MessageBox::Show("Report not available.");
@@ -311,9 +447,9 @@ void mainForm::s_tB_input_TextChanged(System::Object^  sender, System::EventArgs
 }
 //Event: triggered when ENTER is pressed
 void mainForm::s_b_Enter_Click(System::Object^  sender, System::EventArgs^  e) {
-		this->s_tB_input->Focus();
-		this->s_tB_input->SelectAll();
-		this->Submit_search();//search here
+	this->s_tB_input->Focus();
+	this->s_tB_input->SelectAll();
+	this->Submit_search();//search here
 }
 //Event: when s_rB_byName, s_rB_byCategory, s_rB_byManufacturer or s_rB_byBarcode is selected
 void mainForm::s_rB_CheckedChanged(System::Object^  sender, System::EventArgs^  e){
@@ -343,9 +479,9 @@ void mainForm::Submit_search(){
 	}
 	else if(this->Get_byMethod() == byBarcode && (this->s_tB_input->Text->Length > 9 || !InputCheck::is_int(this->s_tB_input->Text) || 
 		InputCheck::lessThan_zero(this->s_tB_input->Text))){
-		this->Update_statusBar(searchF);//barcode shall be an integer, larger than zero and its length <= 9
-		this->list_lv->Items->Clear();
-		this->Toggle_list_b(false);
+			this->Update_statusBar(searchF);//barcode shall be an integer, larger than zero and its length <= 9
+			this->list_lv->Items->Clear();
+			this->Toggle_list_b(false);
 	}
 	//if all satisfied
 	else
@@ -387,18 +523,91 @@ void mainForm::Search_product(System::String^ s, int m){
 //**********LIST DETAILS COMPONENTS FUNCTION***********
 //*****************************************************
 
-//Event: when click pd_b_sell button, open an inputForm window for input sale data
+//Event: when click list_b_sell button, open an inputForm window for input sale data
 void mainForm::list_b_sell_Click(System::Object^  sender, System::EventArgs^  e) {
 	Create_sellForm();
 }
-//Event: when click pd_b_restock button, open an inputForm window for input restock data
+//Event: when click list_b_restock button, open an inputForm window for input restock data
 void mainForm::list_b_restock_Click(System::Object^  sender, System::EventArgs^  e) {
 	Create_restockForm();
 }
 
-//Event: when click pd_b_delete button, open a msgBox to check whether delete the selectedItem or not
+//Event: when click list_b_delete button, open a msgBox to check whether delete the selectedItem or not
 void mainForm::list_b_delete_Click(System::Object^  sender, System::EventArgs^  e) {
 	Create_deleteForm();
+}
+//Event: when click list_b_modify button
+void mainForm::list_b_modify_Click(System::Object^  sender, System::EventArgs^  e){
+	Set_statusBar("Processing...",System::Drawing::Color::Khaki);
+	this->statusStrip1->Refresh();
+	this->Create_modifyForm();
+}
+void mainForm::Create_modifyForm(){
+	//create an input data
+	System::String^ name, ^category, ^barcode, ^price, ^manuf;
+	if(this->list_lv->SelectedItems->Count > 0){
+		name = this->list_lv->SelectedItems[0]->SubItems[0]->Text;
+		category = this->list_lv->SelectedItems[0]->SubItems[1]->Text;
+		barcode = this->list_lv->SelectedItems[0]->SubItems[2]->Text;
+		price = this->list_lv->SelectedItems[0]->SubItems[3]->Text;
+		manuf = this->list_lv->SelectedItems[0]->SubItems[4]->Text;
+	}
+	if(this->list_lv->SelectedItems->Count > 1)
+			barcode = "(...)";
+	for(int i = 1; i < this->list_lv->SelectedItems->Count; i++){
+		if(name != "(...)" && name != this->list_lv->SelectedItems[i]->SubItems[0]->Text)
+			name = "(...)";
+		if(category != "(...)" && category != this->list_lv->SelectedItems[i]->SubItems[1]->Text)
+			category = "(...)";
+		if(price != "(...)" && price != this->list_lv->SelectedItems[i]->SubItems[3]->Text)
+			price = "(...)";
+		if(manuf != "(...)" && manuf != this->list_lv->SelectedItems[i]->SubItems[4]->Text)
+			manuf = "(...)";
+	}
+	System::Windows::Forms::ListViewItem^ input = gcnew System::Windows::Forms::ListViewItem(gcnew cli::array<System::String^>(7) {
+		name,category,barcode,price,manuf
+	});
+	//create the window, and send in the input data
+	prdForm^ dlg = gcnew prdForm;
+	//set up for modification mode
+	dlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
+	dlg->modifyMode_toggle(true, input);
+	dlg->setTitle(" Modify product(s) details", "Product(s) details");
+	System::Windows::Forms::ListViewItem^ output;
+	//get output, then update the database and listView component
+	if(dlg->ShowDialog() == System::Windows::Forms::DialogResult::OK){
+		output = dlg->get_product_details();
+		bool nameChanged = output->SubItems[0]->Text != "(...)" && output->SubItems[0]->Text != input->SubItems[0]->Text,
+			categoryChanged = output->SubItems[1]->Text != "(...)" && output->SubItems[1]->Text != input->SubItems[1]->Text,
+			priceChanged = output->SubItems[3]->Text != "(...)" && output->SubItems[3]->Text != input->SubItems[3]->Text,
+			manufChanged = output->SubItems[4]->Text != "(...)" && output->SubItems[4]->Text != input->SubItems[4]->Text;
+		//any changes? update~
+		if(nameChanged || categoryChanged || priceChanged || manufChanged){
+			this->list_lv->BeginUpdate();
+			for(int i = 0; i < this->list_lv->SelectedItems->Count; i++){
+				if(nameChanged)
+					this->list_lv->SelectedItems[i]->SubItems[0]->Text = output->SubItems[0]->Text;
+				if(categoryChanged)
+					this->list_lv->SelectedItems[i]->SubItems[1]->Text = output->SubItems[1]->Text;
+				if(priceChanged)
+					this->list_lv->SelectedItems[i]->SubItems[3]->Text = output->SubItems[3]->Text;
+				if(manufChanged)
+					this->list_lv->SelectedItems[i]->SubItems[4]->Text = output->SubItems[4]->Text;
+				Bridging->Modify(this->list_lv->SelectedItems[i]);
+			}
+			this->list_lv->EndUpdate();
+			this->list_lv->Focus();
+			Set_statusBar("Product(s) modified successfully",System::Drawing::Color::LightSkyBlue);
+		}
+		else{
+			this->list_lv->Focus();
+			Set_statusBar("Ready",System::Drawing::Color::LightSkyBlue);
+		}
+	}
+	else{
+		this->list_lv->Focus();
+		Set_statusBar("Ready",System::Drawing::Color::LightSkyBlue);
+	}
 }
 //Function: create an inputForm for input; used by pd_b_sell_Click & pd_b_restock_Click events.
 double mainForm::Create_inputForm(System::String^ formTitle, System::String^ pdDescript, System::String^ inputDescript, System::String^ stringInTB){
@@ -440,58 +649,53 @@ void mainForm::Create_restockForm(){
 }
 //Function: create a window to check whether the user want to delete a product or not
 void mainForm::Create_deleteForm(){
-	enum { No_No, Yes_Yes, tooMany = 1};
-	int case_tooMany = No_No;
 	System::Windows::Forms::DialogResult r;
-	if(this->list_lv->SelectedItems->Count > tooMany){
-		case_tooMany = Yes_Yes;
-		if(this->list_lv->SelectedItems->Count > 2)
-			r = (System::Windows::Forms::MessageBox::Show("Are you sure that you would like \nto delete all the selected products?", " Delete Product",
+	bool deleteFlag = false;
+
+	if(this->list_lv->SelectedItems->Count > 2)
+		r = (System::Windows::Forms::MessageBox::Show("Are you sure that you would like \nto delete all the selected products?", " Delete Product",
 		System::Windows::Forms::MessageBoxButtons::YesNo,
 		System::Windows::Forms::MessageBoxIcon::Warning));
-		else// == 2
-			r = (System::Windows::Forms::MessageBox::Show("Are you sure that you would like \nto delete both of the selected products?", " Delete Product",
+	else if(this->list_lv->SelectedItems->Count == 2)
+		r = (System::Windows::Forms::MessageBox::Show("Are you sure that you would like \nto delete both of the selected products?", " Delete Product",
 		System::Windows::Forms::MessageBoxButtons::YesNo,
 		System::Windows::Forms::MessageBoxIcon::Warning));
-		if(r == System::Windows::Forms::DialogResult::Yes)
-			;//del all
-		else if(r == System::Windows::Forms::DialogResult::No)
-			return;//quit the deletion directly
-	}
-	this->list_lv->BeginUpdate();
-	for(int i = 0; i < this->list_lv->SelectedItems->Count; i++){
-		if(case_tooMany == Yes_Yes || (System::Windows::Forms::MessageBox::Show("Are you sure that you would like \nto delete this product, " +
-			this->Get_sName(i) + " (" + this->Get_sCategory(i) + ") - " + this->Get_sBarcode(i) +
-			"?", " Delete Product",
+	else if(this->list_lv->SelectedItems->Count == 1)
+		r = (System::Windows::Forms::MessageBox::Show("Are you sure that you would like \nto delete this product, " +
+		this->Get_sName(0) + " (" + this->Get_sCategory(0) + ") - " + this->Get_sBarcode(0) +
+		"?", " Delete Product",
 		System::Windows::Forms::MessageBoxButtons::YesNo,
-		System::Windows::Forms::MessageBoxIcon::Warning)) == System::Windows::Forms::DialogResult::Yes){
-				if(Bridging->Del(this->list_lv->SelectedItems[i]))
-				{
-					this->Clear_selectedItem(i--);//if delete an item, selectedItems->Count will decrease, index will change as well
-					this->Update_statusBar(deleteS);
-				}
-				else
-					this->Update_statusBar(deleteF);
+		System::Windows::Forms::MessageBoxIcon::Warning));
+
+	deleteFlag = (r == System::Windows::Forms::DialogResult::Yes);
+	if(deleteFlag){
+		this->list_lv->BeginUpdate();
+		for(int i = 0; i < this->list_lv->SelectedItems->Count;){
+			if(Bridging->Del(this->list_lv->SelectedItems[i]))
+			{
+				this->Clear_selectedItem(i);
+				this->Update_statusBar(deleteS);
+			}
+			else{
+				i++;
+				this->Update_statusBar(deleteF);
+			}
 		}
-		else{
-			//quit the deletion
-			this->list_lv->EndUpdate();//must!
-			return;
-		}
+		//aft deletion
+		this->list_lv->EndUpdate();
+		if(this->list_lv->Items->Count > 0)
+			this->list_lv->Items[0]->Selected = true;
+		else
+			this->Toggle_list_b(false);
 	}
-	//aft deletion
-	this->list_lv->EndUpdate();
-	if(this->list_lv->Items->Count > 0)
-		this->list_lv->Items[0]->Selected = true;
-	else
-		this->Toggle_list_b(false);
 }
 //Function: toggle 'enabled' properties for pd_b_delete, pd_b_sell, pd_b_restock buttons
 void mainForm::Toggle_list_b(bool tof){
 	this->list_b_delete->Enabled = tof;
 	this->list_b_sell->Enabled = tof;
 	this->list_b_restock->Enabled = tof;
-	
+	this->list_b_modify->Enabled = tof;
+
 }
 //Event: when select an item in the list, turn on/off some toggles
 void mainForm::list_lv_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
@@ -573,7 +777,8 @@ void mainForm::Update_statusBar(int i){
 			"Product(s) restocked successfully", "Product(s) restocked unsuccessfully", //restockS, restockF
 			"Product(s) deleted successfully", "Product(s) deleted unsuccessfully", //deleteS, deleteF
 			"Price discounted successfully", "Price discounted unsuccessfully", //discountS, discountF
-			"Searched successfully", "No results found" //searchS, searchF
+			"Searched successfully", "No results found", //searchS, searchF
+			"Data recovered successfully", "Data recovered unsuccessfully" //recoverS, recoverF
 	};
 	this->Set_statusBar(text[i], i % 2? /*failure*/System::Drawing::Color::RosyBrown: /*success*/System::Drawing::Color::LightSkyBlue);
 }
@@ -590,17 +795,26 @@ void mainForm::Set_statusBar(System::String^ s, System::Drawing::Color c){
 //Initialize the components & set their properties; run at startup of class mainForm
 void mainForm::InitializeComponent()
 {
+	System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(mainForm::typeid));
 	this->menu = (gcnew System::Windows::Forms::MenuStrip());
 	this->menu_f = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->menu_f_addNewProducts = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->toolStripSeparator1 = (gcnew System::Windows::Forms::ToolStripSeparator());
+	this->menu_f_save = (gcnew System::Windows::Forms::ToolStripMenuItem());
+	this->menu_f_saveAs = (gcnew System::Windows::Forms::ToolStripMenuItem());
+	this->menu_f_load = (gcnew System::Windows::Forms::ToolStripMenuItem());
+	this->menu_f_bp = (gcnew System::Windows::Forms::ToolStripMenuItem());
+	this->toolStripSeparator3 = (gcnew System::Windows::Forms::ToolStripSeparator());
 	this->menu_f_quit = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->menu_stat = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->menu_stat_BSpd = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->menu_stat_BSmanu = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->menu_stat_BSpdCate = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->menu_stat_topXpd = (gcnew System::Windows::Forms::ToolStripMenuItem());
-	this->menu_about = (gcnew System::Windows::Forms::ToolStripMenuItem());
+	this->menu_help = (gcnew System::Windows::Forms::ToolStripMenuItem());
+	this->menu_help_hotkey = (gcnew System::Windows::Forms::ToolStripMenuItem());
+	this->toolStripSeparator2 = (gcnew System::Windows::Forms::ToolStripSeparator());
+	this->menu_help_abt = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->s_tB_input = (gcnew System::Windows::Forms::TextBox());
 	this->s_grp = (gcnew System::Windows::Forms::GroupBox());
 	this->s_rB_byManufacturer = (gcnew System::Windows::Forms::RadioButton());
@@ -621,6 +835,7 @@ void mainForm::InitializeComponent()
 	this->list_col_stock = (gcnew System::Windows::Forms::ColumnHeader());
 	this->list_col_sold = (gcnew System::Windows::Forms::ColumnHeader());
 	this->list_grp = (gcnew System::Windows::Forms::GroupBox());
+	this->list_b_modify = (gcnew System::Windows::Forms::Button());
 	this->statusStrip1 = (gcnew System::Windows::Forms::StatusStrip());
 	this->toolStripStatusLabel1 = (gcnew System::Windows::Forms::ToolStripStatusLabel());
 	this->menu->SuspendLayout();
@@ -632,7 +847,7 @@ void mainForm::InitializeComponent()
 	// menu
 	// 
 	this->menu->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {this->menu_f, this->menu_stat, 
-		this->menu_about});
+		this->menu_help});
 	this->menu->Location = System::Drawing::Point(0, 0);
 	this->menu->Name = L"menu";
 	this->menu->Size = System::Drawing::Size(890, 24);
@@ -641,33 +856,83 @@ void mainForm::InitializeComponent()
 	// 
 	// menu_f
 	// 
-	this->menu_f->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {this->menu_f_addNewProducts, 
-		this->toolStripSeparator1, this->menu_f_quit});
+	this->menu_f->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
+	this->menu_f->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(8) {this->menu_f_addNewProducts, 
+		this->toolStripSeparator1, this->menu_f_save, this->menu_f_saveAs, this->menu_f_load, this->menu_f_bp, this->toolStripSeparator3, 
+		this->menu_f_quit});
 	this->menu_f->Name = L"menu_f";
+	this->menu_f->ShortcutKeyDisplayString = L"";
 	this->menu_f->Size = System::Drawing::Size(37, 20);
 	this->menu_f->Text = L"File";
 	// 
 	// menu_f_addNewProducts
 	// 
+	this->menu_f_addNewProducts->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
+	this->menu_f_addNewProducts->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"menu_f_addNewProducts.Image")));
 	this->menu_f_addNewProducts->Name = L"menu_f_addNewProducts";
-	this->menu_f_addNewProducts->Size = System::Drawing::Size(211, 22);
-	this->menu_f_addNewProducts->Text = L"Add new products (Ctrl+N)";
+	this->menu_f_addNewProducts->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::N));
+	this->menu_f_addNewProducts->Size = System::Drawing::Size(207, 22);
+	this->menu_f_addNewProducts->Text = L"Add new products";
 	this->menu_f_addNewProducts->Click += gcnew System::EventHandler(this, &mainForm::menu_f_addNewProducts_Click);
 	// 
 	// toolStripSeparator1
 	// 
 	this->toolStripSeparator1->Name = L"toolStripSeparator1";
-	this->toolStripSeparator1->Size = System::Drawing::Size(207, 6);
+	this->toolStripSeparator1->Size = System::Drawing::Size(204, 6);
+	// 
+	// menu_f_save
+	// 
+	this->menu_f_save->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
+	this->menu_f_save->Name = L"menu_f_save";
+	this->menu_f_save->ShortcutKeyDisplayString = L"Ctrl+S";
+	this->menu_f_save->Size = System::Drawing::Size(207, 22);
+	this->menu_f_save->Text = L"Save";
+	this->menu_f_save->Click += gcnew System::EventHandler(this, &mainForm::menu_f_save_Click);
+	// 
+	// menu_f_saveAs
+	// 
+	this->menu_f_saveAs->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
+	this->menu_f_saveAs->Name = L"menu_f_saveAs";
+	this->menu_f_saveAs->ShortcutKeys = static_cast<System::Windows::Forms::Keys>(((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::Shift) 
+		| System::Windows::Forms::Keys::S));
+	this->menu_f_saveAs->Size = System::Drawing::Size(207, 22);
+	this->menu_f_saveAs->Text = L"Save as...";
+	this->menu_f_saveAs->Click += gcnew System::EventHandler(this, &mainForm::menu_f_saveAs_Click);
+	// 
+	// menu_f_load
+	// 
+	this->menu_f_load->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
+	this->menu_f_load->Name = L"menu_f_load";
+	this->menu_f_load->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::L));
+	this->menu_f_load->Size = System::Drawing::Size(207, 22);
+	this->menu_f_load->Text = L"Load";
+	this->menu_f_load->Click += gcnew System::EventHandler(this, &mainForm::menu_f_load_Click);
+	// 
+	// menu_f_bp
+	// 
+	this->menu_f_bp->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
+	this->menu_f_bp->Name = L"menu_f_bp";
+	this->menu_f_bp->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::B));
+	this->menu_f_bp->Size = System::Drawing::Size(207, 22);
+	this->menu_f_bp->Text = L"Batch processing";
+	this->menu_f_bp->Click += gcnew System::EventHandler(this, &mainForm::menu_f_bp_Click);
+	// 
+	// toolStripSeparator3
+	// 
+	this->toolStripSeparator3->Name = L"toolStripSeparator3";
+	this->toolStripSeparator3->Size = System::Drawing::Size(204, 6);
 	// 
 	// menu_f_quit
 	// 
+	this->menu_f_quit->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
 	this->menu_f_quit->Name = L"menu_f_quit";
-	this->menu_f_quit->Size = System::Drawing::Size(210, 22);
+	this->menu_f_quit->Size = System::Drawing::Size(207, 22);
 	this->menu_f_quit->Text = L"Quit";
 	this->menu_f_quit->Click += gcnew System::EventHandler(this, &mainForm::menu_f_quit_Click);
 	// 
 	// menu_stat
 	// 
+	this->menu_stat->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
 	this->menu_stat->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(4) {this->menu_stat_BSpd, 
 		this->menu_stat_BSmanu, this->menu_stat_BSpdCate, this->menu_stat_topXpd});
 	this->menu_stat->Name = L"menu_stat";
@@ -677,37 +942,62 @@ void mainForm::InitializeComponent()
 	// menu_stat_BSpd
 	// 
 	this->menu_stat_BSpd->Name = L"menu_stat_BSpd";
-	this->menu_stat_BSpd->Size = System::Drawing::Size(334, 22);
+	this->menu_stat_BSpd->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::D1));
+	this->menu_stat_BSpd->Size = System::Drawing::Size(373, 22);
 	this->menu_stat_BSpd->Text = L"Report the Best-Selling product";
 	this->menu_stat_BSpd->Click += gcnew System::EventHandler(this, &mainForm::menu_stat_BSpd_Click);
 	// 
 	// menu_stat_BSmanu
 	// 
 	this->menu_stat_BSmanu->Name = L"menu_stat_BSmanu";
-	this->menu_stat_BSmanu->Size = System::Drawing::Size(334, 22);
+	this->menu_stat_BSmanu->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::D2));
+	this->menu_stat_BSmanu->Size = System::Drawing::Size(373, 22);
 	this->menu_stat_BSmanu->Text = L"Report the Best-Selling manufacturer";
 	this->menu_stat_BSmanu->Click += gcnew System::EventHandler(this, &mainForm::menu_stat_BSmanu_Click);
 	// 
 	// menu_stat_BSpdCate
 	// 
 	this->menu_stat_BSpdCate->Name = L"menu_stat_BSpdCate";
-	this->menu_stat_BSpdCate->Size = System::Drawing::Size(334, 22);
+	this->menu_stat_BSpdCate->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::D3));
+	this->menu_stat_BSpdCate->Size = System::Drawing::Size(373, 22);
 	this->menu_stat_BSpdCate->Text = L"Report the Best-Selling product in a given category";
 	this->menu_stat_BSpdCate->Click += gcnew System::EventHandler(this, &mainForm::menu_stat_BSpdCate_Click);
 	// 
 	// menu_stat_topXpd
 	// 
 	this->menu_stat_topXpd->Name = L"menu_stat_topXpd";
-	this->menu_stat_topXpd->Size = System::Drawing::Size(334, 22);
+	this->menu_stat_topXpd->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::D4));
+	this->menu_stat_topXpd->Size = System::Drawing::Size(373, 22);
 	this->menu_stat_topXpd->Text = L"Report the Top X Selling products";
 	this->menu_stat_topXpd->Click += gcnew System::EventHandler(this, &mainForm::menu_stat_topXpd_Click);
 	// 
-	// menu_about
+	// menu_help
 	// 
-	this->menu_about->Name = L"menu_about";
-	this->menu_about->Size = System::Drawing::Size(50, 20);
-	this->menu_about->Text = L"About";
-	this->menu_about->Click += gcnew System::EventHandler(this, &mainForm::menu_about_Click);
+	this->menu_help->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
+	this->menu_help->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {this->menu_help_hotkey, 
+		this->toolStripSeparator2, this->menu_help_abt});
+	this->menu_help->Name = L"menu_help";
+	this->menu_help->Size = System::Drawing::Size(43, 20);
+	this->menu_help->Text = L"Help";
+	// 
+	// menu_help_hotkey
+	// 
+	this->menu_help_hotkey->Name = L"menu_help_hotkey";
+	this->menu_help_hotkey->Size = System::Drawing::Size(173, 22);
+	this->menu_help_hotkey->Text = L"Keyboard shortcuts";
+	this->menu_help_hotkey->Click += gcnew System::EventHandler(this, &mainForm::menu_help_hotkey_Click);
+	// 
+	// toolStripSeparator2
+	// 
+	this->toolStripSeparator2->Name = L"toolStripSeparator2";
+	this->toolStripSeparator2->Size = System::Drawing::Size(170, 6);
+	// 
+	// menu_help_abt
+	// 
+	this->menu_help_abt->Name = L"menu_help_abt";
+	this->menu_help_abt->Size = System::Drawing::Size(173, 22);
+	this->menu_help_abt->Text = L"About";
+	this->menu_help_abt->Click += gcnew System::EventHandler(this, &mainForm::menu_help_abt_Click);
 	// 
 	// s_tB_input
 	// 
@@ -832,7 +1122,7 @@ void mainForm::InitializeComponent()
 	// list_b_delete
 	// 
 	this->list_b_delete->Enabled = false;
-	this->list_b_delete->Location = System::Drawing::Point(172, 19);
+	this->list_b_delete->Location = System::Drawing::Point(572, 19);
 	this->list_b_delete->Name = L"list_b_delete";
 	this->list_b_delete->Size = System::Drawing::Size(75, 23);
 	this->list_b_delete->TabIndex = 7;
@@ -842,9 +1132,11 @@ void mainForm::InitializeComponent()
 	// 
 	// list_lv
 	// 
+	this->list_lv->Activation = System::Windows::Forms::ItemActivation::OneClick;
 	this->list_lv->Columns->AddRange(gcnew cli::array< System::Windows::Forms::ColumnHeader^  >(7) {this->list_col_name, this->list_col_category, 
 		this->list_col_barcode, this->list_col_price, this->list_col_manuf, this->list_col_stock, this->list_col_sold});
 	this->list_lv->FullRowSelect = true;
+	this->list_lv->HideSelection = false;
 	this->list_lv->Location = System::Drawing::Point(11, 50);
 	this->list_lv->Name = L"list_lv";
 	this->list_lv->ShowGroups = false;
@@ -889,6 +1181,7 @@ void mainForm::InitializeComponent()
 	// 
 	// list_grp
 	// 
+	this->list_grp->Controls->Add(this->list_b_modify);
 	this->list_grp->Controls->Add(this->list_lv);
 	this->list_grp->Controls->Add(this->list_b_restock);
 	this->list_grp->Controls->Add(this->list_b_sell);
@@ -899,6 +1192,17 @@ void mainForm::InitializeComponent()
 	this->list_grp->TabIndex = 13;
 	this->list_grp->TabStop = false;
 	this->list_grp->Text = L"Result";
+	// 
+	// list_b_modify
+	// 
+	this->list_b_modify->Enabled = false;
+	this->list_b_modify->Location = System::Drawing::Point(172, 19);
+	this->list_b_modify->Name = L"list_b_modify";
+	this->list_b_modify->Size = System::Drawing::Size(75, 23);
+	this->list_b_modify->TabIndex = 9;
+	this->list_b_modify->Text = L"Modify";
+	this->list_b_modify->UseVisualStyleBackColor = true;
+	this->list_b_modify->Click += gcnew System::EventHandler(this, &mainForm::list_b_modify_Click);
 	// 
 	// statusStrip1
 	// 

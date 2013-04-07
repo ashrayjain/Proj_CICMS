@@ -120,6 +120,16 @@
   <metadata name="menu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="menu_f_addNewProducts.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsEAAA7BAbiRa+0AAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjEwMPRy
+        oQAAAIhJREFUWEftmDEKwDAMA/04//9LbgMdulQqBkMCN3gKBnGRI5OoqtipthKzwCDI2QNCI4QyM+4q
+        UW3yrUYEuXuGEIReeXrOlJl3Rr1B9kxZ4pMQgh4fQWhZAQ+5gegSWiuGKrl+qN6WINVEuBKuR4YrpnZZ
+        5ow9dd5a0KbE8NnwhyxX5ihtR+gCyQd2dCaMfTkAAAAASUVORK5CYII=
+</value>
+  </data>
   <metadata name="statusStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>379, 17</value>
   </metadata>

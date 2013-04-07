@@ -9,15 +9,15 @@
 //  API:
 //  Processing();
 //	~Processing();
-//  inline bool Processing::addProduct(Product t);
-//  inline bool Processing::delProduct(Product t);
-//  inline vector<Product>* Processing::search(string s, int i);
-//  inline bool Processing::updateStock(Product t, int i);
-//  inline bool Processing::updateSale(Product t, unsigned i);
-//  inline vector<Product>* Processing::generatePrd(int X);
-//  inline vector<Product>* Processing::generatePrd(string s);
-//  inline vector<string>* Processing::generateManu();
-//	inline int size() { return _database.size(); }
+//  bool Processing::addProduct(Product t);
+//  bool Processing::delProduct(Product t);
+//  vector<Product>* Processing::search(string s, int i);
+//  bool Processing::updateStock(Product t, int i);
+//  bool Processing::updateSale(Product t, unsigned i);
+//  vector<Product>* Processing::generatePrd(int X);
+//  vector<Product>* Processing::generatePrd(string s);
+//  vector<string>* Processing::generateManu();
+//	int size() { return _database.size(); }
 //
 //  Main authors: ASHRAY JAIN (A0105199B)
 //
@@ -30,6 +30,7 @@
 #include "List_v1.h"
 //#include "List_v2.h"
 //#include "List_v3.h"
+
 #include "File_processing.h"
 #include "DB_Processing.h"
 
@@ -40,19 +41,29 @@ private:
 	list_adt<Product> _database;
 	File_processing *file;
 	DB_Processing *db;
+	bool changed;
 
 public:
 	Processing();
 	~Processing();
-	inline bool Processing::addProduct(Product t) { return db->addProduct(t)&&file->writeTemp(t, "ADD"); }
-	inline bool Processing::delProduct(Product t) { return db->delProduct(t)&&file->writeTemp(t, "DELETE"); }
-	inline vector<Product>* Processing::search(string s, int i) { return db->search(s, i); }
-	inline bool Processing::updateStock(Product t, unsigned i) { return db->updateStock(t, i)&&file->writeTemp(t, "RESTOCK", i); }
-	inline bool Processing::updateSale(Product t, unsigned i) { return db->updateSale(t, i)&&file->writeTemp(t, "SALE", i); }
-	inline vector<Product>* Processing::generatePrd(int X) { return db->generatePrd(X); }
-	inline vector<Product>* Processing::generatePrd(string s) { return db->generatePrd(s); }
-	inline vector<string>* Processing::generateManu() { return db->generateManu(); }
-	inline int size() { return _database.size(); }
+	void clearDatabase();
+	bool isSaved();
+	bool isEmptyFilename();
+	bool writeTemp(Product, string);
+	bool writeTemp(Product, string, int);
+	bool loadFile(string);
+	bool saveFile();
+	bool saveFileAs(string);
+	bool chkTmpFile();
+	void recover(bool);
+	int size();
+	bool addProduct(Product);
+	bool delProduct(Product);
+	vector<Product>* search(string, int);
+	bool updateStock(Product, unsigned);
+	bool updateSale(Product, unsigned);
+	vector<Product>* generatePrd(int);
+	vector<Product>* generatePrd(string);
+	vector<string>* generateManu();
 };
-
 #endif
