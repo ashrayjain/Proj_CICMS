@@ -153,18 +153,31 @@ System::String^ Bridge::toSysString(std::string s)
 {
 	return gcnew System::String(s.c_str());
 }
+///////////////////////////////////////////////////////////////////////new staff
 //Check whether a recovery is needed
 bool Bridge::CheckRecovery(){
 	//return Handler->chkTmpFile();
-	return false;
+	return true;//can recover
+}
+//Recover the product list operations
+void Bridge::Recover(bool yesOrNo){
+	//Handler->recover(yesOrNo);
 }
 //Load a product list
-bool Bridge::Load(bool tof, System::String^ filename){
-	return Handler->Load(tof, this->toStdString(filename));
+
+bool Bridge::Load(System::String^ filename){
+	//return Handler->Load(this->toStdString(filename));
+	return true;
+}
+//save into current product list
+bool Bridge::Save(){
+	//return Handler->Save();
+	return true;
 }
 //Save into a .txt file
-bool Bridge::Save(System::String^ filename){
-	return Handler->Save(this->toStdString(filename));
+bool Bridge::SaveAs(System::String^ filename){
+	//return Handler->SaveAs(this->toStdString(filename));
+	return true;
 }
 //Execute the batchProcessing
 int Bridge::Batch_processing(System::String^ filename){
@@ -174,4 +187,17 @@ int Bridge::Batch_processing(System::String^ filename){
 //Modify products details
 void Bridge::Modify(System::Windows::Forms::ListViewItem^ item){
 	//Handler->updatePrd(this->toProduct(item));
+}
+//create a new product list
+void Bridge::Create_newPrdList(){
+	//Handler->clear_database();
+}
+//whether the current file is !changed/saved or not
+bool Bridge::isSaved(){
+	//return Handler->isSaved();
+	return false;
+}
+bool Bridge::isEmptyFilename(){
+	//return Handler->isEmptyFilename();
+	return true;
 }

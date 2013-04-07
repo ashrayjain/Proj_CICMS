@@ -184,34 +184,9 @@ void mainForm::Ini_settings(){
 	this->SelectAll_toggle = true;
 	this->default_IComparer = this->list_lv->ListViewItemSorter;
 	this->CA_in_List_lv_toggle = true;
-	this->curr_filename = "product.txt";
+	//this->curr_filename = "product.txt"; //no auto load anymore
 
 	this->Bridging = gcnew Bridge;
-	//loading at start up
-	if(Bridging->CheckRecovery()){
-		if(System::Windows::Forms::MessageBox::Show("Application crashes detected, do you want to restore\nthe operation(s) last time?",
-			" CICMS Recovery",
-			System::Windows::Forms::MessageBoxButtons::YesNo,
-			System::Windows::Forms::MessageBoxIcon::Question)
-			== System::Windows::Forms::DialogResult::Yes){
-				if(Bridging->Load(true, curr_filename))
-					this->Update_statusBar(recoverS); //successful
-				else
-					this->Update_statusBar(recoverF); //unsuccessful
-		}
-		else{
-			if(Bridging->Load(false, curr_filename))
-				this->Set_statusBar("Ready", System::Drawing::Color::LightSkyBlue);
-			else
-				this->Update_statusBar(loadF);
-		}
-	}
-	else{
-		if(Bridging->Load(false, curr_filename))
-			this->Set_statusBar("Ready", System::Drawing::Color::LightSkyBlue);
-		else
-			this->Update_statusBar(loadF);
-	}
 }
 
 //*********************************************
@@ -242,24 +217,59 @@ void mainForm::menu_f_load_Click(System::Object^  sender, System::EventArgs^  e)
 void mainForm::menu_f_bp_Click(System::Object^  sender, System::EventArgs^  e){
 	this->Batch_processing();
 }
+//Event: when click menu_f_newprdlist, create a new product list to hold products
+void mainForm::menu_f_newprdlist_Click(System::Object^  sender, System::EventArgs^  e){
+	this->DoYouWantToSave();
+	this->s_tB_input->Text = "";
+	this->list_lv->Items->Clear();
+	Bridging->Create_newPrdList();
+}
+void mainForm::DoYouWantToSave(){
+	if(!Bridging->isSaved()){
+		if(System::Windows::Forms::DialogResult::Yes == 
+			System::Windows::Forms::MessageBox::Show("Do you want to save the current product list?",
+			" Save product list",
+			System::Windows::Forms::MessageBoxButtons::YesNo,
+			System::Windows::Forms::MessageBoxIcon::Question)){
+			if(Bridging->isEmptyFilename())
+				this->Save_as_ano_prdList();
+			else{
+				this->Set_statusBar("Saving...", System::Drawing::Color::Khaki);
+				this->statusStrip1->Refresh();
+				if(Bridging->Save())
+					this->Update_statusBar(saveS);//successful
+				else
+					this->Update_statusBar(saveF);//unsuccessful
+			}
+		}
+	}
+}
 //Save the current product list
 void mainForm::Save_curr_prdList(){
-	this->Set_statusBar("Saving...", System::Drawing::Color::Khaki);
-	if(Bridging->Save(curr_filename))
-		this->Update_statusBar(saveS);//successful
-	else
-		this->Update_statusBar(saveF);//unsuccessful
+	//this->Set_statusBar("Saving...", System::Drawing::Color::Khaki);
+	if(!Bridging->isSaved()){
+		if(Bridging->isEmptyFilename())
+			this->Save_as_ano_prdList();
+		else{
+			this->Set_statusBar("Saving...", System::Drawing::Color::Khaki);
+			this->statusStrip1->Refresh();
+			if(Bridging->Save())
+				this->Update_statusBar(saveS);//successful
+			else
+				this->Update_statusBar(saveF);//unsuccessful
+		}
+	}
 }
 //Save as another product list
 void mainForm::Save_as_ano_prdList(){
 	System::Windows::Forms::SaveFileDialog^ sf_dlg = gcnew System::Windows::Forms::SaveFileDialog;
 	sf_dlg->FileName = "product";
-	sf_dlg->Title = " Save as another product list";
+	sf_dlg->Title = " Save...";
 	sf_dlg->Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
 	sf_dlg->FilterIndex = 1;
 	if(sf_dlg->ShowDialog() == System::Windows::Forms::DialogResult::OK){
 		this->Set_statusBar("Saving...", System::Drawing::Color::Khaki);
-		if(Bridging->Save(sf_dlg->FileName))
+		if(Bridging->SaveAs(sf_dlg->FileName))
 			this->Update_statusBar(saveS);//successful
 		else
 			this->Update_statusBar(saveF);//unsuccessful
@@ -267,6 +277,9 @@ void mainForm::Save_as_ano_prdList(){
 }
 //Load a product list
 void mainForm::Load_prdList(){
+	//save before load
+	this->DoYouWantToSave();
+	
 	System::Windows::Forms::OpenFileDialog^ of_dlg = gcnew System::Windows::Forms::OpenFileDialog;
 	of_dlg->FileName = "product";
 	of_dlg->Title = " Load product list";
@@ -274,11 +287,23 @@ void mainForm::Load_prdList(){
 	of_dlg->FilterIndex = 1;
 	if(of_dlg->ShowDialog() == System::Windows::Forms::DialogResult::OK){
 		this->Set_statusBar("Loading...", System::Drawing::Color::Khaki);
-		this->Bridging->Save(curr_filename);
-		if(Bridging->Load(false, of_dlg->FileName)){
+		this->statusStrip1->Refresh();
+		//load the product list
+		if(Bridging->Load(of_dlg->FileName)){
+			if(Bridging->CheckRecovery()){
+				//recover
+				if(System::Windows::Forms::MessageBox::Show(of_dlg->SafeFileName + " crashed last time, do you want to restore\nthe operation(s)?",
+					" CICMS Recovery",
+					System::Windows::Forms::MessageBoxButtons::YesNo,
+					System::Windows::Forms::MessageBoxIcon::Question)
+					== System::Windows::Forms::DialogResult::Yes){
+						Bridging->Recover(true);
+				}
+				else
+					Bridging->Recover(false);
+			}
 			this->Submit_search();// refresh the search result
 			this->Update_statusBar(loadS); //successful
-			this->curr_filename = of_dlg->FileName;
 		}
 		else
 			this->Update_statusBar(loadF); //unsuccessful
@@ -799,6 +824,7 @@ void mainForm::InitializeComponent()
 	this->menu = (gcnew System::Windows::Forms::MenuStrip());
 	this->menu_f = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->menu_f_addNewProducts = (gcnew System::Windows::Forms::ToolStripMenuItem());
+	this->menu_f_newprdlist = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->toolStripSeparator1 = (gcnew System::Windows::Forms::ToolStripSeparator());
 	this->menu_f_save = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->menu_f_saveAs = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -857,9 +883,9 @@ void mainForm::InitializeComponent()
 	// menu_f
 	// 
 	this->menu_f->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
-	this->menu_f->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(8) {this->menu_f_addNewProducts, 
-		this->toolStripSeparator1, this->menu_f_save, this->menu_f_saveAs, this->menu_f_load, this->menu_f_bp, this->toolStripSeparator3, 
-		this->menu_f_quit});
+	this->menu_f->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(9) {this->menu_f_addNewProducts, 
+		this->menu_f_newprdlist, this->toolStripSeparator1, this->menu_f_save, this->menu_f_saveAs, this->menu_f_load, this->menu_f_bp, 
+		this->toolStripSeparator3, this->menu_f_quit});
 	this->menu_f->Name = L"menu_f";
 	this->menu_f->ShortcutKeyDisplayString = L"";
 	this->menu_f->Size = System::Drawing::Size(37, 20);
@@ -871,21 +897,30 @@ void mainForm::InitializeComponent()
 	this->menu_f_addNewProducts->Image = (cli::safe_cast<System::Drawing::Image^  >(resources->GetObject(L"menu_f_addNewProducts.Image")));
 	this->menu_f_addNewProducts->Name = L"menu_f_addNewProducts";
 	this->menu_f_addNewProducts->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::N));
-	this->menu_f_addNewProducts->Size = System::Drawing::Size(207, 22);
+	this->menu_f_addNewProducts->Size = System::Drawing::Size(272, 22);
 	this->menu_f_addNewProducts->Text = L"Add new products";
 	this->menu_f_addNewProducts->Click += gcnew System::EventHandler(this, &mainForm::menu_f_addNewProducts_Click);
+	// 
+	// menu_f_newprdlist
+	// 
+	this->menu_f_newprdlist->Name = L"menu_f_newprdlist";
+	this->menu_f_newprdlist->ShortcutKeys = static_cast<System::Windows::Forms::Keys>(((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::Shift) 
+		| System::Windows::Forms::Keys::N));
+	this->menu_f_newprdlist->Size = System::Drawing::Size(272, 22);
+	this->menu_f_newprdlist->Text = L"Create a new product list";
+	this->menu_f_newprdlist->Click += gcnew System::EventHandler(this, &mainForm::menu_f_newprdlist_Click);
 	// 
 	// toolStripSeparator1
 	// 
 	this->toolStripSeparator1->Name = L"toolStripSeparator1";
-	this->toolStripSeparator1->Size = System::Drawing::Size(204, 6);
+	this->toolStripSeparator1->Size = System::Drawing::Size(269, 6);
 	// 
 	// menu_f_save
 	// 
 	this->menu_f_save->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
 	this->menu_f_save->Name = L"menu_f_save";
 	this->menu_f_save->ShortcutKeyDisplayString = L"Ctrl+S";
-	this->menu_f_save->Size = System::Drawing::Size(207, 22);
+	this->menu_f_save->Size = System::Drawing::Size(272, 22);
 	this->menu_f_save->Text = L"Save";
 	this->menu_f_save->Click += gcnew System::EventHandler(this, &mainForm::menu_f_save_Click);
 	// 
@@ -895,7 +930,7 @@ void mainForm::InitializeComponent()
 	this->menu_f_saveAs->Name = L"menu_f_saveAs";
 	this->menu_f_saveAs->ShortcutKeys = static_cast<System::Windows::Forms::Keys>(((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::Shift) 
 		| System::Windows::Forms::Keys::S));
-	this->menu_f_saveAs->Size = System::Drawing::Size(207, 22);
+	this->menu_f_saveAs->Size = System::Drawing::Size(272, 22);
 	this->menu_f_saveAs->Text = L"Save as...";
 	this->menu_f_saveAs->Click += gcnew System::EventHandler(this, &mainForm::menu_f_saveAs_Click);
 	// 
@@ -904,7 +939,7 @@ void mainForm::InitializeComponent()
 	this->menu_f_load->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
 	this->menu_f_load->Name = L"menu_f_load";
 	this->menu_f_load->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::L));
-	this->menu_f_load->Size = System::Drawing::Size(207, 22);
+	this->menu_f_load->Size = System::Drawing::Size(272, 22);
 	this->menu_f_load->Text = L"Load";
 	this->menu_f_load->Click += gcnew System::EventHandler(this, &mainForm::menu_f_load_Click);
 	// 
@@ -913,20 +948,20 @@ void mainForm::InitializeComponent()
 	this->menu_f_bp->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
 	this->menu_f_bp->Name = L"menu_f_bp";
 	this->menu_f_bp->ShortcutKeys = static_cast<System::Windows::Forms::Keys>((System::Windows::Forms::Keys::Control | System::Windows::Forms::Keys::B));
-	this->menu_f_bp->Size = System::Drawing::Size(207, 22);
+	this->menu_f_bp->Size = System::Drawing::Size(272, 22);
 	this->menu_f_bp->Text = L"Batch processing";
 	this->menu_f_bp->Click += gcnew System::EventHandler(this, &mainForm::menu_f_bp_Click);
 	// 
 	// toolStripSeparator3
 	// 
 	this->toolStripSeparator3->Name = L"toolStripSeparator3";
-	this->toolStripSeparator3->Size = System::Drawing::Size(204, 6);
+	this->toolStripSeparator3->Size = System::Drawing::Size(269, 6);
 	// 
 	// menu_f_quit
 	// 
 	this->menu_f_quit->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
 	this->menu_f_quit->Name = L"menu_f_quit";
-	this->menu_f_quit->Size = System::Drawing::Size(207, 22);
+	this->menu_f_quit->Size = System::Drawing::Size(272, 22);
 	this->menu_f_quit->Text = L"Quit";
 	this->menu_f_quit->Click += gcnew System::EventHandler(this, &mainForm::menu_f_quit_Click);
 	// 
