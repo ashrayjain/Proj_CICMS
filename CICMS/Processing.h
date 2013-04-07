@@ -33,7 +33,7 @@
 
 #include "File_processing.h"
 #include "DB_Processing.h"
-
+#include "batch_processing.h"
 
 class Processing
 {
@@ -41,6 +41,7 @@ private:
 	list_adt<Product> _database;
 	File_processing *file;
 	DB_Processing *db;
+	batch_processing *bp;
 	bool changed;
 
 public:
@@ -60,8 +61,10 @@ public:
 	bool addProduct(Product);
 	bool delProduct(Product);
 	vector<Product>* search(string, int);
+	bool updatePrd(Product);
 	bool updateStock(Product, unsigned);
 	bool updateSale(Product, unsigned);
+	int batchProcessing(string);
 	vector<Product>* generatePrd(int);
 	vector<Product>* generatePrd(string);
 	vector<string>* generateManu();

@@ -49,10 +49,13 @@ public:
 	DB_Processing(list_adt<Product>& db): _db(&db), s(&db) {}
 	bool addProduct(Product);
 	bool delProduct(Product);
+	bool delProduct(unsigned);
 	vector<Product>* search(string, int);
 	bool updateProduct(Product);
 	bool updateStock(Product, unsigned);
 	bool updateSale(Product, unsigned);
+	bool updateStock(unsigned, unsigned);
+	bool updateSale(unsigned, unsigned);
 	vector<Product>* generatePrd(int X = 1);
 	vector<Product>* generatePrd(string cat);
 	vector<string>* generateManu();

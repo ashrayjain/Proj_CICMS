@@ -28,8 +28,8 @@
 #include <fstream>
 #include <time.h>
 
-Processing::Processing():changed(true), file(NULL)	{ db = new DB_Processing(_database); }
-Processing::~Processing()							{ delete file;delete db; }
+Processing::Processing():changed(true), file(NULL), bp(NULL){ db = new DB_Processing(_database);}
+Processing::~Processing()									{ delete file;delete db; }
 
 void Processing::clearDatabase()
 {
@@ -64,8 +64,18 @@ bool Processing::saveFile()
 void Processing::recover(bool tof)
 {
 	if(tof)
-		return ;//call BatchProcessing
+	{
+	}//call BatchProcessing
 	file->initializeTemp();
+}
+
+int Processing::batchProcessing(string filename)
+{
+	bp = new batch_processing(db, file);
+	int temp =  bp->bp_execute(filename);
+	delete bp;
+	bp = NULL;
+	return temp;
 }
 
 bool Processing::writeTemp(Product t,string func)	{ return (!file)?true:file->writeTemp(t, func); }
@@ -74,6 +84,7 @@ bool Processing::chkTmpFile()						{ return file->tempExists(); }
 bool Processing::addProduct(Product t)				{ changed = true; return db->addProduct(t) && writeTemp(t, "ADD"); }
 bool Processing::delProduct(Product t)				{ changed = true; return db->delProduct(t) && writeTemp(t, "DELETE"); }
 vector<Product>* Processing::search(string s, int i){ return db->search(s, i); }
+bool Processing::updatePrd(Product t)				{ return db->updateProduct(t) && writeTemp(t, "DELETE") && writeTemp(t, "ADD"); }
 bool Processing::updateStock(Product t, unsigned i)	{ changed = true; return db->updateStock(t, i) && writeTemp(t, "RESTOCK", i); }
 bool Processing::updateSale(Product t, unsigned i)	{ changed = true; return db->updateSale(t, i) && writeTemp(t, "SALE", i); }
 vector<Product>* Processing::generatePrd(int X)		{ return db->generatePrd(X); }

@@ -61,6 +61,11 @@ bool DB_Processing::delProduct(Product p)
 	return _db->del(p);
 }
 
+bool DB_Processing::delProduct(unsigned barcode)
+{
+	return _db->del(*(getProduct(barcode)));
+}
+
 bool DB_Processing::updateStock(Product p, unsigned stock)
 {
 	Product* result = getProduct(p.getBarcode());
@@ -89,6 +94,24 @@ bool DB_Processing::updateProduct(Product newPrd)
 	}
 	return false;
 }
+
+bool DB_Processing::updateSale(unsigned barcode, unsigned sale)
+{
+	Product* result = getProduct(barcode);
+	if(result)
+		return result->updateSale(sale);
+	return false;
+}
+
+bool DB_Processing::updateStock(unsigned barcode, unsigned stock)
+{
+	Product* result = getProduct(barcode);
+	if(!result)
+		return false;
+	result->updateStock(stock);
+	return true;
+}
+
 
 void DB_Processing::ins_sort(list<pair<int, list<Product>>>* arr, Product p, int x)
 {

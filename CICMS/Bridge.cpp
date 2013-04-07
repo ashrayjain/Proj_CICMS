@@ -123,6 +123,7 @@ System::Windows::Forms::ListViewItem^ Bridge::toLvItem(Product pd)
 			toSysString(pd.getNoSold())
 	});
 }
+
 //Conversion from System::String to double
 double Bridge::toDouble(System::String^ s)
 {
