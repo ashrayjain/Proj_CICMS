@@ -15,7 +15,8 @@ private:
 
 public:
 	Job(string jobtype, string name, string category, unsigned barcode, double price, string manufacturer, unsigned number);
-	Product AddProduct();
+	Product ReturnProduct();
 	unsigned ReturnBarcode();
 	unsigned ReturnNumber();
+	string ReturnJobType();
 };

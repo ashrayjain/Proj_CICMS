@@ -10,4 +10,9 @@ public:
 	Transaction(string id);
 	void pushJob(Job);
 	void popJob();
+	Product ReturnProduct();
+	unsigned ReturnBarcode();
+	unsigned ReturnNumber();
+	string ReturnJobType();
+	
 };
