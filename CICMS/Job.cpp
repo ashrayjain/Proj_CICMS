@@ -13,7 +13,7 @@ Job::Job(string jobtype, string name, string category, unsigned barcode, double 
 	_number=number;
 }
 
-Product Job::AddProduct()
+Product Job::ReturnProduct()
 {
 	return Product(_name, _category, _manufacturer, _barcode, _price, _number, 0);
 }
@@ -27,3 +27,9 @@ unsigned Job::ReturnNumber()
 {
 	return _number;
 }
+
+string Job::ReturnJobType()
+{
+	return _jobtype;
+}
+
