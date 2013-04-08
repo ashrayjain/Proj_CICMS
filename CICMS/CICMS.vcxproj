@@ -54,6 +54,8 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="batch_processing.h" />
+    <ClInclude Include="Job.h" />
     <ClInclude Include="prdForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
@@ -79,11 +81,14 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Transaction.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="batch_processing.cpp" />
+    <ClCompile Include="Job.cpp" />
     <ClCompile Include="prdForm.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="DB_Processing.cpp" />
@@ -101,6 +106,7 @@
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Transaction.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="app.ico" />

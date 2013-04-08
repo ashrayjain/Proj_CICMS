@@ -20,25 +20,30 @@ void Transaction::popJob()
 
 string Transaction::ReturnJobType()
 {
-	MainQueue.front.ReturnJobType();
+	return MainQueue.front().ReturnJobType();
 }
 
 Product Transaction::ReturnProduct()
 {
-	return MainQueue.front.ReturnProduct();
+	return MainQueue.front().ReturnProduct();
 }
 
 unsigned Transaction::ReturnBarcode()
 {
-	return MainQueue.front.ReturnBarcode();
+	return MainQueue.front().ReturnBarcode();
 }
 
 unsigned Transaction::ReturnNumber()
 {
-	return MainQueue.front.ReturnNumber();
+	return MainQueue.front().ReturnNumber();
 }
 
 bool Transaction::QueueEmpty()
 {
 	return MainQueue.empty();
+}
+
+string Transaction::ReturnId()
+{
+	return _id;
 }

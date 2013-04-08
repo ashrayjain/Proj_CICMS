@@ -16,4 +16,5 @@ public:
 	unsigned ReturnNumber();
 	string ReturnJobType();
 	bool QueueEmpty();
+	string ReturnId();
 };

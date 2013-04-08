@@ -9,12 +9,13 @@ using namespace std;
 class batch_processing 
 {
 private:
-stack<Transaction> MainStack; 
+stack<Transaction> MainStack;
 void bp_read(string BatchJobsPath);
 DB_Processing *_dbstuff;
 File_processing *_fpstuff;
 
 public:
-	batch_processing(DB_Processing *dbstuff, File_processing *fpstuff);
+	batch_processing(DB_Processing *dbstuff, File_processing *fpstuff); 
 	void bp_execute(string BatchJobsPath);
+	void errorReport();
 };
