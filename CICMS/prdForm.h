@@ -45,6 +45,8 @@ namespace CICMS_UI {
 	 System::Windows::Forms::Button^  npd_b_ok;
 	 System::Drawing::Color DefaultColor;
 	 bool modifyMode;
+	 System::String^ npd_no_in_stock;
+	 System::String^ npd_no_in_sold;
 
 	//********************************************************
 	//*************MEMBER FUNCTION DECLARATION***************
