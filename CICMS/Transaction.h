@@ -15,5 +15,5 @@ public:
 	unsigned ReturnBarcode();
 	unsigned ReturnNumber();
 	string ReturnJobType();
-	
+	bool QueueEmpty();
 };

@@ -18,7 +18,9 @@ void batch_processing::bp_execute(string BatchJobsPath)
 {
 	bp_read(BatchJobsPath);
 
-	while(!MainStack.top())
+	while(!MainStack.empty())
+	{
+	while(!MainStack.top().QueueEmpty())
 	{
 		if(MainStack.top().ReturnJobType()=="ADD")
 		{
@@ -37,9 +39,16 @@ void batch_processing::bp_execute(string BatchJobsPath)
 			_dbstuff->updateStock(MainStack.top().ReturnBarcode(), MainStack.top().ReturnNumber());
 		}
 
+
 		MainStack.top().popJob();
 	}
-	
+
+	MainStack.pop();
 	
 	}
+
+
+	
+	
+	
 }

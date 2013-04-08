@@ -38,3 +38,7 @@ unsigned Transaction::ReturnNumber()
 	return MainQueue.front.ReturnNumber();
 }
 
+bool Transaction::QueueEmpty()
+{
+	return MainQueue.empty();
+}
