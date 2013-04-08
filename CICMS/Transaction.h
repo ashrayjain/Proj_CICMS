@@ -1,6 +1,10 @@
+#ifndef _TRANSACTION_H_
+#define _TRANSACTION_H_
+
 #include "stdafx.h"
 #include <queue>
 #include "Job.h"
+
 using namespace std;
 
 class Transaction {
@@ -17,3 +21,5 @@ public:
 	string ReturnJobType();
 	bool QueueEmpty();
 };
+
+#endif

@@ -1,3 +1,6 @@
+#ifndef _JOB_H_
+#define _JOB_H_
+
 #include "stdafx.h"
 #include <string>
 #include "Product.h"
@@ -21,3 +24,5 @@ public:
 	unsigned ReturnNumber();
 	string ReturnJobType();
 };
+
+#endif

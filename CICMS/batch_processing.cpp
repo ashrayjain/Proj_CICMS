@@ -11,7 +11,7 @@ batch_processing::batch_processing(DB_Processing *dbstuff, File_processing *fpst
 
 void batch_processing::bp_read(string BatchJobsPath)
 {
-	*_fpstuff->load_bp(MainStack, BatchJobsPath);
+	//_fpstuff->load_bp(MainStack, BatchJobsPath);
 }
 
 void batch_processing::bp_execute(string BatchJobsPath)

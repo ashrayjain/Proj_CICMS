@@ -28,7 +28,7 @@
 #include <fstream>
 #include <time.h>
 
-Processing::Processing():changed(false), file(NULL), bp(NULL) { db = new DB_Processing(_database); }
+Processing::Processing():changed(false), file(NULL)/*, bp(NULL)*/ { db = new DB_Processing(_database); }
 Processing::~Processing() { delete file;delete db; }
 
 void Processing::clearDatabase()

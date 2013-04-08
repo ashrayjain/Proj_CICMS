@@ -15,7 +15,6 @@
 /******************************************************************************************************/
 
 #include "stdafx.h"
-#include <Windows.h>
 #include "File_Processing.h"
 
 void File_processing::init()
@@ -117,3 +116,27 @@ bool File_processing::savePrds()
 	initializeTemp();
 	return true;
 }
+/*
+void File_processing::loadBp(stack<Transaction>& s, string BPlocation)
+{
+	ifstream fin(BPlocation);
+	if(fin)
+	{
+		char temp;
+		int noOfTransactions = 0;
+		fin>>noOfTransactions;
+		fin>>temp;
+		string transID;
+		for(int i = 0; i < noOfTransactions; i++)
+		{
+			fin>>transID;
+			Transaction tempTransaction(transID);
+			int noOfJobs;
+			fin>>noOfJobs;
+			fin>>temp;
+			for(int j = 0; j < noOfJobs; j++)
+				readJob(fin);
+	}
+}
+
+*/

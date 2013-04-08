@@ -25,6 +25,11 @@
 #include <fstream>
 #include <string>
 #include <cstdio>
+#include <Windows.h>
+#include <stack>
+#include "Transaction.h"
+//#include "batch_processing.h"
+//#include "Transaction.h"
 
 using namespace std;
 
@@ -36,6 +41,8 @@ private:
 	ofstream tempOut;
 	bool failedPreviously;
 	void init();
+	void readJob(ifstream);
+
 public:
 	File_processing(string file, list_adt<Product>& db): filename(file), tempfile(file.substr(0, file.size()-3)+"cicms"),
 		logfile("log.txt"), failedPreviously(false), _db(db)
@@ -46,6 +53,7 @@ public:
 	bool writeTemp(Product t, string function, int i = 0);
 	bool tempExists();
 	void initializeTemp();
+	void loadBp(stack<Transaction>&, string);
 };
 
 #endif
