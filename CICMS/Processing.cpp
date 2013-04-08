@@ -28,8 +28,8 @@
 #include <fstream>
 #include <time.h>
 
-Processing::Processing():changed(true), file(NULL), bp(NULL){ db = new DB_Processing(_database);}
-Processing::~Processing()									{ delete file;delete db; }
+Processing::Processing():changed(false), file(NULL), bp(NULL) { db = new DB_Processing(_database); }
+Processing::~Processing() { delete file;delete db; }
 
 void Processing::clearDatabase()
 {
@@ -42,8 +42,15 @@ bool Processing::loadFile(string filename)
 	clearDatabase();
 	if(file)
 		delete file;
-	file = new File_processing(filename, _database); 
+	file = new File_processing(filename, _database);
 	return file->loadPrds();
+}
+
+void Processing::newFile()
+{
+	delete file;
+	file = NULL;
+	clearDatabase();
 }
 
 bool Processing::saveFileAs(string filename)
@@ -71,11 +78,14 @@ void Processing::recover(bool tof)
 
 int Processing::batchProcessing(string filename)
 {
+	/*
 	bp = new batch_processing(db, file);
 	int temp =  bp->bp_execute(filename);
 	delete bp;
 	bp = NULL;
 	return temp;
+	*/
+	return 0;
 }
 
 bool Processing::writeTemp(Product t,string func)	{ return (!file)?true:file->writeTemp(t, func); }
@@ -92,4 +102,4 @@ vector<Product>* Processing::generatePrd(string s)	{ return db->generatePrd(s); 
 vector<string>* Processing::generateManu()			{ return db->generateManu(); }
 int Processing::size()								{ return _database.size(); }
 bool Processing::isSaved()							{ return !changed; }
-bool Processing::isEmptyFilename()					{ return file; }
+bool Processing::isEmptyFilename()					{ return (file)?false:true; }

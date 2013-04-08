@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include <string>
 #include "Product.h"
 

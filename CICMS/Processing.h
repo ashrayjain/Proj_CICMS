@@ -43,11 +43,11 @@ private:
 	DB_Processing *db;
 	batch_processing *bp;
 	bool changed;
+	void clearDatabase();
 
 public:
 	Processing();
 	~Processing();
-	void clearDatabase();
 	bool isSaved();
 	bool isEmptyFilename();
 	bool writeTemp(Product, string);
@@ -55,6 +55,7 @@ public:
 	bool loadFile(string);
 	bool saveFile();
 	bool saveFileAs(string);
+	void newFile();
 	bool chkTmpFile();
 	void recover(bool);
 	int size();

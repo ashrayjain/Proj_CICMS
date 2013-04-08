@@ -247,7 +247,7 @@ void mainForm::DoYouWantToSave(){
 //Save the current product list
 void mainForm::Save_curr_prdList(){
 	//this->Set_statusBar("Saving...", System::Drawing::Color::Khaki);
-	if(!Bridging->isSaved()){
+	if(!Bridging->isSaved() || Bridging->isEmptyFilename()){
 		if(Bridging->isEmptyFilename())
 			this->Save_as_ano_prdList();
 		else{

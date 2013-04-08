@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include <queue>
 #include "Job.h"
 using namespace std;

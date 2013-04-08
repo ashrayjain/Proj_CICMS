@@ -28,22 +28,26 @@ void File_processing::init()
 	fin.close();
 }
 
+File_processing::~File_processing()
+{
+	remove(tempfile.c_str());
+}
+
 bool File_processing::tempExists() { return failedPreviously; }
 
 void File_processing::initializeTemp()
 {
-	
 	tempOut.open(tempfile);
 	SetFileAttributes(wstring(tempfile.begin(), tempfile.end()).c_str(), FILE_ATTRIBUTE_HIDDEN);
-	tempOut<<to_string(1)<<endl;
-	tempOut<<endl;
-	tempOut<<"Recovery\n";
+	tempOut<<to_string(1);
+	tempOut<<"\n\nRecovery\n";
+	tempOut.close();
+	failedPreviously = false;
 }
 
 bool File_processing::writeTemp(Product t, string function, int i)
-{	
-	if(!tempOut)
-		return false;
+{
+	tempOut.open(tempfile, ios::app);
 	tempOut<<function<<"\n";
 	if(function == "ADD")
 		tempOut<<t.getName()<<"\n"
@@ -58,6 +62,7 @@ bool File_processing::writeTemp(Product t, string function, int i)
 	if(i)
 		tempOut<<to_string(i)<<"\n";
 	tempOut<<"\n\n";
+	tempOut.close();
 	return true;
 }
 bool File_processing::loadPrds()
@@ -109,6 +114,6 @@ bool File_processing::savePrds()
 		fout<<"\n";
 	}
 	fout.close();
-	remove(tempfile.c_str());
+	initializeTemp();
 	return true;
 }

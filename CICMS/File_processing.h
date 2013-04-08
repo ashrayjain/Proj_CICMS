@@ -32,14 +32,15 @@ class File_processing
 {
 private:
 	string filename, tempfile, logfile;
-	list_adt<Product> &_db;
+	list_adt<Product>& _db;
 	ofstream tempOut;
 	bool failedPreviously;
 	void init();
 public:
-	File_processing(string file, list_adt<Product> db): filename(file), tempfile(file.substr(0, file.size()-3)+"cicms"),
+	File_processing(string file, list_adt<Product>& db): filename(file), tempfile(file.substr(0, file.size()-3)+"cicms"),
 		logfile("log.txt"), failedPreviously(false), _db(db)
 	{ init(); }
+	~File_processing();
 	bool loadPrds();
 	bool savePrds();
 	bool writeTemp(Product t, string function, int i = 0);

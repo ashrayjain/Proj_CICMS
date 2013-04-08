@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include<stack>
 #include "DB_Processing.h"
 #include "File_processing.h"
@@ -11,7 +12,7 @@ private:
 stack<Transaction> MainStack; 
 void bp_read(string BatchJobsPath);
 DB_Processing *_dbstuff;
-File_Processing *_fpstuff;
+File_processing *_fpstuff;
 
 public:
 	batch_processing(DB_Processing *dbstuff, File_processing *fpstuff);
