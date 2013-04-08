@@ -42,3 +42,8 @@ bool Transaction::QueueEmpty()
 {
 	return MainQueue.empty();
 }
+
+string Transaction::ReturnId()
+{
+	return _id;
+}
