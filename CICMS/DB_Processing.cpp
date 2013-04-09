@@ -135,30 +135,33 @@ void DB_Processing::ins_sort(list<pair<int, list<Product>>>* arr, Product p, int
 }
 
 
-vector<Product>* DB_Processing::generatePrd(int X)
+vector<vector<Product>>* DB_Processing::generatePrd(int X)
 {
 	list<pair<int, list<Product>>> prd_list(1, pair<int, list<Product>>(-1, list<Product>()));
 	
 	for(unsigned i = 0; i < _db->size(); i++)
 		ins_sort(&prd_list, (*_db)[i], X);
 	
-	vector<Product>* results = new vector<Product>();
+	vector<vector<Product>>* results = new vector<vector<Product>>();
 	for(list<pair<int, list<Product>>>::iterator i = prd_list.begin(); i != prd_list.end(); i++)
+	{
+		results->push_back(vector<Product>());
 		for(list<Product>::iterator j = i->second.begin(); j != i->second.end(); j++)
-			results->push_back(*j);
+			results->back.push_back(*j);
+	}
 	return results;
 }
-
 
 vector<Product>* DB_Processing::generatePrd(string cat)
 {
 	vector<Product>* results = new vector<Product>();
 	vector<int>* result_idx = new vector<int>();
 	int max_sale = -1;
+	cat = Search::convertToLower(cat);
 	for(unsigned i = 0; i < _db->size(); i++)
 	{
 		Product p = (*_db)[i];
-		if(p.getCategory() == cat)
+		if(Search::convertToLower(p.getCategory()) == cat)
 		{
 			int temp = p.getNoSold();
 			if(temp > max_sale)

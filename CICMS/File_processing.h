@@ -40,6 +40,7 @@ private:
 	bool failedPreviously;
 	void init();
 	static void readJob(ifstream&, Transaction&);
+	static void recoveryLoad(ifstream&, Transaction&);
 
 public:
 	File_processing(string file, list_adt<Product>& db): filename(file), tempfile(file.substr(0, file.size()-3)+"cicms"),
@@ -51,6 +52,7 @@ public:
 	bool writeTemp(Product t, string function, int i = 0);
 	bool tempExists();
 	void initializeTemp();
+	string recoveryAddress();
 	static void loadBp(stack<Transaction>&, string);
 	static void writeLog(string);
 };
