@@ -187,6 +187,8 @@ void mainForm::Ini_settings(){
 	this->CA_in_List_lv_toggle = true;
 	this->curr_prdList = "untitled product list";
 	this->Text = " CICMS [" + this->curr_prdList + "]";
+	this->defaultStatusColor = System::Drawing::Color::MediumPurple;
+	this->Set_statusBar("Ready", defaultStatusColor);
 	this->Bridging = gcnew Bridge;
 }
 
@@ -257,6 +259,7 @@ void mainForm::Save_curr_prdList(){
 			this->Set_statusBar("Saving...", System::Drawing::Color::Khaki);
 			this->statusStrip1->Refresh();
 			if(Bridging->Save()){
+				this->defaultStatusColor = System::Drawing::Color::LightSkyBlue;
 				this->Update_statusBar(saveS);//successful
 				this->Text = " CICMS [" + this->curr_prdList + "]";
 			}
@@ -276,6 +279,7 @@ void mainForm::Save_as_ano_prdList(){
 		this->Set_statusBar("Saving...", System::Drawing::Color::Khaki);
 		if(Bridging->SaveAs(sf_dlg->FileName)){
 			this->curr_prdList = System::IO::Path::GetFileName(sf_dlg->FileName);
+			this->defaultStatusColor = System::Drawing::Color::LightSkyBlue;
 			this->Update_statusBar(saveS);//successful
 			this->Text = " CICMS [" + this->curr_prdList + "]";
 		}
@@ -298,6 +302,7 @@ void mainForm::Load_prdList(){
 		this->statusStrip1->Refresh();
 		//load the product list
 		if(Bridging->Load(of_dlg->FileName)){
+			this->defaultStatusColor = System::Drawing::Color::LightSkyBlue;
 			this->curr_prdList = of_dlg->SafeFileName;
 			this->Text = " CICMS [" + this->curr_prdList + "]";
 			
@@ -334,9 +339,9 @@ void mainForm::Batch_processing(){
 
 		this->Submit_search();// refresh the search result
 		if(i == 0)
-			this->Set_statusBar("Batch file processed successfully", System::Drawing::Color::LightSkyBlue);
+			this->Set_statusBar("Batch file processed successfully", this->defaultStatusColor);
 		else
-			this->Set_statusBar("Batch file processed successfully, " + i + " errors found" , System::Drawing::Color::LightSkyBlue);
+			this->Set_statusBar("Batch file processed successfully, " + i + " errors found" , this->defaultStatusColor);
 	}
 }
 //Event: when click menu_stat_BSpd_Click item, open the MessageBox window to show the result of Best-Selling product(s)
@@ -512,7 +517,7 @@ void mainForm::s_tB_input_LostFocus(System::Object^  sender, System::EventArgs^ 
 void mainForm::Submit_search(){
 	//input Checking first
 	if(InputCheck::is_empty(this->s_tB_input->Text)){
-		this->Set_statusBar("Ready", System::Drawing::Color::LightSkyBlue);
+		this->Set_statusBar("Ready", this->defaultStatusColor);
 		this->list_lv->Items->Clear();
 		this->Toggle_list_b(false);
 	}
@@ -637,16 +642,16 @@ void mainForm::Create_modifyForm(){
 			}
 			this->list_lv->EndUpdate();
 			this->list_lv->Focus();
-			Set_statusBar("Product(s) modified successfully",System::Drawing::Color::LightSkyBlue);
+			Set_statusBar("Product(s) modified successfully",this->defaultStatusColor);
 		}
 		else{
 			this->list_lv->Focus();
-			Set_statusBar("Ready",System::Drawing::Color::LightSkyBlue);
+			Set_statusBar("Ready",this->defaultStatusColor);
 		}
 	}
 	else{
 		this->list_lv->Focus();
-		Set_statusBar("Ready",System::Drawing::Color::LightSkyBlue);
+		Set_statusBar("Ready",this->defaultStatusColor);
 	}
 }
 //Function: create an inputForm for input; used by pd_b_sell_Click & pd_b_restock_Click events.
@@ -823,7 +828,7 @@ void mainForm::Update_statusBar(int i){
 			"Searched successfully", "No results found", //searchS, searchF
 			"Data recovered successfully", "Data recovered unsuccessfully" //recoverS, recoverF
 	};
-	this->Set_statusBar(text[i], i % 2? /*failure*/System::Drawing::Color::RosyBrown: /*success*/System::Drawing::Color::LightSkyBlue);
+	this->Set_statusBar(text[i], i % 2? /*failure*/System::Drawing::Color::RosyBrown: /*success*/this->defaultStatusColor);
 }
 //Function: set statusBus's Text and BackColor
 void mainForm::Set_statusBar(System::String^ s, System::Drawing::Color c){

@@ -227,6 +227,7 @@ namespace CICMS_UI {
 	private: bool CA_in_List_lv_toggle;
 
 	//**********STATUS COMPONENTS DECLEARATION***********
+	private: System::Drawing::Color defaultStatusColor;
 	private: System::Windows::Forms::StatusStrip^  statusStrip1;
 	private: System::Windows::Forms::ToolStripStatusLabel^  toolStripStatusLabel1;
 	private: System::String^ curr_prdList; // no auto load anymore
