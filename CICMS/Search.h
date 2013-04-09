@@ -43,12 +43,12 @@ public:
 	vector<Product>* searchByCategory(string);
 	vector<Product>* searchByManufacturer(string);
 	vector<Product>* searchByBarcode(string);
+	static string convertToLower(string);
 	
 private:
 	list_adt<Product>* _db;
 	int Min(int, int);
 	int Max(int, int);
-	string convertToLower(string);
 	void smartSearch(Product, string, string, vector<Product>* &, vector<Product> &, vector<vector<Product>> &, vector<vector<Product>> &, int);
 	void getConsolidatedResults(vector<Product>* &, vector<Product> &, vector<vector<Product>> &, vector<vector<Product>> &, int);
 	int substring_search(string, string);

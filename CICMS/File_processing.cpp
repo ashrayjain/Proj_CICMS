@@ -60,7 +60,7 @@ bool File_processing::writeTemp(Product t, string function, int i)
 
 	if(i)
 		tempOut<<to_string(i)<<"\n";
-	tempOut<<"\n\n";
+	tempOut<<"\n";
 	tempOut.close();
 	return true;
 }
@@ -155,6 +155,13 @@ void File_processing::readJob(ifstream &fin, Transaction& t)
 			atof(price.c_str()), manu, atoi(num.c_str())));
 }
 
+void File_processing::recoveryLoad()
+{
+	
+
+}
+
+
 void File_processing::loadBp(stack<Transaction>& s, string BPlocation)
 {
 	ifstream fin(BPlocation);
@@ -167,13 +174,18 @@ void File_processing::loadBp(stack<Transaction>& s, string BPlocation)
 		{
 			fin>>transID;
 			Transaction tempTransaction(transID);
-			int noOfJobs;
-			fin>>noOfJobs;
-			string temp;
-			getline(fin, temp);
-			getline(fin, temp);
-			for(int j = 0; j < noOfJobs; j++)
-				readJob(fin, tempTransaction);
+			if(transID == "Recovery")
+				recoveryLoad();
+			else
+			{
+				int noOfJobs;
+				fin>>noOfJobs;
+				string temp;
+				getline(fin, temp);
+				getline(fin, temp);
+				for(int j = 0; j < noOfJobs; j++)
+					readJob(fin, tempTransaction);
+			}
 			s.push(tempTransaction);
 		}
 		fin.close();

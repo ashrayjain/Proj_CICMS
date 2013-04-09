@@ -149,16 +149,16 @@ vector<Product>* DB_Processing::generatePrd(int X)
 	return results;
 }
 
-
 vector<Product>* DB_Processing::generatePrd(string cat)
 {
 	vector<Product>* results = new vector<Product>();
 	vector<int>* result_idx = new vector<int>();
 	int max_sale = -1;
+	cat = Search::convertToLower(cat);
 	for(unsigned i = 0; i < _db->size(); i++)
 	{
 		Product p = (*_db)[i];
-		if(p.getCategory() == cat)
+		if(Search::convertToLower(p.getCategory()) == cat)
 		{
 			int temp = p.getNoSold();
 			if(temp > max_sale)
