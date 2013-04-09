@@ -1217,6 +1217,7 @@ void mainForm::InitializeComponent()
 	this->list_lv->Columns->AddRange(gcnew cli::array< System::Windows::Forms::ColumnHeader^  >(7) {this->list_col_name, this->list_col_category, 
 		this->list_col_barcode, this->list_col_price, this->list_col_manuf, this->list_col_stock, this->list_col_sold});
 	this->list_lv->FullRowSelect = true;
+	this->list_lv->HideSelection = false;
 	this->list_lv->Location = System::Drawing::Point(11, 50);
 	this->list_lv->Name = L"list_lv";
 	this->list_lv->ShowGroups = false;
