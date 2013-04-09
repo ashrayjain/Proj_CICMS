@@ -147,7 +147,7 @@ vector<vector<Product>>* DB_Processing::generatePrd(int X)
 	{
 		results->push_back(vector<Product>());
 		for(list<Product>::iterator j = i->second.begin(); j != i->second.end(); j++)
-			results->back.push_back(*j);
+			results->back().push_back(*j);
 	}
 	return results;
 }

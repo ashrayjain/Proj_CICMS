@@ -33,12 +33,12 @@ Processing::~Processing()										{ delete file;delete db; }
 bool Processing::writeTemp(Product t,string func)				{ return (!file)?true:file->writeTemp(t, func); }
 bool Processing::writeTemp(Product t,string f,int i)			{ return (!file)?true:file->writeTemp(t, f, i); }
 bool Processing::chkTmpFile()									{ return file->tempExists(); }
-bool Processing::addProduct(Product t)							{ changed = true; return db->addProduct(t) && writeTemp(t, "ADD"); }
-bool Processing::delProduct(Product t)							{ changed = true; return db->delProduct(t) && writeTemp(t, "DELETE"); }
+bool Processing::addProduct(Product t)							{ return db->addProduct(t) && writeTemp(t, "ADD") && (changed = true); }
+bool Processing::delProduct(Product t)							{ return db->delProduct(t) && writeTemp(t, "DELETE") && (changed = true); }
 vector<Product>* Processing::search(string s, int i)			{ return db->search(s, i); }
-bool Processing::updatePrd(Product t)							{ return db->updateProduct(t) && writeTemp(t, "DELETE") && writeTemp(t, "ADD"); }
-bool Processing::updateStock(Product t, unsigned i)				{ changed = true; return db->updateStock(t, i) && writeTemp(t, "RESTOCK", i); }
-bool Processing::updateSale(Product t, unsigned i)				{ changed = true; return db->updateSale(t, i) && writeTemp(t, "SALE", i); }
+bool Processing::updatePrd(Product t)							{ return db->updateProduct(t) && writeTemp(t, "DELETE") && writeTemp(t, "ADD") && (changed = true); }
+bool Processing::updateStock(Product t, unsigned i)				{ return db->updateStock(t, i) && writeTemp(t, "RESTOCK", i) && (changed = true); }
+bool Processing::updateSale(Product t, unsigned i)				{ return db->updateSale(t, i) && writeTemp(t, "SALE", i) && (changed = true); }
 vector<vector<Product>>* Processing::generatePrd(int X)			{ return db->generatePrd(X); }
 vector<Product>* Processing::generatePrd(string s)				{ return db->generatePrd(s); }
 vector<string>* Processing::generateManu()						{ return db->generateManu(); }
