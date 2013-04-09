@@ -321,7 +321,7 @@ void mainForm::Load_prdList(){
 			
 			if(Bridging->CheckRecovery()){
 				//recover
-				if(System::Windows::Forms::MessageBox::Show("Product list " + of_dlg->SafeFileName + " crashed last time, do you want to restore\nthe operation(s)?",
+				if(System::Windows::Forms::MessageBox::Show("Product list " + of_dlg->SafeFileName + " crashed last time, do you want to restore the operation(s)?",
 					" CICMS Recovery",
 					System::Windows::Forms::MessageBoxButtons::YesNo,
 					System::Windows::Forms::MessageBoxIcon::Question)
