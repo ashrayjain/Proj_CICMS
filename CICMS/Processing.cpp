@@ -72,8 +72,7 @@ bool Processing::saveFile()
 void Processing::recover(bool tof)
 {
 	if(tof)
-	{
-	}//call BatchProcessing
+		batchProcessing(file->recoveryAddress());
 	file->initializeTemp();
 }
 

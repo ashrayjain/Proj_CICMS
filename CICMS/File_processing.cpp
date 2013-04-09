@@ -36,6 +36,7 @@ bool File_processing::tempExists() { return failedPreviously; }
 
 void File_processing::initializeTemp()
 {
+	remove(tempfile.c_str());
 	tempOut.open(tempfile);
 	SetFileAttributes(wstring(tempfile.begin(), tempfile.end()).c_str(), FILE_ATTRIBUTE_HIDDEN);
 	tempOut<<to_string(1);
@@ -124,7 +125,7 @@ void File_processing::writeLog(string line)
 	fout.close();
 }
 
-void File_processing::readJob(ifstream &fin, Transaction& t)
+void File_processing::readJob(ifstream& fin, Transaction& t)
 {
 	string function = "",
 		name = "", 
@@ -151,16 +152,22 @@ void File_processing::readJob(ifstream &fin, Transaction& t)
 			getline(fin, num);
 	}
 	getline(fin, temp);
+	
 	t.pushJob(Job(function, name, cat, atoi(barcode.c_str()),
 			atof(price.c_str()), manu, atoi(num.c_str())));
 }
 
-void File_processing::recoveryLoad()
-{
-	
-
+void File_processing::recoveryLoad(ifstream& fin, Transaction& t)
+{	
+	readJob(fin, t);
+	while(!fin.eof())
+		readJob(fin, t);
 }
 
+string File_processing::recoveryAddress()
+{
+	return tempfile;
+}
 
 void File_processing::loadBp(stack<Transaction>& s, string BPlocation)
 {
@@ -174,13 +181,16 @@ void File_processing::loadBp(stack<Transaction>& s, string BPlocation)
 		{
 			fin>>transID;
 			Transaction tempTransaction(transID);
+			string temp;
 			if(transID == "Recovery")
-				recoveryLoad();
+			{
+				getline(fin, temp);
+				recoveryLoad(fin, tempTransaction);
+			}
 			else
 			{
 				int noOfJobs;
 				fin>>noOfJobs;
-				string temp;
 				getline(fin, temp);
 				getline(fin, temp);
 				for(int j = 0; j < noOfJobs; j++)
