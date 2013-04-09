@@ -178,8 +178,7 @@ bool Bridge::SaveAs(System::String^ filename){
 }
 //Execute the batchProcessing
 int Bridge::Batch_processing(System::String^ filename){
-	//return Handler->Batch_processing(this->toStdString(filename));
-	return 3;
+	return Handler->batchProcessing(this->toStdString(filename));
 }
 //Modify products details
 void Bridge::Modify(System::Windows::Forms::ListViewItem^ item){

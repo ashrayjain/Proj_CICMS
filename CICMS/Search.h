@@ -1,12 +1,12 @@
 /******************************************************************************************************/
 //
-//  class search
+//  class Search
 //
-//  Description: The search class implements all the search related features, like searching products
+//  Description: The Search class implements all the Search related features, like searching products
 //  from the database with respect to their name, barcode, category or manufacturer.
 //
 //  API:
-//  search(list_adt<Product> * db);
+//  Search(list_adt<Product> * db);
 //	vector<Product>* searchByName(string);
 //	vector<Product>* searchByCategory(string);
 //	vector<Product>* searchByManufacturer(string);
@@ -16,8 +16,8 @@
 //
 /******************************************************************************************************/
 
-#ifndef _SEARCH_H_
-#define _SEARCH_H_
+#ifndef _SEARCHCLASS_H_
+#define _SEARCHCLASS_H_
 
 
 #include "stdafx.h"
@@ -35,10 +35,10 @@
 
 using namespace std;
 
-class search
+class Search
 {
 public:
-	search(list_adt<Product> * db): _db(db) {}
+	Search(list_adt<Product> * db): _db(db) {}
 	vector<Product>* searchByName(string);
 	vector<Product>* searchByCategory(string);
 	vector<Product>* searchByManufacturer(string);
@@ -46,11 +46,11 @@ public:
 	
 private:
 	list_adt<Product>* _db;
-	int min(int, int);
-	int max(int, int);
+	int Min(int, int);
+	int Max(int, int);
 	string convertToLower(string);
 	void smartSearch(Product, string, string, vector<Product>* &, vector<Product> &, vector<vector<Product>> &, vector<vector<Product>> &, int);
-	void search::getConsolidatedResults(vector<Product>* &, vector<Product> &, vector<vector<Product>> &, vector<vector<Product>> &, int);
+	void getConsolidatedResults(vector<Product>* &, vector<Product> &, vector<vector<Product>> &, vector<vector<Product>> &, int);
 	int substring_search(string, string);
 	int editDistance(string, string, int);
 	int countOccurrences(string, char);

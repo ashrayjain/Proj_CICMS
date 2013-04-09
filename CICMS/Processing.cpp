@@ -28,7 +28,7 @@
 #include <fstream>
 #include <time.h>
 
-Processing::Processing():changed(false), file(NULL)/*, bp(NULL)*/ { db = new DB_Processing(_database); }
+Processing::Processing():changed(false), file(NULL), bp(NULL) { db = new DB_Processing(_database); }
 Processing::~Processing() { delete file;delete db; }
 
 void Processing::clearDatabase()
@@ -43,6 +43,7 @@ bool Processing::loadFile(string filename)
 	if(file)
 		delete file;
 	file = new File_processing(filename, _database);
+	changed = false;
 	return file->loadPrds();
 }
 
@@ -78,14 +79,12 @@ void Processing::recover(bool tof)
 
 int Processing::batchProcessing(string filename)
 {
-	/*
-	bp = new batch_processing(db, file);
+	bp = new batch_processing(db);
 	int temp =  bp->bp_execute(filename);
 	delete bp;
 	bp = NULL;
+	changed = true;
 	return temp;
-	*/
-	return 0;
 }
 
 bool Processing::writeTemp(Product t,string func)	{ return (!file)?true:file->writeTemp(t, func); }

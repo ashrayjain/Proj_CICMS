@@ -41,7 +41,7 @@ class DB_Processing
 {
 private:
 	list_adt<Product>* _db;
-	search s;
+	Search s;
 	Product* getProduct(unsigned barcode);
 	void ins_sort(list<pair<int, list<Product>>>*, Product, int);
 	

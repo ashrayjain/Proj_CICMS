@@ -28,24 +28,22 @@
 #include <Windows.h>
 #include <stack>
 #include "Transaction.h"
-//#include "batch_processing.h"
-//#include "Transaction.h"
 
 using namespace std;
 
 class File_processing
 {
 private:
-	string filename, tempfile, logfile;
+	string filename, tempfile;
 	list_adt<Product>& _db;
 	ofstream tempOut;
 	bool failedPreviously;
 	void init();
-	void readJob(ifstream);
+	static void readJob(ifstream&, Transaction&);
 
 public:
 	File_processing(string file, list_adt<Product>& db): filename(file), tempfile(file.substr(0, file.size()-3)+"cicms"),
-		logfile("log.txt"), failedPreviously(false), _db(db)
+		failedPreviously(false), _db(db)
 	{ init(); }
 	~File_processing();
 	bool loadPrds();
@@ -53,7 +51,8 @@ public:
 	bool writeTemp(Product t, string function, int i = 0);
 	bool tempExists();
 	void initializeTemp();
-	void loadBp(stack<Transaction>&, string);
+	static void loadBp(stack<Transaction>&, string);
+	static void writeLog(string);
 };
 
 #endif

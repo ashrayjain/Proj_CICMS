@@ -6,7 +6,7 @@
 //  from the database with respect to their name, barcode, category or manufacturer.
 //
 //  API:
-//  search(list_adt<Product> * db);
+//  Search(list_adt<Product> * db);
 //	vector<Product>* searchByName(string);
 //	vector<Product>* searchByCategory(string);
 //	vector<Product>* searchByManufacturer(string);
@@ -19,14 +19,14 @@
 #include "stdafx.h"
 #include "Search.h"
 
-string search::convertToLower(string s)
+string Search::convertToLower(string s)
 {
 	for(unsigned int i = 0; i < s.length(); ++i) 
 		s[i] = tolower(s[i]);
 	return s;
 }
 
-int search::substring_search(string name, string query)
+int Search::substring_search(string name, string query)
 {
 	istringstream iss(query);
 	string word;
@@ -36,7 +36,7 @@ int search::substring_search(string name, string query)
 			count++;
 	return count;
 }
-int search::countOccurrences(string a, char b)
+int Search::countOccurrences(string a, char b)
 {
 	int count = 0;
 	for(unsigned i=0; i<a.size(); i++)
@@ -45,17 +45,17 @@ int search::countOccurrences(string a, char b)
 	return count;
 }
 
-int search::min(int a, int b)
+int Search::Min(int a, int b)
 {
 	return a>b?b:a;
 }
 
-int search::max(int a, int b)
+int Search::Max(int a, int b)
 {
 	return a>b?a:b;
 }
 
-int search::editDistance(string a, string b, int k)
+int Search::editDistance(string a, string b, int k)
 {
 	//Wagner-Fischer Algorithm with memory and complexity optimizations
 
@@ -72,7 +72,7 @@ int search::editDistance(string a, string b, int k)
 	int* curr = new int[l1+1];
 	int* prev = new int[l1+1];
 
-	int boundary = min(k, l1);
+	int boundary = Min(k, l1);
 	for(int i = 0; i<=boundary; i++)
 		prev[i] = i;
 	for(int i = boundary+1; i<=l1; i++)
@@ -85,8 +85,8 @@ int search::editDistance(string a, string b, int k)
 		curr[0] = i;
 		
 		int min_idx, max_idx;
-		min_idx = max(1, i-k);
-		max_idx = min(l1, i+k);
+		min_idx = Max(1, i-k);
+		max_idx = Min(l1, i+k);
 		
 		if(min_idx > max_idx)
 		{
@@ -101,7 +101,7 @@ int search::editDistance(string a, string b, int k)
 			if(a[j-1]==b[i-1])
 				curr[j] = prev[j-1];
 			else
-				curr[j] = 1 + min(min(prev[j], curr[j-1]), prev[j-1]);
+				curr[j] = 1 + Min(Min(prev[j], curr[j-1]), prev[j-1]);
 
 		int* temp = prev;
 		prev = curr;
@@ -114,7 +114,7 @@ int search::editDistance(string a, string b, int k)
  }
 
 
-void search::getConsolidatedResults(vector<Product>* &results, 
+void Search::getConsolidatedResults(vector<Product>* &results, 
 	vector<Product> &close_results,
 	vector<vector<Product>> &substring_matches,
 	vector<vector<Product>> &edit_distance_matches, int count)
@@ -127,7 +127,7 @@ void search::getConsolidatedResults(vector<Product>* &results,
 }
 
 
-void search::smartSearch(Product p, string str_p, string _query, vector<Product>* &results, 
+void Search::smartSearch(Product p, string str_p, string _query, vector<Product>* &results, 
 	vector<Product> &close_results, vector<vector<Product>> &substring_matches,
 	vector<vector<Product>> &edit_distance_matches, int threshold)
 {
@@ -152,7 +152,7 @@ void search::smartSearch(Product p, string str_p, string _query, vector<Product>
 		}
 	}
 }
-vector<Product>* search::searchByName(string query)
+vector<Product>* Search::searchByName(string query)
 {
 	vector<Product>* results = new vector<Product>();
 	string _query = convertToLower(query);
@@ -176,7 +176,7 @@ vector<Product>* search::searchByName(string query)
 	return results;
 }
 
-vector<Product>* search::searchByCategory(string query)
+vector<Product>* Search::searchByCategory(string query)
 {
 	vector<Product>* results = new vector<Product>();
 	string _query = convertToLower(query);
@@ -200,7 +200,7 @@ vector<Product>* search::searchByCategory(string query)
 }
 
 
-vector<Product>* search::searchByManufacturer(string query)
+vector<Product>* Search::searchByManufacturer(string query)
 {
 	vector<Product>* results = new vector<Product>();
 	string _query = convertToLower(query);
@@ -223,7 +223,7 @@ vector<Product>* search::searchByManufacturer(string query)
 	return results;
 }
 
-vector<Product>* search::searchByBarcode(string query)
+vector<Product>* Search::searchByBarcode(string query)
 {
 	vector<Product>* results = new vector<Product>();
 	string _query = convertToLower(query);

@@ -63,7 +63,10 @@ bool DB_Processing::delProduct(Product p)
 
 bool DB_Processing::delProduct(unsigned barcode)
 {
-	return _db->del(*(getProduct(barcode)));
+	Product* p = getProduct(barcode);
+	if(p)
+		return _db->del(*(p));
+	return false;
 }
 
 bool DB_Processing::updateStock(Product p, unsigned stock)
