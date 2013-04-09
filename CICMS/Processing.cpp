@@ -28,8 +28,23 @@
 #include <fstream>
 #include <time.h>
 
-Processing::Processing():changed(false), file(NULL), bp(NULL) { db = new DB_Processing(_database); }
-Processing::~Processing() { delete file;delete db; }
+Processing::Processing():changed(false), file(NULL), bp(NULL)	{ db = new DB_Processing(_database); }
+Processing::~Processing()										{ delete file;delete db; }
+bool Processing::writeTemp(Product t,string func)				{ return (!file)?true:file->writeTemp(t, func); }
+bool Processing::writeTemp(Product t,string f,int i)			{ return (!file)?true:file->writeTemp(t, f, i); }
+bool Processing::chkTmpFile()									{ return file->tempExists(); }
+bool Processing::addProduct(Product t)							{ changed = true; return db->addProduct(t) && writeTemp(t, "ADD"); }
+bool Processing::delProduct(Product t)							{ changed = true; return db->delProduct(t) && writeTemp(t, "DELETE"); }
+vector<Product>* Processing::search(string s, int i)			{ return db->search(s, i); }
+bool Processing::updatePrd(Product t)							{ return db->updateProduct(t) && writeTemp(t, "DELETE") && writeTemp(t, "ADD"); }
+bool Processing::updateStock(Product t, unsigned i)				{ changed = true; return db->updateStock(t, i) && writeTemp(t, "RESTOCK", i); }
+bool Processing::updateSale(Product t, unsigned i)				{ changed = true; return db->updateSale(t, i) && writeTemp(t, "SALE", i); }
+vector<vector<Product>>* Processing::generatePrd(int X)			{ return db->generatePrd(X); }
+vector<Product>* Processing::generatePrd(string s)				{ return db->generatePrd(s); }
+vector<string>* Processing::generateManu()						{ return db->generateManu(); }
+int Processing::size()											{ return _database.size(); }
+bool Processing::isSaved()										{ return !changed; }
+bool Processing::isEmptyFilename()								{ return (file)?false:true; }
 
 void Processing::clearDatabase()
 {
@@ -85,19 +100,3 @@ int Processing::batchProcessing(string filename)
 	changed = true;
 	return temp;
 }
-
-bool Processing::writeTemp(Product t,string func)	{ return (!file)?true:file->writeTemp(t, func); }
-bool Processing::writeTemp(Product t,string f,int i){ return (!file)?true:file->writeTemp(t, f, i); }
-bool Processing::chkTmpFile()						{ return file->tempExists(); }
-bool Processing::addProduct(Product t)				{ changed = true; return db->addProduct(t) && writeTemp(t, "ADD"); }
-bool Processing::delProduct(Product t)				{ changed = true; return db->delProduct(t) && writeTemp(t, "DELETE"); }
-vector<Product>* Processing::search(string s, int i){ return db->search(s, i); }
-bool Processing::updatePrd(Product t)				{ return db->updateProduct(t) && writeTemp(t, "DELETE") && writeTemp(t, "ADD"); }
-bool Processing::updateStock(Product t, unsigned i)	{ changed = true; return db->updateStock(t, i) && writeTemp(t, "RESTOCK", i); }
-bool Processing::updateSale(Product t, unsigned i)	{ changed = true; return db->updateSale(t, i) && writeTemp(t, "SALE", i); }
-vector<Product>* Processing::generatePrd(int X)		{ return db->generatePrd(X); }
-vector<Product>* Processing::generatePrd(string s)	{ return db->generatePrd(s); }
-vector<string>* Processing::generateManu()			{ return db->generateManu(); }
-int Processing::size()								{ return _database.size(); }
-bool Processing::isSaved()							{ return !changed; }
-bool Processing::isEmptyFilename()					{ return (file)?false:true; }
