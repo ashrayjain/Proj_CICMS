@@ -864,11 +864,12 @@ void mainForm::InitializeComponent()
 	this->menu = (gcnew System::Windows::Forms::MenuStrip());
 	this->menu_f = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->menu_f_addNewProducts = (gcnew System::Windows::Forms::ToolStripMenuItem());
-	this->menu_f_newprdlist = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->toolStripSeparator1 = (gcnew System::Windows::Forms::ToolStripSeparator());
+	this->menu_f_newprdlist = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->menu_f_save = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->menu_f_saveAs = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->menu_f_load = (gcnew System::Windows::Forms::ToolStripMenuItem());
+	this->toolStripSeparator4 = (gcnew System::Windows::Forms::ToolStripSeparator());
 	this->menu_f_bp = (gcnew System::Windows::Forms::ToolStripMenuItem());
 	this->toolStripSeparator3 = (gcnew System::Windows::Forms::ToolStripSeparator());
 	this->menu_f_quit = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -904,7 +905,6 @@ void mainForm::InitializeComponent()
 	this->list_b_modify = (gcnew System::Windows::Forms::Button());
 	this->statusStrip1 = (gcnew System::Windows::Forms::StatusStrip());
 	this->toolStripStatusLabel1 = (gcnew System::Windows::Forms::ToolStripStatusLabel());
-	this->toolStripSeparator4 = (gcnew System::Windows::Forms::ToolStripSeparator());
 	this->menu->SuspendLayout();
 	this->s_grp->SuspendLayout();
 	this->list_grp->SuspendLayout();
@@ -942,6 +942,11 @@ void mainForm::InitializeComponent()
 	this->menu_f_addNewProducts->Text = L"Add new products";
 	this->menu_f_addNewProducts->Click += gcnew System::EventHandler(this, &mainForm::menu_f_addNewProducts_Click);
 	// 
+	// toolStripSeparator1
+	// 
+	this->toolStripSeparator1->Name = L"toolStripSeparator1";
+	this->toolStripSeparator1->Size = System::Drawing::Size(269, 6);
+	// 
 	// menu_f_newprdlist
 	// 
 	this->menu_f_newprdlist->Name = L"menu_f_newprdlist";
@@ -950,11 +955,6 @@ void mainForm::InitializeComponent()
 	this->menu_f_newprdlist->Size = System::Drawing::Size(272, 22);
 	this->menu_f_newprdlist->Text = L"Create a new product list";
 	this->menu_f_newprdlist->Click += gcnew System::EventHandler(this, &mainForm::menu_f_newprdlist_Click);
-	// 
-	// toolStripSeparator1
-	// 
-	this->toolStripSeparator1->Name = L"toolStripSeparator1";
-	this->toolStripSeparator1->Size = System::Drawing::Size(269, 6);
 	// 
 	// menu_f_save
 	// 
@@ -983,6 +983,11 @@ void mainForm::InitializeComponent()
 	this->menu_f_load->Size = System::Drawing::Size(272, 22);
 	this->menu_f_load->Text = L"Load";
 	this->menu_f_load->Click += gcnew System::EventHandler(this, &mainForm::menu_f_load_Click);
+	// 
+	// toolStripSeparator4
+	// 
+	this->toolStripSeparator4->Name = L"toolStripSeparator4";
+	this->toolStripSeparator4->Size = System::Drawing::Size(269, 6);
 	// 
 	// menu_f_bp
 	// 
@@ -1212,7 +1217,6 @@ void mainForm::InitializeComponent()
 	this->list_lv->Columns->AddRange(gcnew cli::array< System::Windows::Forms::ColumnHeader^  >(7) {this->list_col_name, this->list_col_category, 
 		this->list_col_barcode, this->list_col_price, this->list_col_manuf, this->list_col_stock, this->list_col_sold});
 	this->list_lv->FullRowSelect = true;
-	this->list_lv->HideSelection = false;
 	this->list_lv->Location = System::Drawing::Point(11, 50);
 	this->list_lv->Name = L"list_lv";
 	this->list_lv->ShowGroups = false;
@@ -1297,11 +1301,6 @@ void mainForm::InitializeComponent()
 	this->toolStripStatusLabel1->Size = System::Drawing::Size(39, 17);
 	this->toolStripStatusLabel1->Text = L"Ready";
 	// 
-	// toolStripSeparator4
-	// 
-	this->toolStripSeparator4->Name = L"toolStripSeparator4";
-	this->toolStripSeparator4->Size = System::Drawing::Size(269, 6);
-	// 
 	// mainForm
 	// 
 	this->AcceptButton = this->s_b_Enter;
@@ -1318,10 +1317,10 @@ void mainForm::InitializeComponent()
 	this->MaximizeBox = false;
 	this->Name = L"mainForm";
 	this->Text = L" CICMS";
+	this->Closing += gcnew System::ComponentModel::CancelEventHandler(this, &mainForm::mainForm_Closing);
 	this->Load += gcnew System::EventHandler(this, &mainForm::mainForm_Load);
 	this->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &mainForm::mainForm_KeyDown);
 	this->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &mainForm::mainForm_KeyPress);
-	this->Closing += gcnew System::ComponentModel::CancelEventHandler(this, &mainForm::mainForm_Closing);
 	this->menu->ResumeLayout(false);
 	this->menu->PerformLayout();
 	this->s_grp->ResumeLayout(false);
