@@ -67,6 +67,7 @@ void Processing::newFile()
 	delete file;
 	file = NULL;
 	clearDatabase();
+	changed = false;
 }
 
 bool Processing::saveFileAs(string filename)
