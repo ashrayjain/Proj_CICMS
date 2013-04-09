@@ -142,7 +142,23 @@
 					this->list_lv->Items[0]->Selected = true;
 				}
 			}
-
+	void statForm::Set_listData_grp(cli::array<cli::array<System::Windows::Forms::ListViewItem^>^>^ r){
+				if(r[0]->Length){
+					this->list_lv->BeginUpdate();
+					this->list_lv->Items->Clear();
+					for(int i = 0; i < r->Length; i++){
+						System::Windows::Forms::ListViewGroup^ grp = gcnew System::Windows::Forms::ListViewGroup("Rank " + i, System::Windows::Forms::HorizontalAlignment::Left);
+						this->list_lv->Groups->Add(grp);
+						for(int j = 0; j < r[i]->Length; j++){
+							r[i][j]->Group = this->list_lv->Groups[i];
+							this->list_lv->Items->Add(r[i][j]);
+						}
+					}
+					this->list_lv->EndUpdate();
+					if(this->list_lv->Items->Count > 0)
+						this->list_lv->Items[0]->Selected = true;
+				}
+			}
 	System::Void statForm::button1_Click(System::Object^  sender, System::EventArgs^  e) {
 				 this->Close();
 			 }

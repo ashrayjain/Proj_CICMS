@@ -417,15 +417,15 @@ void mainForm::Create_addPdForms(){
 }
 //Function: create a window to display the Best-Selling product(s)
 void mainForm::Create_BSpdForm(){
-	array<System::Windows::Forms::ListViewItem^>^ r = Bridging->Gen_TopXpd(1);
-	if(r->Length == 0){
+	cli::array<cli::array<System::Windows::Forms::ListViewItem^>^>^ r = Bridging->Gen_TopXpd(1);
+	if(r[0]->Length == 0){
 		System::Windows::Forms::MessageBox::Show("Report not available.");
 		return;
 	}
 
 	statForm^ dlg = gcnew statForm();
 	dlg->Set_grpTitle("The Best-Selling product(s)");
-	dlg->Set_listData(r);
+	dlg->Set_listData_grp(r);
 	dlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 	dlg->ShowDialog();
 }
@@ -477,15 +477,15 @@ void mainForm::Create_topXpdForm(){
 	else
 		return;
 
-	array<System::Windows::Forms::ListViewItem^>^ r = Bridging->Gen_TopXpd(i);
-	if(r->Length == 0){
+	cli::array<cli::array<System::Windows::Forms::ListViewItem^>^>^ r = Bridging->Gen_TopXpd(i);
+	if(r[0]->Length == 0){
 		System::Windows::Forms::MessageBox::Show("Report not available.");
 		return;
 	}
 
 	statForm^ dlg = gcnew statForm();
 	dlg->Set_grpTitle("The Top " + i.ToString() + " Selling products");
-	dlg->Set_listData(r);
+	dlg->Set_listData_grp(r);
 	dlg->StartPosition = System::Windows::Forms::FormStartPosition::CenterParent;
 	dlg->ShowDialog();
 }

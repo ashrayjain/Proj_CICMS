@@ -87,13 +87,21 @@ array<System::Windows::Forms::ListViewItem^>^ Bridge::Gen_BSpdCate(System::Strin
 	return items;
 }
 //combine Gen_TopXpd and Gen_BSpd
-array<System::Windows::Forms::ListViewItem^>^ Bridge::Gen_TopXpd(int x){
-	vector<Product> *r = Handler->generatePrd(x);
-	array<System::Windows::Forms::ListViewItem^>^ items = gcnew array<System::Windows::Forms::ListViewItem^>(r->size());
-	for(unsigned i = 0; i < r->size(); i++)
-		items[i] = toLvItem((*r)[i]);
+cli::array<cli::array<System::Windows::Forms::ListViewItem^>^>^ Bridge::Gen_TopXpd(int x){
+	std::vector<std::vector<Product>> *r = Handler->generatePrd(x);
+	cli::array<cli::array<System::Windows::Forms::ListViewItem^>^>^ final_output = 
+		gcnew cli::array<cli::array<System::Windows::Forms::ListViewItem^>^>(r->size());
+
+	for(unsigned i = 0; i < r->size(); i++){
+		cli::array<System::Windows::Forms::ListViewItem^>^ output = 
+			gcnew cli::array<System::Windows::Forms::ListViewItem^>((*r)[i].size());
+		for(unsigned j = 0; j < (*r)[i].size(); j++){
+			output[j] = toLvItem((*r)[i][j]);
+		}
+		final_output[i] = output;
+	}
 	delete r;
-	return items;
+	return final_output;
 }
 //**************************************************
 //

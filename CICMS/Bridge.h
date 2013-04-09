@@ -68,7 +68,7 @@ public:
 	bool Sell(System::Windows::Forms::ListViewItem^, unsigned);
 	bool Del(System::Windows::Forms::ListViewItem^);
 	System::String^ Bridge::Gen_BSmanu();
-	array<System::Windows::Forms::ListViewItem^>^ Bridge::Gen_TopXpd(int x);
+	cli::array<cli::array<System::Windows::Forms::ListViewItem^>^>^ Bridge::Gen_TopXpd(int x);
 	array<System::Windows::Forms::ListViewItem^>^ Bridge::Gen_BSpdCate(System::String^ s);
 	//new staff in phase 3
 	bool CheckRecovery();

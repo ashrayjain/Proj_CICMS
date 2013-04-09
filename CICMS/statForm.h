@@ -22,6 +22,7 @@
 #include "stdafx.h"
 #include "InputCheck.h"
 #include "ListViewItemComparer.h"
+#include <cliext\vector>
 
 using namespace CICMS_UI;
 
@@ -81,6 +82,7 @@ namespace CICMS_UI {
 	private: void list_lv_ColumnClick(System::Object^, System::Windows::Forms::ColumnClickEventArgs^ e);
 	private: void Sort_list_lv(System::Windows::Forms::ColumnClickEventArgs^ e, bool t, bool is_num);
 	public: void Set_grpTitle(System::String^ s);
+	public: void Set_listData_grp(cli::array<cli::array<System::Windows::Forms::ListViewItem^>^>^ r);
 	public: void Set_listData(array<System::Windows::Forms::ListViewItem^>^ r);
 
 	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e);
