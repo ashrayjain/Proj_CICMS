@@ -95,8 +95,6 @@ namespace CICMS_UI {
 		}
 
 		~mainForm(){
-			this->DoYouWantToSave();
-			//in order to specifically trigger the auto-save function
 			delete Bridging;
 		}
 	//********************************************************
@@ -105,6 +103,7 @@ namespace CICMS_UI {
 	private: void mainForm_KeyDown(Object^ sender, System::Windows::Forms::KeyEventArgs^ e);
 	private: void mainForm_KeyPress(Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e);
 	private: void mainForm_Load(System::Object^  sender, System::EventArgs^  e);
+	private: void mainForm_Closing(System::Object^ sender, System::ComponentModel::CancelEventArgs^ e);
 	private: void Ini_settings();
 
 	//**********MENU COMPONENTS FUNCTION***********
@@ -130,7 +129,7 @@ namespace CICMS_UI {
 	private: void Create_BSmanuForm();
 	private: void Create_BSpdCateForm();
 	private: void Create_topXpdForm();
-	private: void DoYouWantToSave();
+	private: System::Windows::Forms::DialogResult DoYouWantToSave();
 
 	//**********SEARCH COMPONENTS FUNCTION***********
 	private: void s_tB_input_TextChanged(System::Object^  sender, System::EventArgs^  e);

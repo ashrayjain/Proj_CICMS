@@ -108,6 +108,11 @@ enum SORT_ORDER{Descending = false, Ascending = true};
 //*************                            ***************
 //********************************************************
 
+//Event: when window is going to close
+void mainForm::mainForm_Closing(Object^ sender, System::ComponentModel::CancelEventArgs^ e){
+	if(this->DoYouWantToSave() == System::Windows::Forms::DialogResult::Cancel)
+		e->Cancel = true;
+}
 //Event: when there is keyDown in mainForm (KeyDown is for hotkey)
 void mainForm::mainForm_KeyDown(Object^ sender, System::Windows::Forms::KeyEventArgs^ e){
 	//Enter: will be handled by s_b_Enter_Click
@@ -222,20 +227,22 @@ void mainForm::menu_f_bp_Click(System::Object^  sender, System::EventArgs^  e){
 }
 //Event: when click menu_f_newprdlist, create a new product list to hold products
 void mainForm::menu_f_newprdlist_Click(System::Object^  sender, System::EventArgs^  e){
-	this->DoYouWantToSave();
+	if(this->DoYouWantToSave() == System::Windows::Forms::DialogResult::Cancel)
+		return;
 	this->s_tB_input->Text = "";
 	this->curr_prdList = "untitled product list";
 	this->Text = " CICMS [" + this->curr_prdList + "]";
 	this->list_lv->Items->Clear();
 	Bridging->Create_newPrdList();
 }
-void mainForm::DoYouWantToSave(){
+System::Windows::Forms::DialogResult mainForm::DoYouWantToSave(){
+	System::Windows::Forms::DialogResult r = System::Windows::Forms::DialogResult::Yes;
 	if(!Bridging->isSaved()){
-		if(System::Windows::Forms::DialogResult::Yes == 
-			System::Windows::Forms::MessageBox::Show("Do you want to save the current product list?",
+		r = System::Windows::Forms::MessageBox::Show("Do you want to save the current product list?",
 			" Save product list",
 			System::Windows::Forms::MessageBoxButtons::YesNoCancel,
-			System::Windows::Forms::MessageBoxIcon::Question)){
+			System::Windows::Forms::MessageBoxIcon::Question);
+		if(System::Windows::Forms::DialogResult::Yes == r){
 			if(Bridging->isEmptyFilename())
 				this->Save_as_ano_prdList();
 			else{
@@ -246,8 +253,9 @@ void mainForm::DoYouWantToSave(){
 				else
 					this->Update_statusBar(saveF);//unsuccessful
 			}
-		}//do sth for cancel
+		}
 	}
+	return r;
 }
 //Save the current product list
 void mainForm::Save_curr_prdList(){
@@ -290,7 +298,8 @@ void mainForm::Save_as_ano_prdList(){
 //Load a product list
 void mainForm::Load_prdList(){
 	//save before load
-	this->DoYouWantToSave();
+	if(this->DoYouWantToSave() == System::Windows::Forms::DialogResult::Cancel)
+		return;
 	
 	System::Windows::Forms::OpenFileDialog^ of_dlg = gcnew System::Windows::Forms::OpenFileDialog;
 	of_dlg->FileName = "product";
@@ -1304,6 +1313,7 @@ void mainForm::InitializeComponent()
 	this->Load += gcnew System::EventHandler(this, &mainForm::mainForm_Load);
 	this->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &mainForm::mainForm_KeyDown);
 	this->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &mainForm::mainForm_KeyPress);
+	this->Closing += gcnew System::ComponentModel::CancelEventHandler(this, &mainForm::mainForm_Closing);
 	this->menu->ResumeLayout(false);
 	this->menu->PerformLayout();
 	this->s_grp->ResumeLayout(false);
