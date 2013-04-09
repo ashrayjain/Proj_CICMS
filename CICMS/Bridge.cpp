@@ -107,7 +107,9 @@ Product Bridge::toProduct(System::Windows::Forms::ListViewItem^ item)
 		toStdString(item->SubItems[1]->Text),
 		toStdString(item->SubItems[4]->Text),
 		toUInt(item->SubItems[2]->Text),
-		toDouble(item->SubItems[3]->Text)
+		toDouble(item->SubItems[3]->Text),
+		toUInt(item->SubItems[5]->Text),
+		toUInt(item->SubItems[6]->Text)
 		);
 }
 //Conversion from Product to ListViewItem

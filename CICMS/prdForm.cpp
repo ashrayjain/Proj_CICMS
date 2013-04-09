@@ -17,6 +17,8 @@ prdForm::prdForm(void)
 	InitializeComponent();
 	this->DefaultColor = this->npd_tB_name->BackColor;
 	this->modifyMode = false;
+	this->npd_no_in_stock = "0";
+	this->npd_no_in_sold = "0";
 }
 
 void prdForm::InitializeComponent(void) //Initializes every single component on the form
@@ -324,7 +326,9 @@ System::Windows::Forms::ListViewItem^ prdForm::get_product_details(){
 		this->npd_tB_category->Text,
 		this->npd_tB_barcode->Text,
 		this->npd_tB_price->Text, 
-		this->npd_tB_manuf->Text
+		this->npd_tB_manuf->Text,
+		this->npd_no_in_stock,
+		this->npd_no_in_sold
 	});
 }
 //Set form title
@@ -350,6 +354,8 @@ void prdForm::setValue(System::Windows::Forms::ListViewItem^ item){
 	this->npd_tB_barcode->Text = item->SubItems[2]->Text;
 	this->npd_tB_price->Text = item->SubItems[3]->Text;
 	this->npd_tB_manuf->Text = item->SubItems[4]->Text;
+	this->npd_no_in_stock = item->SubItems[5]->Text;
+	this->npd_no_in_sold = item->SubItems[6]->Text;
 }
 //Modification mode toggle
 //this mode is used by 'Modify' button
