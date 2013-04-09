@@ -390,6 +390,7 @@ void mainForm::menu_help_hotkey_Click(System::Object^  sender, System::EventArgs
 		"Ctrl + 4		The Top X product(s)\n" +
 		"-------------------------------------------------------\n" + 
 		"Ctrl + N		Add new product(s)\n" +
+		"Ctrl + Shift + N	Add a new product list\n" +
 		"Ctrl + S		Save current product list\n" +
 		"Ctrl + Shift + S	Save as another product list\n" +
 		"Ctrl + L		Load product list\n" +
