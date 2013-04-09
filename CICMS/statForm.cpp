@@ -145,9 +145,11 @@
 	void statForm::Set_listData_grp(cli::array<cli::array<System::Windows::Forms::ListViewItem^>^>^ r){
 				if(r[0]->Length){
 					this->list_lv->BeginUpdate();
+					if(r->Length > 1)
+						this->list_lv->ShowGroups = true;
 					this->list_lv->Items->Clear();
 					for(int i = 0; i < r->Length; i++){
-						System::Windows::Forms::ListViewGroup^ grp = gcnew System::Windows::Forms::ListViewGroup("Rank " + i, System::Windows::Forms::HorizontalAlignment::Left);
+						System::Windows::Forms::ListViewGroup^ grp = gcnew System::Windows::Forms::ListViewGroup("Rank " + (i + 1), System::Windows::Forms::HorizontalAlignment::Left);
 						this->list_lv->Groups->Add(grp);
 						for(int j = 0; j < r[i]->Length; j++){
 							r[i][j]->Group = this->list_lv->Groups[i];
