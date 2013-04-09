@@ -183,9 +183,10 @@ void mainForm::mainForm_Load(System::Object^  sender, System::EventArgs^  e){
 void mainForm::Ini_settings(){
 	this->SelectAll_toggle = true;
 	this->default_IComparer = this->list_lv->ListViewItemSorter;
+	//CA means ctrl + A hotkey
 	this->CA_in_List_lv_toggle = true;
-	//this->curr_filename = "product.txt"; //no auto load anymore
-
+	this->curr_prdList = "untitled product list";
+	this->Text = " CICMS [" + this->curr_prdList + "]";
 	this->Bridging = gcnew Bridge;
 }
 
@@ -221,6 +222,8 @@ void mainForm::menu_f_bp_Click(System::Object^  sender, System::EventArgs^  e){
 void mainForm::menu_f_newprdlist_Click(System::Object^  sender, System::EventArgs^  e){
 	this->DoYouWantToSave();
 	this->s_tB_input->Text = "";
+	this->curr_prdList = "untitled product list";
+	this->Text = " CICMS [" + this->curr_prdList + "]";
 	this->list_lv->Items->Clear();
 	Bridging->Create_newPrdList();
 }
@@ -229,7 +232,7 @@ void mainForm::DoYouWantToSave(){
 		if(System::Windows::Forms::DialogResult::Yes == 
 			System::Windows::Forms::MessageBox::Show("Do you want to save the current product list?",
 			" Save product list",
-			System::Windows::Forms::MessageBoxButtons::YesNo,
+			System::Windows::Forms::MessageBoxButtons::YesNoCancel,
 			System::Windows::Forms::MessageBoxIcon::Question)){
 			if(Bridging->isEmptyFilename())
 				this->Save_as_ano_prdList();
@@ -241,7 +244,7 @@ void mainForm::DoYouWantToSave(){
 				else
 					this->Update_statusBar(saveF);//unsuccessful
 			}
-		}
+		}//do sth for cancel
 	}
 }
 //Save the current product list
@@ -253,8 +256,10 @@ void mainForm::Save_curr_prdList(){
 		else{
 			this->Set_statusBar("Saving...", System::Drawing::Color::Khaki);
 			this->statusStrip1->Refresh();
-			if(Bridging->Save())
+			if(Bridging->Save()){
 				this->Update_statusBar(saveS);//successful
+				this->Text = " CICMS [" + this->curr_prdList + "]";
+			}
 			else
 				this->Update_statusBar(saveF);//unsuccessful
 		}
@@ -269,8 +274,11 @@ void mainForm::Save_as_ano_prdList(){
 	sf_dlg->FilterIndex = 1;
 	if(sf_dlg->ShowDialog() == System::Windows::Forms::DialogResult::OK){
 		this->Set_statusBar("Saving...", System::Drawing::Color::Khaki);
-		if(Bridging->SaveAs(sf_dlg->FileName))
+		if(Bridging->SaveAs(sf_dlg->FileName)){
+			this->curr_prdList = System::IO::Path::GetFileName(sf_dlg->FileName);
 			this->Update_statusBar(saveS);//successful
+			this->Text = " CICMS [" + this->curr_prdList + "]";
+		}
 		else
 			this->Update_statusBar(saveF);//unsuccessful
 	}
@@ -290,6 +298,9 @@ void mainForm::Load_prdList(){
 		this->statusStrip1->Refresh();
 		//load the product list
 		if(Bridging->Load(of_dlg->FileName)){
+			this->curr_prdList = of_dlg->SafeFileName;
+			this->Text = " CICMS [" + this->curr_prdList + "]";
+			
 			if(Bridging->CheckRecovery()){
 				//recover
 				if(System::Windows::Forms::MessageBox::Show(of_dlg->SafeFileName + " crashed last time, do you want to restore\nthe operation(s)?",
@@ -319,6 +330,8 @@ void mainForm::Batch_processing(){
 	if(of_dlg->ShowDialog() == System::Windows::Forms::DialogResult::OK){
 		this->Set_statusBar("Processing...", System::Drawing::Color::Khaki);
 		int i = Bridging->Batch_processing(of_dlg->FileName);
+		this->Text = " CICMS [" + this->curr_prdList + "*]";
+
 		this->Submit_search();// refresh the search result
 		if(i == 0)
 			this->Set_statusBar("Batch file processed successfully", System::Drawing::Color::LightSkyBlue);
@@ -379,6 +392,7 @@ void mainForm::Create_addPdForms(){
 			if(Bridging->Add(dlg->get_product_details())){
 				this->Submit_search();// refresh the search result
 				this->Update_statusBar(addS);
+				this->Text = " CICMS [" + this->curr_prdList + "*]";
 			}
 			else
 				this->Update_statusBar(addF);
@@ -619,6 +633,7 @@ void mainForm::Create_modifyForm(){
 				if(manufChanged)
 					this->list_lv->SelectedItems[i]->SubItems[4]->Text = output->SubItems[4]->Text;
 				Bridging->Modify(this->list_lv->SelectedItems[i]);
+				this->Text = " CICMS [" + this->curr_prdList + "*]";
 			}
 			this->list_lv->EndUpdate();
 			this->list_lv->Focus();
@@ -653,6 +668,7 @@ void mainForm::Create_sellForm(){
 		else if(Bridging->Sell(this->list_lv->SelectedItems[i], num)){
 			this->Update_selectedItem_sell(i, num);
 			this->Update_statusBar(sellS);
+			this->Text = " CICMS [" + this->curr_prdList + "*]";
 		}
 		else
 			this->Update_statusBar(sellF);
@@ -667,6 +683,7 @@ void mainForm::Create_restockForm(){
 		else if(Bridging->Restock(this->list_lv->SelectedItems[i], num)){
 			this->Update_selectedItem_restock(i, num);
 			this->Update_statusBar(restockS);
+			this->Text = " CICMS [" + this->curr_prdList + "*]";
 		}
 		else
 			this->Update_statusBar(restockF);
@@ -700,6 +717,7 @@ void mainForm::Create_deleteForm(){
 			{
 				this->Clear_selectedItem(i);
 				this->Update_statusBar(deleteS);
+				this->Text = " CICMS [" + this->curr_prdList + "*]";
 			}
 			else{
 				i++;
@@ -864,6 +882,7 @@ void mainForm::InitializeComponent()
 	this->list_b_modify = (gcnew System::Windows::Forms::Button());
 	this->statusStrip1 = (gcnew System::Windows::Forms::StatusStrip());
 	this->toolStripStatusLabel1 = (gcnew System::Windows::Forms::ToolStripStatusLabel());
+	this->toolStripSeparator4 = (gcnew System::Windows::Forms::ToolStripSeparator());
 	this->menu->SuspendLayout();
 	this->s_grp->SuspendLayout();
 	this->list_grp->SuspendLayout();
@@ -883,9 +902,9 @@ void mainForm::InitializeComponent()
 	// menu_f
 	// 
 	this->menu_f->DisplayStyle = System::Windows::Forms::ToolStripItemDisplayStyle::Text;
-	this->menu_f->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(9) {this->menu_f_addNewProducts, 
-		this->menu_f_newprdlist, this->toolStripSeparator1, this->menu_f_save, this->menu_f_saveAs, this->menu_f_load, this->menu_f_bp, 
-		this->toolStripSeparator3, this->menu_f_quit});
+	this->menu_f->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(10) {this->menu_f_addNewProducts, 
+		this->toolStripSeparator1, this->menu_f_newprdlist, this->menu_f_save, this->menu_f_saveAs, this->menu_f_load, this->toolStripSeparator4, 
+		this->menu_f_bp, this->toolStripSeparator3, this->menu_f_quit});
 	this->menu_f->Name = L"menu_f";
 	this->menu_f->ShortcutKeyDisplayString = L"";
 	this->menu_f->Size = System::Drawing::Size(37, 20);
@@ -1255,6 +1274,11 @@ void mainForm::InitializeComponent()
 	this->toolStripStatusLabel1->Name = L"toolStripStatusLabel1";
 	this->toolStripStatusLabel1->Size = System::Drawing::Size(39, 17);
 	this->toolStripStatusLabel1->Text = L"Ready";
+	// 
+	// toolStripSeparator4
+	// 
+	this->toolStripSeparator4->Name = L"toolStripSeparator4";
+	this->toolStripSeparator4->Size = System::Drawing::Size(269, 6);
 	// 
 	// mainForm
 	// 

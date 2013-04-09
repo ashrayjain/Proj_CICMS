@@ -229,7 +229,8 @@ namespace CICMS_UI {
 	//**********STATUS COMPONENTS DECLEARATION***********
 	private: System::Windows::Forms::StatusStrip^  statusStrip1;
 	private: System::Windows::Forms::ToolStripStatusLabel^  toolStripStatusLabel1;
-	//private: System::String^ curr_filename; // no auto load anymore
+	private: System::String^ curr_prdList; // no auto load anymore
+private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator4;
 
 	//**********WRAPPER HANDLER DECLEARATION***********
 	private: Bridge^ Bridging;
