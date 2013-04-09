@@ -233,6 +233,8 @@ void mainForm::menu_f_newprdlist_Click(System::Object^  sender, System::EventArg
 	this->curr_prdList = "untitled product list";
 	this->Text = " CICMS [" + this->curr_prdList + "]";
 	this->list_lv->Items->Clear();
+	this->defaultStatusColor = System::Drawing::Color::MediumPurple;
+	this->Set_statusBar("Ready", defaultStatusColor);
 	Bridging->Create_newPrdList();
 }
 System::Windows::Forms::DialogResult mainForm::DoYouWantToSave(){
@@ -248,8 +250,10 @@ System::Windows::Forms::DialogResult mainForm::DoYouWantToSave(){
 			else{
 				this->Set_statusBar("Saving...", System::Drawing::Color::Khaki);
 				this->statusStrip1->Refresh();
-				if(Bridging->Save())
+				if(Bridging->Save()){
 					this->Update_statusBar(saveS);//successful
+					this->Text = " CICMS [" + this->curr_prdList + "]";
+				}
 				else
 					this->Update_statusBar(saveF);//unsuccessful
 			}
@@ -323,6 +327,7 @@ void mainForm::Load_prdList(){
 					System::Windows::Forms::MessageBoxIcon::Question)
 					== System::Windows::Forms::DialogResult::Yes){
 						Bridging->Recover(true);
+						this->Text = " CICMS [" + this->curr_prdList + "*]";
 				}
 				else
 					Bridging->Recover(false);
@@ -349,6 +354,8 @@ void mainForm::Batch_processing(){
 		this->Submit_search();// refresh the search result
 		if(i == 0)
 			this->Set_statusBar("Batch file processed successfully", this->defaultStatusColor);
+		else if(i == 1)
+			this->Set_statusBar("Batch file processed successfully, " + i + " error found" , this->defaultStatusColor);
 		else
 			this->Set_statusBar("Batch file processed successfully, " + i + " errors found" , this->defaultStatusColor);
 	}
