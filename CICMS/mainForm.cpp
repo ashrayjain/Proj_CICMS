@@ -317,7 +317,7 @@ void mainForm::Load_prdList(){
 			
 			if(Bridging->CheckRecovery()){
 				//recover
-				if(System::Windows::Forms::MessageBox::Show(of_dlg->SafeFileName + " crashed last time, do you want to restore\nthe operation(s)?",
+				if(System::Windows::Forms::MessageBox::Show("Product list " + of_dlg->SafeFileName + " crashed last time, do you want to restore\nthe operation(s)?",
 					" CICMS Recovery",
 					System::Windows::Forms::MessageBoxButtons::YesNo,
 					System::Windows::Forms::MessageBoxIcon::Question)
@@ -649,6 +649,7 @@ void mainForm::Create_modifyForm(){
 				Bridging->Modify(this->list_lv->SelectedItems[i]);
 				this->Text = " CICMS [" + this->curr_prdList + "*]";
 			}
+			this->Submit_search();//refresh the search result
 			this->list_lv->EndUpdate();
 			this->list_lv->Focus();
 			Set_statusBar("Product(s) modified successfully",this->defaultStatusColor);
