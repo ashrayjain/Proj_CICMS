@@ -56,7 +56,7 @@ public:
 	bool updateSale(Product, unsigned);
 	bool updateStock(unsigned, unsigned);
 	bool updateSale(unsigned, unsigned);
-	vector<Product>* generatePrd(int X = 1);
+	vector<vector<Product>>* generatePrd(int X = 1);
 	vector<Product>* generatePrd(string cat);
 	vector<string>* generateManu();
 };
