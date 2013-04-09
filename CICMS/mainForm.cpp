@@ -271,7 +271,7 @@ void mainForm::Save_curr_prdList(){
 			this->Set_statusBar("Saving...", System::Drawing::Color::Khaki);
 			this->statusStrip1->Refresh();
 			if(Bridging->Save()){
-				this->defaultStatusColor = System::Drawing::Color::LightSkyBlue;
+				this->defaultStatusColor = System::Drawing::Color::LightBlue;
 				this->Update_statusBar(saveS);//successful
 				this->Text = " CICMS [" + this->curr_prdList + "]";
 			}
@@ -291,7 +291,7 @@ void mainForm::Save_as_ano_prdList(){
 		this->Set_statusBar("Saving...", System::Drawing::Color::Khaki);
 		if(Bridging->SaveAs(sf_dlg->FileName)){
 			this->curr_prdList = System::IO::Path::GetFileName(sf_dlg->FileName);
-			this->defaultStatusColor = System::Drawing::Color::LightSkyBlue;
+			this->defaultStatusColor = System::Drawing::Color::LightBlue;
 			this->Update_statusBar(saveS);//successful
 			this->Text = " CICMS [" + this->curr_prdList + "]";
 		}
@@ -315,7 +315,7 @@ void mainForm::Load_prdList(){
 		this->statusStrip1->Refresh();
 		//load the product list
 		if(Bridging->Load(of_dlg->FileName)){
-			this->defaultStatusColor = System::Drawing::Color::LightSkyBlue;
+			this->defaultStatusColor = System::Drawing::Color::LightBlue;
 			this->curr_prdList = of_dlg->SafeFileName;
 			this->Text = " CICMS [" + this->curr_prdList + "]";
 			
@@ -845,7 +845,7 @@ void mainForm::Update_statusBar(int i){
 			"Searched successfully", "No results found", //searchS, searchF
 			"Data recovered successfully", "Data recovered unsuccessfully" //recoverS, recoverF
 	};
-	this->Set_statusBar(text[i], i % 2? /*failure*/System::Drawing::Color::RosyBrown: /*success*/this->defaultStatusColor);
+	this->Set_statusBar(text[i], i % 2? /*failure*/System::Drawing::Color::LightSalmon: /*success*/this->defaultStatusColor);
 }
 //Function: set statusBus's Text and BackColor
 void mainForm::Set_statusBar(System::String^ s, System::Drawing::Color c){
@@ -1287,7 +1287,7 @@ void mainForm::InitializeComponent()
 	// 
 	// statusStrip1
 	// 
-	this->statusStrip1->BackColor = System::Drawing::Color::LightSkyBlue;
+	this->statusStrip1->BackColor = System::Drawing::Color::LightBlue;
 	this->statusStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) {this->toolStripStatusLabel1});
 	this->statusStrip1->Location = System::Drawing::Point(0, 409);
 	this->statusStrip1->Name = L"statusStrip1";
@@ -1298,6 +1298,7 @@ void mainForm::InitializeComponent()
 	// 
 	// toolStripStatusLabel1
 	// 
+	this->toolStripStatusLabel1->Font = (gcnew System::Drawing::Font(L"Segoe UI Semibold", 8.25F));
 	this->toolStripStatusLabel1->Name = L"toolStripStatusLabel1";
 	this->toolStripStatusLabel1->Size = System::Drawing::Size(39, 17);
 	this->toolStripStatusLabel1->Text = L"Ready";
