@@ -1207,7 +1207,7 @@ void mainForm::InitializeComponent()
 	this->list_b_delete->Location = System::Drawing::Point(572, 19);
 	this->list_b_delete->Name = L"list_b_delete";
 	this->list_b_delete->Size = System::Drawing::Size(75, 23);
-	this->list_b_delete->TabIndex = 7;
+	this->list_b_delete->TabIndex = 8;
 	this->list_b_delete->Text = L"Delete";
 	this->list_b_delete->UseVisualStyleBackColor = true;
 	this->list_b_delete->Click += gcnew System::EventHandler(this, &mainForm::list_b_delete_Click);
@@ -1223,7 +1223,7 @@ void mainForm::InitializeComponent()
 	this->list_lv->Name = L"list_lv";
 	this->list_lv->ShowGroups = false;
 	this->list_lv->Size = System::Drawing::Size(636, 309);
-	this->list_lv->TabIndex = 8;
+	this->list_lv->TabIndex = 9;
 	this->list_lv->UseCompatibleStateImageBehavior = false;
 	this->list_lv->View = System::Windows::Forms::View::Details;
 	this->list_lv->ColumnClick += gcnew System::Windows::Forms::ColumnClickEventHandler(this, &mainForm::list_lv_ColumnClick);
@@ -1281,7 +1281,7 @@ void mainForm::InitializeComponent()
 	this->list_b_modify->Location = System::Drawing::Point(172, 19);
 	this->list_b_modify->Name = L"list_b_modify";
 	this->list_b_modify->Size = System::Drawing::Size(75, 23);
-	this->list_b_modify->TabIndex = 9;
+	this->list_b_modify->TabIndex = 7;
 	this->list_b_modify->Text = L"Modify";
 	this->list_b_modify->UseVisualStyleBackColor = true;
 	this->list_b_modify->Click += gcnew System::EventHandler(this, &mainForm::list_b_modify_Click);
