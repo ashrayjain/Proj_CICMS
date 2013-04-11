@@ -152,8 +152,7 @@ void mainForm::mainForm_KeyDown(Object^ sender, System::Windows::Forms::KeyEvent
 		this->Save_as_ano_prdList();
 	//Ctrl+S for Save
 	else if(e->Control && e->KeyCode == System::Windows::Forms::Keys::S){
-		if(this->toolStripStatusLabel1->Text != "Data saved successfully")
-			this->Save_curr_prdList();
+		this->Save_curr_prdList();
 	}
 	//Ctrl+L for Load
 	else if(e->Control && e->KeyCode == System::Windows::Forms::Keys::L)
@@ -263,11 +262,10 @@ System::Windows::Forms::DialogResult mainForm::DoYouWantToSave(){
 }
 //Save the current product list
 void mainForm::Save_curr_prdList(){
-	//this->Set_statusBar("Saving...", System::Drawing::Color::Khaki);
-	if(!Bridging->isSaved() || Bridging->isEmptyFilename()){
-		if(Bridging->isEmptyFilename())
-			this->Save_as_ano_prdList();
-		else{
+	if(Bridging->isEmptyFilename())//unnamed
+		this->Save_as_ano_prdList();
+	else{//named
+		if(!Bridging->isSaved()){//unsaved
 			this->Set_statusBar("Saving...", System::Drawing::Color::Khaki);
 			this->statusStrip1->Refresh();
 			if(Bridging->Save()){
@@ -277,6 +275,9 @@ void mainForm::Save_curr_prdList(){
 			}
 			else
 				this->Update_statusBar(saveF);//unsuccessful
+		}
+		else{//saved
+			this->Set_statusBar("All changes saved", defaultStatusColor);
 		}
 	}
 }
