@@ -1,14 +1,40 @@
 /******************************************************************************************************/
 //
 //  class File_Processing
-//
+//  
 //  Description: File_Proceesing implements features related to data persistence, like loading products
 //  from a text file into the database and saving the current state of the database into a text file.
-//
+//  
 //  API:
-//  File_processing(list_adt<Product>& db);
-//  bool load();
-//	bool save();
+//	*** Constructor that accepts a filename and a database ***
+//  File_processing(string file, list_adt<Product>& db);
+//  
+//	*** Destructor ***
+//	~File_processing();
+//  
+//  *** Load all Products from the file (object's filename attribute) into the database ***
+//	bool loadPrds();
+//  
+//  *** Save all the Products from the database to the file (object's filename attribute) ***
+//	bool savePrds();
+//  
+//  *** Write event with given function to the recovery file  ***
+//	bool writeTemp(Product t, string function, int i = 0);
+//  
+//  *** Return whether temporary file exists already ***
+//	bool tempExists();
+//  
+//  *** Deletes previous temproray file and initializes new one ***
+//	void initializeTemp();
+//  
+//  *** Getter function for the address of the temporary file ***
+//	string recoveryAddress();
+//  
+//  *** Static function that loads a batch processing file into a stack ***
+//	static void loadBp(stack<Transaction>&, string);
+//
+//  *** Static function that writes the given string into the log file ***
+//	static void writeLog(string);
 //
 //  Main authors: ASHRAY JAIN (A0105199B)
 //
@@ -34,12 +60,19 @@ using namespace std;
 class File_processing
 {
 private:
+	// Product list file and the temporary file for recovery
 	string filename, tempfile;
+	// The Database
 	list_adt<Product>& _db;
+	// Filestream object for tempfile
 	ofstream tempOut;
+	// Toggle for previous recovery file existence
 	bool failedPreviously;
+	// Determines whether crash occured previously
 	void init();
+	// Static function to read in a Job for batch processing
 	static void readJob(ifstream&, Transaction&);
+	// Static function to load a recovery file
 	static void recoveryLoad(ifstream&, Transaction&);
 
 public:

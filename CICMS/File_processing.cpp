@@ -1,14 +1,40 @@
 /******************************************************************************************************/
 //
 //  class File_Processing
-//
+//  
 //  Description: File_Proceesing implements features related to data persistence, like loading products
 //  from a text file into the database and saving the current state of the database into a text file.
-//
+//  
 //  API:
-//  File_processing(list_adt<Product>& db);
-//  bool load();
-//	bool save();
+//	*** Constructor that accepts a filename and a database ***
+//  File_processing(string file, list_adt<Product>& db);
+//  
+//	*** Destructor ***
+//	~File_processing();
+//  
+//  *** Load all Products from the file (object's filename attribute) into the database ***
+//	bool loadPrds();
+//  
+//  *** Save all the Products from the database to the file (object's filename attribute) ***
+//	bool savePrds();
+//  
+//  *** Write event with given function to the recovery file  ***
+//	bool writeTemp(Product t, string function, int i = 0);
+//  
+//  *** Return whether temporary file exists already ***
+//	bool tempExists();
+//  
+//  *** Deletes previous temproray file and initializes new one ***
+//	void initializeTemp();
+//  
+//  *** Getter function for the address of the temporary file ***
+//	string recoveryAddress();
+//  
+//  *** Static function that loads a batch processing file into a stack ***
+//	static void loadBp(stack<Transaction>&, string);
+//
+//  *** Static function that writes the given string into the log file ***
+//	static void writeLog(string);
 //
 //  Main authors: ASHRAY JAIN (A0105199B)
 //
@@ -17,6 +43,7 @@
 #include "stdafx.h"
 #include "File_Processing.h"
 
+// Determines whether crash occured previously
 void File_processing::init()
 {
 	ifstream fin(tempfile);
@@ -27,13 +54,16 @@ void File_processing::init()
 	fin.close();
 }
 
+// Destructor
 File_processing::~File_processing()
 {
 	remove(tempfile.c_str());
 }
 
+// Return whether temporary file exists already
 bool File_processing::tempExists() { return failedPreviously; }
 
+// Deletes previous temproray file and initializes new one
 void File_processing::initializeTemp()
 {
 	remove(tempfile.c_str());
@@ -45,6 +75,7 @@ void File_processing::initializeTemp()
 	failedPreviously = false;
 }
 
+// Write event with given function to the recovery file
 bool File_processing::writeTemp(Product t, string function, int i)
 {
 	tempOut.open(tempfile, ios::app);
@@ -65,6 +96,8 @@ bool File_processing::writeTemp(Product t, string function, int i)
 	tempOut.close();
 	return true;
 }
+
+// Load all Products from the file (object's filename attribute) into the database
 bool File_processing::loadPrds()
 {
 	ifstream fin(filename);
@@ -95,6 +128,7 @@ bool File_processing::loadPrds()
 	return true;
 }
 
+// Save all the Products from the database to the file (object's filename attribute)
 bool File_processing::savePrds()
 {
 	ofstream fout(filename);
@@ -118,6 +152,7 @@ bool File_processing::savePrds()
 	return true;
 }
 
+// Static function that writes the given string into the log file
 void File_processing::writeLog(string line)
 {
 	ofstream fout("log.txt", ios::app);
@@ -125,6 +160,7 @@ void File_processing::writeLog(string line)
 	fout.close();
 }
 
+// Static function to read in a Job for batch processing
 void File_processing::readJob(ifstream& fin, Transaction& t)
 {
 	string function = "",
@@ -157,6 +193,7 @@ void File_processing::readJob(ifstream& fin, Transaction& t)
 			atof(price.c_str()), manu, atoi(num.c_str())));
 }
 
+// Static function to load a recovery file
 void File_processing::recoveryLoad(ifstream& fin, Transaction& t)
 {	
 	readJob(fin, t);
@@ -164,11 +201,13 @@ void File_processing::recoveryLoad(ifstream& fin, Transaction& t)
 		readJob(fin, t);
 }
 
+// Getter function for the address of the temporary file
 string File_processing::recoveryAddress()
 {
 	return tempfile;
 }
 
+// Static function that loads a batch processing file into a stack
 void File_processing::loadBp(stack<Transaction>& s, string BPlocation)
 {
 	ifstream fin(BPlocation);

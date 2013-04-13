@@ -8,10 +8,10 @@
 //  compare the objects' barcodes.
 //  
 //  API:
-//  Product(std::string, std::string, std::string, unsigned, double, unsigned _no_in_stock = 0, unsigned _no_sold = 0);
-//  std::string getName();
-//  std::string getCategory();
-//  std::string getManufacturer();
+//  Product(string, string, string, unsigned, double, unsigned _no_in_stock = 0, unsigned _no_sold = 0);
+//  string getName();
+//  string getCategory();
+//  string getManufacturer();
 //  unsigned getBarcode();
 //  unsigned getNoInStock();
 //  unsigned getNoSold();
@@ -31,11 +31,10 @@
 
 #include "stdafx.h"
 #include "Product.h"
-#include <string>
 
 using namespace std;
 
-Product::Product(std::string name, std::string category, std::string manufacturer, unsigned barcode, double price, unsigned no_in_stock, unsigned no_sold)
+Product::Product(string name, string category, string manufacturer, unsigned barcode, double price, unsigned no_in_stock, unsigned no_sold)
 {
 	_name = name;
 	_category = category;

@@ -1,16 +1,28 @@
 /******************************************************************************************************/
 //
-//  class search
+//  class Search
 //
-//  Description: The search class implements all the search related features, like searching products
+//  Description: The Search class implements all the Search related features, like searching products
 //  from the database with respect to their name, barcode, category or manufacturer.
 //
 //  API:
-//  Search(list_adt<Product> * db);
+//  *** Constructor that takes in a pointer to the database ***
+//  Search(list_adt<Product> * db): _db(db) {}
+//  
+//  *** Search for the string in the database using Product names ***
 //	vector<Product>* searchByName(string);
+//  
+//  *** Search for the string in the database using Product categories ***
 //	vector<Product>* searchByCategory(string);
+//  
+//  *** Search for the string in the database using Product manufacturers ***
 //	vector<Product>* searchByManufacturer(string);
+//  
+//  *** Search for the string in the database using Product barcodes ***
 //	vector<Product>* searchByBarcode(string);
+//  
+//  *** Static function to convert given string to lowercase ***
+//	static string convertToLower(string);
 //
 //  Main authors: ASHRAY JAIN (A0105199B)
 //
@@ -19,6 +31,7 @@
 #include "stdafx.h"
 #include "Search.h"
 
+// Static function to convert given string to lowercase
 string Search::convertToLower(string s)
 {
 	for(unsigned int i = 0; i < s.length(); ++i) 
@@ -26,38 +39,37 @@ string Search::convertToLower(string s)
 	return s;
 }
 
+// Get the number of occurrences of each part of the query in the given string
 int Search::substring_search(string name, string query)
 {
 	istringstream iss(query);
 	string word;
 	int count = 0;
+	// break up the query into words
 	while(iss>>word)
 		if(word.size() >= 2 && name.find(word)!=-1)
 			count++;
 	return count;
 }
-int Search::countOccurrences(string a, char b)
-{
-	int count = 0;
-	for(unsigned i=0; i<a.size(); i++)
-		if(a[i]==b)
-			count++;
-	return count;
-}
 
+// Return lesser element
 int Search::Min(int a, int b)
 {
 	return a>b?b:a;
 }
 
+// Return greater element
 int Search::Max(int a, int b)
 {
 	return a>b?a:b;
 }
 
+// Get closeness of one string to another (i.e. the edit distance)
 int Search::editDistance(string a, string b, int k)
 {
-	//Wagner-Fischer Algorithm with memory and complexity optimizations
+	// Utilizing Wagner-Fischer Algorithm
+	// memory and complexity optimizations to suit our
+	// application
 
 	int l1 = a.length(), l2 = b.length();
 	if(l1 > l2)
@@ -95,7 +107,7 @@ int Search::editDistance(string a, string b, int k)
 			return -1;
 		}
 		if(min_idx != 1)
-			curr[min_idx-1] = 99;
+			curr[min_idx-1] = 999;
 		
 		for(int j = min_idx; j <= max_idx; j++)
 			if(a[j-1]==b[i-1])
@@ -113,7 +125,7 @@ int Search::editDistance(string a, string b, int k)
 	return (ret_val <= k)?ret_val:-1;
  }
 
-
+// Consolidate the different types of results into one
 void Search::getConsolidatedResults(vector<Product>* &results, 
 	vector<Product> &close_results,
 	vector<vector<Product>> &substring_matches,
@@ -126,7 +138,7 @@ void Search::getConsolidatedResults(vector<Product>* &results,
 		results->insert(results->end(), edit_distance_matches[i].begin(), edit_distance_matches[i].end());
 }
 
-
+// Search for given string in the database and get results of different accuracy levels
 void Search::smartSearch(Product p, string str_p, string _query, vector<Product>* &results, 
 	vector<Product> &close_results, vector<vector<Product>> &substring_matches,
 	vector<vector<Product>> &edit_distance_matches, int threshold)
@@ -152,6 +164,16 @@ void Search::smartSearch(Product p, string str_p, string _query, vector<Product>
 		}
 	}
 }
+
+
+// NOTE: For all searchBy.. functions, type of results in
+// decreasing order of accuracy are,
+// results				  --> 	exact matches
+// close_results		  -->	start matches
+// substring_matches	  -->	part of query matches
+// edit_distance_matches  -->	matches after considering error in typing
+
+// Search for the string in the database using Product names
 vector<Product>* Search::searchByName(string query)
 {
 	vector<Product>* results = new vector<Product>();
@@ -176,6 +198,7 @@ vector<Product>* Search::searchByName(string query)
 	return results;
 }
 
+// Search for the string in the database using Product categories
 vector<Product>* Search::searchByCategory(string query)
 {
 	vector<Product>* results = new vector<Product>();
@@ -199,7 +222,7 @@ vector<Product>* Search::searchByCategory(string query)
 	return results;
 }
 
-
+// Search for the string in the database using Product manufacturers
 vector<Product>* Search::searchByManufacturer(string query)
 {
 	vector<Product>* results = new vector<Product>();
@@ -223,6 +246,7 @@ vector<Product>* Search::searchByManufacturer(string query)
 	return results;
 }
 
+// Search for the string in the database using Product barcodes
 vector<Product>* Search::searchByBarcode(string query)
 {
 	vector<Product>* results = new vector<Product>();

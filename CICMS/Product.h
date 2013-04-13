@@ -42,7 +42,10 @@ private:
 	double _price;
 
 public:
+	// Constructor
 	Product(std::string, std::string, std::string, unsigned, double, unsigned _no_in_stock = 0, unsigned _no_sold = 0);
+
+	// Getter Functions
 	std::string getName();
 	std::string getCategory();
 	std::string getManufacturer();
@@ -50,8 +53,12 @@ public:
 	unsigned getNoInStock();
 	unsigned getNoSold();
 	double getPrice();
+
+	// Modify sale and stock values
 	bool updateSale(unsigned);
 	void updateStock(unsigned);
+
+	// Overloaded operators
 	inline bool operator==(Product& rhs){ return this->_barcode == rhs._barcode; }
 	inline bool operator!=(Product& rhs){ return !(this->operator==(rhs)); }
 	inline bool operator< (Product& rhs){ return this->_barcode < rhs._barcode; } 

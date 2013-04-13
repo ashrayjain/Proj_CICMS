@@ -7,18 +7,72 @@
 //  Although, the File_Processing features are handled automatically in the current version of CICMS.
 //
 //  API:
+//  *** Default Constructor that creates a new Database of Products ***
 //  Processing();
+//  
+//  *** Default Destructor ***
 //	~Processing();
-//  bool Processing::addProduct(Product t);
-//  bool Processing::delProduct(Product t);
-//  vector<Product>* Processing::search(string s, int i);
-//  bool Processing::updateStock(Product t, int i);
-//  bool Processing::updateSale(Product t, unsigned i);
-//  vector<Product>* Processing::generatePrd(int X);
-//  vector<Product>* Processing::generatePrd(string s);
-//  vector<string>* Processing::generateManu();
-//	int size() { return _database.size(); }
-//
+//  
+//  *** Returns whether the current state of the database is saved ***
+//	bool isSaved();
+//  
+//  *** Returns whether a filename and address has been assigned for the database ***
+//	bool isEmptyFilename();
+//  
+//  *** Write temporary file ***
+//	bool writeTemp(Product, string, int i = 0);
+//  
+//  *** Load product file into database at the given address ***
+//	bool loadFile(string);
+//  
+//  *** Save the database into the file ***
+//	bool saveFile();
+//  
+//  *** Save the database into a new file at the given address ***
+//	bool saveFileAs(string);
+//  
+//  *** Create a new empty database ***
+//	void newFile();
+//  
+//  *** Returns whether recovery is needed ***
+//	bool chkTmpFile();
+//  
+//  *** Initialize the temporary file and recover if parameter is true ***
+//	void recover(bool);
+//  
+//  *** Returns the size of the database ***
+//	int size();
+//  
+//  *** Add the given Product to the database ***
+//	bool addProduct(Product);
+//  
+//  *** Delete the given Product to the database ***
+//	bool delProduct(Product);
+//  
+//  *** Search for the given string in the database using the given method ***
+//	vector<Product>* search(string, int);
+//  
+//  *** Update the Product with the given Product ***
+//	bool updatePrd(Product);
+//  
+//  *** Update the stock of the given Product by the given value ***
+//	bool updateStock(Product, unsigned);
+//  
+//  *** Update the sale of the given Product with the given value ***
+//	bool updateSale(Product, unsigned);
+//  
+//  *** Batch Process the given file and return the number of errors ***
+//	int batchProcessing(string);
+//  
+//  *** Return the Top X Best selling Product(s) in the database ***
+//	vector<vector<Product>>* generatePrd(int);
+//  
+//  *** Return the Best selling Product(s) in the given category ***
+//	vector<Product>* generatePrd(string);
+//  
+//  *** Return the Best selling manufacturer(s) in the database ***
+//	vector<string>* generateManu();
+//  
 //  Main authors: ASHRAY JAIN (A0105199B)
 //
 /******************************************************************************************************/
@@ -38,11 +92,17 @@
 class Processing
 {
 private:
+	// THE DATABASE!
 	list_adt<Product> _database;
+	// File Processing object
 	File_processing *file;
+	// Database Processing object
 	DB_Processing *db;
+	// Batch Processing object
 	batch_processing *bp;
+	// Keep track if any unsaved changes exist in the database
 	bool changed;
+	// Clear the database
 	void clearDatabase();
 
 public:
@@ -50,8 +110,7 @@ public:
 	~Processing();
 	bool isSaved();
 	bool isEmptyFilename();
-	bool writeTemp(Product, string);
-	bool writeTemp(Product, string, int);
+	bool writeTemp(Product, string, int i = 0);
 	bool loadFile(string);
 	bool saveFile();
 	bool saveFileAs(string);
@@ -70,4 +129,5 @@ public:
 	vector<Product>* generatePrd(string);
 	vector<string>* generateManu();
 };
+
 #endif

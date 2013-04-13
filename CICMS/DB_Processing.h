@@ -9,16 +9,45 @@
 //  product in a given category while an int parameter generates the top X products in the database.
 //
 //  API:
-//  DB_Processing(list_adt<Product>& db);
-//	bool addProduct(Product);
-//	bool delProduct(Product);
-//	vector<Product>* search(string, int);
-//	bool updateStock(Product, int);
-//	bool updateSale(Product, unsigned);
-//	vector<Product>* generatePrd(int X = 1);
-//	vector<Product>* generatePrd(string);
-//	vector<string>* generateManu();
+//  *** Constructor that takes in a database to work on and also initializes the search ***
+//  DB_Processing(list_adt<Product>& db): _db(&db), s(&db) {}
 //
+//  *** Adds the given Product to the database ***
+//	bool addProduct(Product);
+//
+//  *** Deletes the given Product from the database ***
+//	bool delProduct(Product);
+//
+//  *** OVERLOADED DELETE: Deletes the Product in the database with the given barcode ***
+//	bool delProduct(unsigned);
+//
+//  *** Searches for the given string using the given method of search in the database  *** 
+//	vector<Product>* search(string, int);
+//
+//  *** Updates the Product in the database with the given Product (using the barcode)  *** 
+//	bool updateProduct(Product);
+//
+//  *** Updates the stock of a given product by the given amount  *** 
+//	bool updateStock(Product, unsigned);
+//
+//  *** OVERLOADED STOCK: Updates the stock by the given amount of the Product with the given barcode *** 
+//	bool updateStock(unsigned, unsigned);
+//
+//  *** Updates the sale of a given product by the given amount  *** 
+//	bool updateSale(Product, unsigned);
+//
+//  *** OVERLOADED SALE: Updates the sale by the given amount of the Product with the given barcode *** 
+//	bool updateSale(unsigned, unsigned);
+//
+//  *** Generates the top X Best selling Products in the database (Note: Default value = 1, i.e., the Best selling product) ***
+//	vector<vector<Product>>* generatePrd(int X = 1);
+//
+//  *** Generates the Best selling product in the given category, in the database ***
+//	vector<Product>* generatePrd(string cat);
+//   
+//  *** Generates the Manufacturer from the database with the Highest sales ***
+//	vector<string>* generateManu();
+//  
 //  Main authors: ASHRAY JAIN (A0105199B)
 //
 /*************************************************************************************************/
@@ -33,19 +62,24 @@
 #include "Search.h"
 #include <list>
 #include <xutility>
-#include <fstream>
 
 using namespace std;
 
 class DB_Processing
 {
 private:
+	// pointer to the database
 	list_adt<Product>* _db;
+	// provides API for search functions
 	Search s;
+	// returns pointer to a Product with a given barcode, from the database
 	Product* getProduct(unsigned barcode);
+	// inserts a product into the list, ensuring that its sorted
+	// in descending order and its size is X at max
 	void ins_sort(list<pair<int, list<Product>>>*, Product, int);
 	
 public:
+	// PUBLIC API
 	DB_Processing(list_adt<Product>& db): _db(&db), s(&db) {}
 	bool addProduct(Product);
 	bool delProduct(Product);
