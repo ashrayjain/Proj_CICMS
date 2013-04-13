@@ -1,6 +1,6 @@
 /******************************************************************************************************/
 //
-//  class search
+//  class Search: Search.cpp
 //
 //  Description: The search class implements all the search related features, like searching products
 //  from the database with respect to their name, barcode, category or manufacturer.

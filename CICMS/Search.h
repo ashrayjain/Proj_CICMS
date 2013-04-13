@@ -1,6 +1,6 @@
 /******************************************************************************************************/
 //
-//  class Search
+//  class Search: Search.h
 //
 //  Description: The Search class implements all the Search related features, like searching products
 //  from the database with respect to their name, barcode, category or manufacturer.

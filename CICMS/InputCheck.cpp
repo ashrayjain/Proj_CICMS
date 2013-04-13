@@ -1,6 +1,6 @@
 /*************************************************************************************************/
 //
-//  class InputCheck: inputCheck.cpp
+//  class inputCheck: inputCheck.cpp
 //
 //  Description: Input Checking only.
 //

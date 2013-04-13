@@ -1,3 +1,21 @@
+/*************************************************************************************************/
+//
+//  class statForm: statForm.cpp
+//
+//  Description:statForm.cpp contains the implementation of statForm.h, a form that displays the statistics report
+//	for the application.
+
+//  API:
+//	*** constructor ***
+//	statForm(void)
+//	*** set the group title ***
+//  void Set_grpTitle(System::String^ s)
+//	*** send in the report data ***
+//	void Set_listData(array<System::Windows::Forms::ListViewItem^>^ r)
+//
+//  Main authors: XIE KAI(A0102016E), BOB WONG(A0094718U)
+//
+/*************************************************************************************************/
 #include "stdafx.h"
 #include "statForm.h"
 

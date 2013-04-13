@@ -1,3 +1,18 @@
+/*************************************************************************************************/
+//	class Job: Job.h
+//
+//	Description: Job.h contains the specification of Job.cpp, which
+//	possesses a number of variables which store the essential information pertinent to a job, as well as
+//  a function for converting these variables into a unified product for adding to the database.
+//
+//
+//	API:
+//	Product ReturnProduct();  //Returns a Product from the data in the Job
+//	unsigned ReturnBarcode(); //Returns barcode
+//	unsigned ReturnNumber();  //Returns the relevant number to add, delete, or restock
+//	string ReturnJobType();   //Returns what kind of job it is
+//	Main authors: BOB WONG (A0094718U)
+/*************************************************************************************************/
 #ifndef _JOB_H_
 #define _JOB_H_
 

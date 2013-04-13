@@ -1,6 +1,6 @@
 /******************************************************************************************************/
 //
-//  class Processing
+//  class Processing: Processing.h
 //
 //  Description: Processing is an entry point into the logic component of CICMS. It provided access to 
 //  both, File_Processing features and DB_Processing features through objects of the respective types.

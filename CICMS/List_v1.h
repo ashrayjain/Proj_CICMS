@@ -1,6 +1,7 @@
 /*************************************************************************************************/
 //
-//  class list_adt : version 1
+//  class list_adt: List_v1.h 
+//	Version 1
 //
 //  Description: list_adt v1 implements class list_adt using an STL vector as the basis for storing
 //  the data. It has been made compatible with all data types (user-defined or otherwise) using
