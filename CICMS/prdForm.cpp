@@ -262,7 +262,6 @@ void prdForm::npd_tB_manuf_LostFocus(System::Object^  sender, System::EventArgs^
 }
 
 // Upon clicking the OK button, stuff happens here
-// possibly notifying the logic classes to call prdForm()
 void prdForm::npd_b_ok_Click(System::Object^  sender, System::EventArgs^  e) {
 	//unfocus every textbox to check whether they are empty or not
 	this->npd_tB_name->Focus();
@@ -319,7 +318,7 @@ void prdForm::npd_b_ok_Click(System::Object^  sender, System::EventArgs^  e) {
 	}
 }
 
-//Data return in the form of strings
+//Data return in the form of strings inside ListViewItem
 System::Windows::Forms::ListViewItem^ prdForm::get_product_details(){
 	return gcnew System::Windows::Forms::ListViewItem(gcnew cli::array<System::String^>(7) {
 		this->npd_tB_name->Text, 

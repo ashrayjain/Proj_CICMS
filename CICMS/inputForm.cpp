@@ -192,11 +192,15 @@ void inputForm::input_tB_input_TextChanged(System::Object^  sender, System::Even
 	else
 		this->input_tB_input->BackColor = this->DefaultColor;
 }
+
+//event triggered when the input textBox lose the focus
+//show red color to indicate the error
 void inputForm::input_tB_input_LostFocus(System::Object^  sender, System::EventArgs^  e){
 	if(!this->input_b_no->Focused && InputCheck::is_empty(this->input_tB_input->Text))
 		this->input_tB_input->BackColor = System::Drawing::Color::LightSalmon;
 }
 
+//if the input textBox is empty, disable the submit button
 void inputForm::submitButton_toggle(){
 	if(InputCheck::is_empty(this->input_tB_input->Text))
 		this->input_b_yes->Enabled = false;
