@@ -44,13 +44,11 @@
 #include "File_Processing.h"
 
 // Determines whether crash occured previously
-void File_processing::init()
+void File_processing::chkPrevCrash()
 {
 	ifstream fin(tempfile);
 	if(fin)
 		failedPreviously = true;
-	else
-		initializeTemp();
 	fin.close();
 }
 
@@ -73,11 +71,14 @@ void File_processing::initializeTemp()
 	tempOut<<"\n\nRecovery\n";
 	tempOut.close();
 	failedPreviously = false;
+	tempInitialized = true;
 }
 
 // Write event with given function to the recovery file
 bool File_processing::writeTemp(Product t, string function, int i)
 {
+	if(!tempInitialized)
+		initializeTemp();
 	tempOut.open(tempfile, ios::app);
 	tempOut<<function<<"\n";
 	if(function == "ADD")
@@ -148,7 +149,8 @@ bool File_processing::savePrds()
 		fout<<"\n";
 	}
 	fout.close();
-	initializeTemp();
+	remove(tempfile.c_str());
+	tempInitialized = false;
 	return true;
 }
 

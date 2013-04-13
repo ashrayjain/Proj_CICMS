@@ -160,7 +160,7 @@ void Processing::recover(bool tof)
 {
 	if(tof)
 		batchProcessing(file->recoveryAddress());
-	file->initializeTemp();
+	remove(file->recoveryAddress().c_str());
 }
 
 // Batch Process the given file and return the number of errors

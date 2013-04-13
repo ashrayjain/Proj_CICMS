@@ -68,8 +68,10 @@ private:
 	ofstream tempOut;
 	// Toggle for previous recovery file existence
 	bool failedPreviously;
+	// To check if temp file is ready for writing
+	bool tempInitialized;
 	// Determines whether crash occured previously
-	void init();
+	void chkPrevCrash();
 	// Static function to read in a Job for batch processing
 	static void readJob(ifstream&, Transaction&);
 	// Static function to load a recovery file
@@ -77,8 +79,8 @@ private:
 
 public:
 	File_processing(string file, list_adt<Product>& db): filename(file), tempfile(file.substr(0, file.size()-3)+"cicms"),
-		failedPreviously(false), _db(db)
-	{ init(); }
+		failedPreviously(false), tempInitialized(false), _db(db)
+	{ chkPrevCrash(); }
 	~File_processing();
 	bool loadPrds();
 	bool savePrds();

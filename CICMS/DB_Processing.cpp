@@ -262,7 +262,7 @@ vector<string>* DB_Processing::generateManu()
 		}
 	}
 
-	// sort the values to get top manufacturer
+	// get top manufacturer
 	vector<string>* top_manu = new vector<string>();
 	int max_sales = -1;
 	for(unsigned i = 0; i < results.size(); i++)
