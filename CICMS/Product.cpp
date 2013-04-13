@@ -1,6 +1,6 @@
 /***************************************************************************************
 //
-//  class Product
+//  class Product: Product.cpp
 //
 //  Description: The Product class defines a Product in CICMS, with all its attributes. It also provides the API for
 //  accessing various attributes of a given Product for further processing and updating the sale value and the stock

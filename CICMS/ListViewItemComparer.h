@@ -1,6 +1,6 @@
 /*************************************************************************************************/
 //
-//  ListViewItemComparer.h
+//  class ListViewItemComparer: ListViewItemComparer.h
 //
 //  Description: [for MainForm's ListView components] A simple class that implements the sorting of items by columns. 
 //

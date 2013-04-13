@@ -1,7 +1,7 @@
 /******************************************************************************************************/
 //
-//  class File_Processing
-//  
+//  class File_Processing: File_Processing.cpp
+//
 //  Description: File_Proceesing implements features related to data persistence, like loading products
 //  from a text file into the database and saving the current state of the database into a text file.
 //  

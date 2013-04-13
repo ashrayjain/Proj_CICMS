@@ -1,6 +1,7 @@
 /*************************************************************************************************/
 //
-//  class list_adt : version 3
+//  class list_adt: List_v3.h
+//	Version 3
 //
 //  Description: Sorted linked list.
 //

@@ -1,6 +1,6 @@
 /*************************************************************************************************/
 //
-//  class DB_Processing
+//  class DB_Processing: DB_Processing.h
 //
 //  Description: DB_Proceesing implements features like adding a product to the database,
 //  deleting a product from the database, update the stock or the sale of a product, generate

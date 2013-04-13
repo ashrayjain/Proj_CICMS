@@ -1,6 +1,6 @@
 /*************************************************************************************************/
 //
-//  ListViewItemComparer.cpp
+//  class ListViewComparer: ListViewItemComparer.cpp
 //
 //  Description: [for MainForm's ListView components] A simple class that implements the manual sorting of items by columns. 
 //

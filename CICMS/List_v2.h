@@ -1,6 +1,7 @@
 /*************************************************************************************************/
 //
-//  class list_adt : version 2
+//  class list_adt: List_v2.h
+//	Version 2
 //
 //  Description: Singly linked list.
 //

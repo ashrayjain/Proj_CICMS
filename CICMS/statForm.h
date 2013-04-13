@@ -2,8 +2,9 @@
 //
 //  class statForm: statForm.h
 //
-//  Description: a form that displays the statistics report
-//
+//  Description:statForm.h contains the specification of statForm.cpp, a form that displays the statistics report
+//	for the application.
+
 //  API:
 //	*** constructor ***
 //	statForm(void)

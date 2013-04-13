@@ -1,7 +1,7 @@
 /******************************************************************************************************/
+// 
+//  class File_Processing: File_Processing.h
 //
-//  class File_Processing
-//  
 //  Description: File_Proceesing implements features related to data persistence, like loading products
 //  from a text file into the database and saving the current state of the database into a text file.
 //  
