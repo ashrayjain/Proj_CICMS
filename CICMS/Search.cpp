@@ -72,6 +72,8 @@ int Search::editDistance(string a, string b, int k)
 	// application
 
 	int l1 = a.length(), l2 = b.length();
+	if(abs(l1-l2) > k)
+		return -1;
 	if(l1 > l2)
 	{
 		string temp = a;
